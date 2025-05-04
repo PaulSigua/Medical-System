@@ -1,0 +1,85 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <div class="text-center mb-6">
+            <img src="/assets/logo-blue.svg" alt="NeuroPredictAI" class="mx-auto h-10 w-10" />
+            <h1 class="text-2xl font-bold text-blue-500 mt-2">NeuroPredictAI</h1>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">Crear cuenta</h2>
+        <p class="text-center text-gray-500 mb-6">Ingresa tus datos para registrarte en el sistema</p>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input formControlName="firstName" placeholder="Tu nombre"
+                        class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Apellidos</label>
+                    <input formControlName="lastName" placeholder="Tus apellidos"
+                        class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                <input type="email" formControlName="email" placeholder="correo@ejemplo.com"
+                    class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Tipo de usuario</label>
+                <select formControlName="role"
+                    class="mt-1 block w-full px-3 py-2 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <option value="">Selecciona tu rol</option>
+                    <option value="admin">Administrador</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="patient">Paciente</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                    <input type="password" formControlName="password" placeholder="Contraseña"
+                        class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+                    <input type="password" formControlName="confirmPassword" placeholder="Repite contraseña"
+                        class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                </div>
+            </div>
+
+            <div class="flex items-center">
+                <input type="checkbox" formControlName="agreeTerms" id="terms"
+                    class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <label for="terms" class="ml-2 text-sm text-gray-600">
+                    Acepto los <a href="#" class="text-blue-500 hover:underline">términos y condiciones</a> y la <a
+                        href="#" class="text-blue-500 hover:underline">política de privacidad</a>
+                </label>
+            </div>
+
+            <button type="submit" [disabled]="signupForm.invalid"
+                class="w-full py-2 rounded-lg bg-blue-400 text-white font-medium hover:bg-blue-500 disabled:opacity-50">
+                Crear cuenta
+            </button>
+        </form>
+
+        <div class="my-6 flex items-center">
+            <div class="flex-grow border-t"></div>
+            <span class="px-2 text-gray-400 uppercase text-xs">o regístrate con</span>
+            <div class="flex-grow border-t"></div>
+        </div>
+
+        <div class="flex space-x-4">
+            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Google</button>
+            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Microsoft</button>
+        </div>
+
+        <p class="mt-6 text-center text-sm text-gray-600">
+            ¿Ya tienes una cuenta?
+            <a routerLink="/auth/login" class="text-blue-500 hover:underline">Inicia sesión</a>
+        </p>
+    </div>
+</div>
