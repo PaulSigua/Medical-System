@@ -1,0 +1,42 @@
+<div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <h1 class="text-center text-2xl font-bold text-blue-500 mb-4">PredMed AI</h1>
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">Iniciar Sesión</h2>
+        <p class="text-center text-gray-500 mb-6">Ingresa tus credenciales para acceder al sistema</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                <input type="email" formControlName="email" placeholder="Username"
+                    class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" formControlName="password" placeholder="Password"
+                    class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            </div>
+
+            <button type="submit" [disabled]="loginForm.invalid"
+                class="w-full py-2 rounded-lg bg-blue-400 text-white font-medium hover:bg-blue-500 disabled:opacity-50">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div class="my-6 flex items-center">
+            <div class="flex-grow border-t"></div>
+            <span class="px-2 text-gray-400 uppercase text-xs">o continúa con</span>
+            <div class="flex-grow border-t"></div>
+        </div>
+
+        <div class="flex space-x-4">
+            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Google</button>
+            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Microsoft</button>
+        </div>
+
+        <p class="mt-6 text-center text-sm text-gray-600">
+            ¿No tienes una cuenta?
+            <a routerLink="/auth/signin" class="text-blue-500 hover:underline">Regístrate</a>
+        </p>
+    </div>
+</div>
