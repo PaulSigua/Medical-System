@@ -10,6 +10,11 @@ const routes: Routes = [
     path: 'work-space',
     loadChildren: () => import('./components/pages/work-space/work-space.module').then(m => m.WorkSpaceModule)
   },
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
