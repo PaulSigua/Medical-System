@@ -36,4 +36,16 @@ export class SigninComponent implements OnInit {
       // TODO: invocar servicio de registro
     }
   }
+
+  showPassword = false;
+  showConfirmPassword = false;
+  
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+  
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+  
 }

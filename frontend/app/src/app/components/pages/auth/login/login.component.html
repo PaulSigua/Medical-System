@@ -1,42 +1,96 @@
-<div class="min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h1 class="text-center text-2xl font-bold text-blue-500 mb-4">PredMed AI</h1>
-        <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">Iniciar Sesión</h2>
-        <p class="text-center text-gray-500 mb-6">Ingresa tus credenciales para acceder al sistema</p>
+<div class="flex items-center justify-center min-h-screen">
+  <div class="grid items-center justify-center">
+    <h1 class="text-center text-2xl font-bold text-blue-500 mb-4">
+      PredMed AI
+    </h1>
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-4xl max-w-md">
+      <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">
+        Iniciar Sesión
+      </h2>
+      <p class="text-center text-gray-500 mb-6">
+        Ingresa tus credenciales para acceder al sistema
+      </p>
 
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-                <input type="email" formControlName="email" placeholder="Username"
-                    class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700"
+            >Correo electrónico</label
+          >
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Username"
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+          />
+        </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" formControlName="password" placeholder="Password"
-                    class="mt-1 block w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            </div>
-
-            <button type="submit" [disabled]="loginForm.invalid"
-                class="w-full py-2 rounded-lg bg-blue-400 text-white font-medium hover:bg-blue-500 disabled:opacity-50">
-                Iniciar Sesión
+        <div class="relative justify-center items-center">
+            <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Password"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+            />
+            <button
+              type="button"
+              (click)="togglePassword()"
+              class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
+              tabindex="-1"
+            >
+              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 3l18 18"/>
+              </svg>
             </button>
-        </form>
+          </div>
+          
 
-        <div class="my-6 flex items-center">
-            <div class="flex-grow border-t"></div>
-            <span class="px-2 text-gray-400 uppercase text-xs">o continúa con</span>
-            <div class="flex-grow border-t"></div>
-        </div>
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full py-2 rounded-lg bg-blue-400 text-white font-medium hover:bg-blue-500 cursor-pointer transition duration-200"
+          (click)="goToWorkSpace()"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
 
-        <div class="flex space-x-4">
-            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Google</button>
-            <button class="flex-1 py-2 border rounded-lg font-medium hover:bg-gray-100">Microsoft</button>
-        </div>
+      <div class="my-6 flex items-center">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="px-2 text-gray-400 uppercase text-xs">o continúa con</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+      </div>
 
-        <p class="mt-6 text-center text-sm text-gray-600">
-            ¿No tienes una cuenta?
-            <a routerLink="/auth/signin" class="text-blue-500 hover:underline">Regístrate</a>
-        </p>
+      <div class="flex space-x-4">
+        <button
+          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
+        >
+          Google
+        </button>
+        <button
+          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
+        >
+          Microsoft
+        </button>
+      </div>
+
+      <p class="mt-6 text-center text-sm text-gray-600">
+        ¿No tienes una cuenta?
+        <a routerLink="/auth/signin" class="text-blue-500 hover:underline"
+          >Regístrate</a
+        >
+      </p>
     </div>
+  </div>
 </div>

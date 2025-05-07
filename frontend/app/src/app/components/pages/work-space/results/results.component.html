@@ -1,1 +1,15 @@
-<p>results works!</p>
+<div class="flex h-screen overflow-visible">
+  <!-- Sidebar con sombra derecha -->
+  <app-sidenav class="relative z-20"></app-sidenav>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col overflow-visible">
+    <!-- Header “detrás” de la sombra -->
+    <app-header class="relative z-0"></app-header>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
