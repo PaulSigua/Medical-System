@@ -7,6 +7,8 @@ import { InformationComponent } from './account/information/information.componen
 import { PasswordComponent } from './account/password/password.component';
 import { Lock, LucideAngularModule, User } from 'lucide-angular';
 import { AccountModule } from '../../layouts/account/account.module';
+import { GeneralComponent } from './settings/general/general.component';
+import { ViewingComponent } from './settings/viewing/viewing.component';
 
 const routes: Routes = [
   {
@@ -20,7 +22,22 @@ const routes: Routes = [
   },
   {
     path: 'settings',
-    component: SettingsComponent
+    component: SettingsComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'general',
+        pathMatch: 'full'
+      },
+      {
+        path: 'general',
+        component: GeneralComponent,
+      },
+      {
+        path: 'viewing',
+        component: ViewingComponent,
+      }
+    ]
   },
   {
     path: '',
@@ -34,7 +51,9 @@ const routes: Routes = [
     AccountComponent,
     SettingsComponent,
     InformationComponent,
-    PasswordComponent
+    PasswordComponent,
+    GeneralComponent,
+    ViewingComponent
   ],
   imports: [
     CommonModule,

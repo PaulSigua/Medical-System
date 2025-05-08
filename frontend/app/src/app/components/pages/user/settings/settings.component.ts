@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ArrowLeft } from 'lucide-angular';
+import { ArrowLeft, Key, Laptop, PcCase, Settings, User } from 'lucide-angular';
 
 @Component({
   selector: 'app-settings',
@@ -10,6 +10,8 @@ import { ArrowLeft } from 'lucide-angular';
 export class SettingsComponent {
 
   icons = {
-    ArrowLeft
+    ArrowLeft,
+    Settings,
+    Laptop
   };
 }
