@@ -20,7 +20,7 @@
             type="email"
             formControlName="email"
             placeholder="Username"
-            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"  
           />
         </div>
 
@@ -30,7 +30,7 @@
               [type]="showPassword ? 'text' : 'password'"
               formControlName="password"
               placeholder="Password"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400 pr-10"
             />
             <button
               type="button"
@@ -54,7 +54,21 @@
               </svg>
             </button>
           </div>
-          
+
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              formControlName="agreeTerms"
+              id="terms"
+              class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label for="terms" class="ml-2 text-sm text-gray-600">
+              ¿Recordar la 
+              <a href="#" class="text-blue-500 hover:underline"
+                >sesión?</a
+              >
+            </label>
+          </div>
 
         <button
           type="submit"
@@ -64,26 +78,8 @@
         >
           Iniciar Sesión
         </button>
+
       </form>
-
-      <div class="my-6 flex items-center">
-        <div class="flex-grow border-t border-gray-300"></div>
-        <span class="px-2 text-gray-400 uppercase text-xs">o continúa con</span>
-        <div class="flex-grow border-t border-gray-300"></div>
-      </div>
-
-      <div class="flex space-x-4">
-        <button
-          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
-        >
-          Google
-        </button>
-        <button
-          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
-        >
-          Microsoft
-        </button>
-      </div>
 
       <p class="mt-6 text-center text-sm text-gray-600">
         ¿No tienes una cuenta?

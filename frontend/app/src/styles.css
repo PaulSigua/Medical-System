@@ -1,6 +1,28 @@
-html,
-body {
-    background-color: #F6FBFF;
+@font-face {
+    font-family: 'Inter';
+    src: url('/assets/fonts/Inter.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+:root {
+    --colour-background: #F6FBFF;
+    --colour-primary: #D6EEFF;
+    --colour-secondary: #FFFFFF;
+    --colour-background-shadow: #F1F5F9;
+    --colour-h1: #27A2FA;
+    --colour-text: #000;
+    --colour-p: #64748B;
+    --colour-border: #E5EFFF;
+    --colour-button: #27A2FA;
+    --colour-link: #27A2FA;
+    --colour-shadow: #8C98A9;
 }
 
 @import "tailwindcss";
+
+html,
+body {
+    background-color: var(--colour-background);
+    font-family: 'Inter', sans-serif;
+}

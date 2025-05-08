@@ -1,12 +1,8 @@
 import { Component, HostListener } from '@angular/core';
-import {
-  Bell,
-  Brain
-} from 'lucide-angular';
-
+import { Bell, Brain } from 'lucide-angular';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header-ws',
   standalone: false,
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -28,5 +24,4 @@ export class HeaderComponent {
       this.showUserMenu = false;
     }
   }
-
 }

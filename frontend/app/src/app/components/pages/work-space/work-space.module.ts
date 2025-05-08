@@ -8,7 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { HelpComponent } from './help/help.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { LayoutsModule } from '../../layouts/layouts.module';
+import { WorkSpaceModule as LayoutWorkSpaceModule } from "../../layouts/work-space/work-space.module";
 
 const routes: Routes = [
   {
@@ -58,8 +58,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    LayoutsModule
-  ],
+    LayoutWorkSpaceModule,
+],
   exports: [
     RouterModule
   ]

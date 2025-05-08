@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./components/pages/work-space/work-space.module').then(m => m.WorkSpaceModule)
   },
   {
+    path: 'user',
+    loadChildren: () => import('./components/pages/user/user.module').then(m => m.UserModule)
+  },
+  {
     path: '',
     redirectTo: 'auth',
     pathMatch: 'full'

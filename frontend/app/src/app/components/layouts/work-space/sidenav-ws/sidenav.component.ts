@@ -1,18 +1,8 @@
 import { Component } from '@angular/core';
-import {
-  Home,
-  Brain,
-  Upload,
-  BarChart2,
-  FileText,
-  Users,
-  Settings,
-  HelpCircle
-} from 'lucide-angular';
-
+import { BarChart2, Brain, FileText, HelpCircle, Home, Settings, Upload, Users } from 'lucide-angular';
 
 @Component({
-  selector: 'app-sidenav',
+  selector: 'app-sidenav-ws',
   standalone: false,
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
@@ -29,5 +19,4 @@ export class SidenavComponent {
     Settings,
     HelpCircle
   };
-
 }

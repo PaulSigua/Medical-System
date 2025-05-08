@@ -20,7 +20,7 @@
             <input
               formControlName="firstName"
               placeholder="Tu nombre"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
             />
           </div>
           <div>
@@ -30,7 +30,7 @@
             <input
               formControlName="lastName"
               placeholder="Tus apellidos"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -43,23 +43,8 @@
             type="email"
             formControlName="email"
             placeholder="correo@ejemplo.com"
-            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100"
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
           />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700"
-            >Tipo de usuario</label
-          >
-          <select
-            formControlName="role"
-            class="mt-1 block w-full px-3 py-2 border-1 border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100"
-          >
-            <option value="">Selecciona tu rol</option>
-            <option value="admin">Administrador</option>
-            <option value="doctor">Doctor</option>
-            <option value="patient">Paciente</option>
-          </select>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -69,7 +54,7 @@
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
                 placeholder="Contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10"
+                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10 placeholder:text-gray-400"
                 />
                 <span
                 class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
@@ -97,7 +82,7 @@
                 [type]="showConfirmPassword ? 'text' : 'password'"
                 formControlName="confirmPassword"
                 placeholder="Repite contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10"
+                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10 placeholder:text-gray-400"
                 />
                 <span
                 class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
@@ -149,27 +134,6 @@
           Crear cuenta
         </button>
       </form>
-
-      <div class="my-6 flex items-center">
-        <div class="flex-grow border-t border-gray-200"></div>
-        <span class="px-2 text-gray-400 uppercase text-xs"
-          >o regístrate con</span
-        >
-        <div class="flex-grow border-t border-gray-200"></div>
-      </div>
-
-      <div class="flex space-x-4">
-        <button
-          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
-        >
-          Google
-        </button>
-        <button
-          class="flex-1 py-2 border-1 border-gray-300 rounded-lg font-medium hover:bg-gray-100"
-        >
-          Microsoft
-        </button>
-      </div>
 
       <p class="mt-6 text-center text-sm text-gray-600">
         ¿Ya tienes una cuenta?
