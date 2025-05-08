@@ -1,12 +1,13 @@
-<div>
-    <header class="bg-sky-500 text-white p-4 flex items-center justify-between shadow-md">
-        <div class="flex items-center">
-            <a routerLink="/work-space" 
-               class="flex items-center text-white font-bold hover:underline">
-                <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5 mr-2"></lucide-icon>
-                <span>Regresar al Espacio de Trabajo</span>
-            </a>
-        </div>
-        <h1 class="text-lg font-bold">Paúl Sigua</h1>
-    </header>
-</div>
+<header class="bg-sky-500 text-white px-6 py-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Botón de regreso -->
+        <a routerLink="/work-space" class="flex items-center text-white font-semibold hover:underline">
+            <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5 mr-2"></lucide-icon>
+            <span>Regresar al Espacio de Trabajo</span>
+        </a>
+        <div class="flex items-center space-x-2 justify-center">
+            <span class="font-bold">Paúl Sigua</span>
+            <lucide-icon name="user" class="w-6 h-6"></lucide-icon>
+          </div>    
+    </div>
+</header>
