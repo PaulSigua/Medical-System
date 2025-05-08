@@ -1,7 +1,7 @@
 <div class="flex items-center justify-center min-h-screen">
   <div class="grid items-center justify-center bg-gray-50">
     <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold text-blue-500 mt-2">PredMed AI</h1>
+      <h1 class="text-2xl font-bold text-sky-500 mt-2">PredMed AI</h1>
     </div>
     <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
       <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">
@@ -20,7 +20,7 @@
             <input
               formControlName="firstName"
               placeholder="Tu nombre"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
             />
           </div>
           <div>
@@ -30,7 +30,7 @@
             <input
               formControlName="lastName"
               placeholder="Tus apellidos"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
+              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -43,7 +43,7 @@
             type="email"
             formControlName="email"
             placeholder="correo@ejemplo.com"
-            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-blue-100 border-blue-100 placeholder:text-gray-400"
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
           />
         </div>
 
@@ -54,7 +54,7 @@
                 [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
                 placeholder="Contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10 placeholder:text-gray-400"
+                class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
                 />
                 <span
                 class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
@@ -82,7 +82,7 @@
                 [type]="showConfirmPassword ? 'text' : 'password'"
                 formControlName="confirmPassword"
                 placeholder="Repite contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-blue-100 rounded-lg focus:outline-1 focus:outline-blue-100 pr-10 placeholder:text-gray-400"
+                class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
                 />
                 <span
                 class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
@@ -112,15 +112,15 @@
             type="checkbox"
             formControlName="agreeTerms"
             id="terms"
-            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            class="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
           <label for="terms" class="ml-2 text-sm text-gray-600">
             Acepto los
-            <a href="#" class="text-blue-500 hover:underline"
+            <a href="#" class="text-sky-500 hover:underline"
               >términos y condiciones</a
             >
             y la
-            <a href="#" class="text-blue-500 hover:underline"
+            <a href="#" class="text-sky-500 hover:underline"
               >política de privacidad</a
             >
           </label>
@@ -129,7 +129,7 @@
         <button
           type="submit"
           [disabled]="signupForm.invalid"
-          class="w-full py-2 rounded-lg bg-blue-400 text-white font-medium hover:bg-blue-500 cursor-pointer"
+          class="w-full py-2 rounded-lg bg-sky-400 text-white font-medium hover:bg-sky-500 cursor-pointer"
         >
           Crear cuenta
         </button>
@@ -137,7 +137,7 @@
 
       <p class="mt-6 text-center text-sm text-gray-600">
         ¿Ya tienes una cuenta?
-        <a routerLink="/auth/login" class="text-blue-500 hover:underline"
+        <a routerLink="/auth/login" class="text-sky-500 hover:underline"
           >Inicia sesión</a
         >
       </p>
