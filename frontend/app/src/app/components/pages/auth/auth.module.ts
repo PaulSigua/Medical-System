@@ -5,6 +5,7 @@ import { SigninComponent } from './signin/signin.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthLayoutModule } from '../../layouts/auth/auth-layout.module';
 
 const routes: Routes = [
   {
@@ -30,7 +31,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AuthLayoutModule
   ],
   exports: [
     RouterModule

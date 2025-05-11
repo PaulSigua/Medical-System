@@ -1,0 +1,96 @@
+<div class="max-w-4xl py-8 mx-auto">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-sky-500">Política de Privacidad</h1>
+      <p class="mt-2 text-gray-500">Última actualización: 10 de mayo de 2025</p>
+    </div>
+    <!-- Si quieres mostrar los botones, descomenta esto:
+    <div class="flex gap-2">
+      <button class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+        <lucide-icon [name]="icons.Printer" class="w-5 h-5 mr-2"></lucide-icon>
+        Imprimir
+      </button>
+      <button class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+        <lucide-icon [name]="icons.FileDown" class="w-5 h-5 mr-2"></lucide-icon>
+        Descargar PDF
+      </button>
+    </div>
+    -->
+  </div>
+
+  <!-- Resumen de Privacidad -->
+  <div class="mb-6 border border-gray-300 rounded-xl shadow-sm">
+    <div class="border-b border-gray-300 p-4">
+      <h2 class="text-lg font-semibold">Resumen de Privacidad</h2>
+      <p class="text-sm text-gray-500">Aspectos clave de nuestra política de privacidad</p>
+    </div>
+    <div class="p-4 grid gap-4 md:grid-cols-2">
+      <div class="flex items-start gap-3">
+        <lucide-icon [name]="icons.Shield" class="mt-1 h-5 w-5 text-sky-500"></lucide-icon>
+        <div>
+          <h3 class="font-medium">Protección de Datos Médicos</h3>
+          <p class="text-sm text-gray-500">Cumplimos con HIPAA, GDPR y otras regulaciones de protección de datos médicos.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <lucide-icon [name]="icons.Lock" class="mt-1 h-5 w-5 text-sky-500"></lucide-icon>
+        <div>
+          <h3 class="font-medium">Seguridad Avanzada</h3>
+          <p class="text-sm text-gray-500">Utilizamos encriptación de extremo a extremo y medidas de seguridad avanzadas.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <lucide-icon [name]="icons.Eye" class="mt-1 h-5 w-5 text-sky-500"></lucide-icon>
+        <div>
+          <h3 class="font-medium">Control de Acceso</h3>
+          <p class="text-sm text-gray-500">Usted controla quién puede acceder a los datos de sus pacientes.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <lucide-icon [name]="icons.Database" class="mt-1 h-5 w-5 text-sky-500"></lucide-icon>
+        <div>
+          <h3 class="font-medium">Datos Anonimizados</h3>
+          <p class="text-sm text-gray-500">Puede contribuir con datos anonimizados para mejorar nuestros algoritmos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Contenidos -->
+  <div class="mb-6 border border-gray-300 rounded-xl shadow-sm">
+    <div class="border-b border-gray-300 p-4">
+      <h2 class="text-lg font-semibold">Tabla de Contenidos</h2>
+      <p class="text-sm text-gray-500">Navega rápidamente a las secciones de interés</p>
+    </div>
+    <div class="p-4">
+      <ul class="grid gap-1">
+        <li *ngFor="let item of [
+          { id: 'introduccion', text: '1. Introducción' },
+          { id: 'informacion', text: '2. Información que Recopilamos' },
+          { id: 'uso', text: '3. Uso de la Información' },
+          { id: 'compartir', text: '4. Compartir Información' },
+          { id: 'derechos', text: '5. Sus Derechos' },
+          { id: 'seguridad', text: '6. Seguridad de los Datos' },
+          { id: 'menores', text: '7. Menores de Edad' },
+          { id: 'internacional', text: '8. Transferencias Internacionales' },
+          { id: 'cambios', text: '9. Cambios en esta Política' },
+          { id: 'contacto', text: '10. Contacto' }
+        ]">
+          <a [href]="'#' + item.id" class="text-sky-500 hover:underline">{{ item.text }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Aquí irían tus secciones de contenido (introducción, información, etc.) respetando la misma estructura y clases -->
+
+  <div class="mt-10 flex justify-between">
+    <a routerLink="/" class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+      <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5 mr-3"></lucide-icon>
+      Volver al inicio
+    </a>
+    <a routerLink="/legal/terms" class="bg-sky-500 text-white text-sm px-4 py-2 rounded-md hover:bg-sky-600">
+      Ver Términos y Condiciones
+    </a>
+  </div>
+</div>
