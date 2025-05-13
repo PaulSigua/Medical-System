@@ -35,4 +35,15 @@ export class PasswordComponent {
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
+
+  showSuccess = false;
+
+  guardarCambios() {
+    // Aquí iría tu lógica para guardar los cambios
+    this.showSuccess = true;
+
+    setTimeout(() => {
+      this.showSuccess = false;
+    }, 5000);
+  }
 }

@@ -1,0 +1,51 @@
+<div
+  *ngIf="show"
+  [ngClass]="{
+    'bg-green-50 border-green-300 text-green-800': type === 'success',
+    'bg-red-50 border-red-300 text-red-800': type === 'error',
+    'bg-yellow-50 border-yellow-300 text-yellow-800': type === 'warning'
+  }"
+  class="mb-4 rounded border px-4 py-3 text-sm w-full"
+>
+  <div class="flex items-center gap-2">
+    <svg
+      *ngIf="type === 'success'"
+      class="w-5 h-5 text-green-600"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    <svg
+      *ngIf="type === 'error'"
+      class="w-5 h-5 text-red-600"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+    <svg
+      *ngIf="type === 'warning'"
+      class="w-5 h-5 text-yellow-600"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 9v2m0 4h.01M12 6a9 9 0 110 18 9 9 0 010-18z"
+      />
+    </svg>
+    <span [innerHTML]="message"></span>
+  </div>
+</div>

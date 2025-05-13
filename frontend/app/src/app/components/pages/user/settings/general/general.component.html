@@ -1,1 +1,74 @@
-<p>general works!</p>
+<main class="flex flex-col gap-6 bg-white p-6 rounded-lg w-fit border border-gray-300 shadow-md">
+
+  <!-- Encabezado -->
+  <div>
+    <h1 class="text-2xl font-bold pb-3">Configuración General</h1>
+    <p class="text-gray-600">Configura los parámetros básicos del sistema</p>
+  </div>
+
+  <!-- Nombre de institución -->
+  <div>
+    <label class="block font-medium">Nombre de la institución</label>
+    <input
+      type="text"
+      placeholder="Solca"
+      class="w-full mt-2 p-2 border border-gray-300 rounded-lg placeholder:text-gray-400 focus:outline-none"
+    />
+    <p class="text-gray-600 mt-1">Este nombre aparecerá en los informes y en el encabezado de la aplicación.</p>
+  </div>
+
+  <!-- Dirección -->
+  <div>
+    <label class="block font-medium">Dirección</label>
+    <textarea
+      placeholder="Av. De las Américas"
+      class="w-full mt-2 p-2 border border-gray-300 rounded-lg placeholder:text-gray-400 focus:outline-none max-h-24 min-h-20"
+    ></textarea>
+  </div>
+
+  <!-- Contacto -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block font-medium">Teléfono de contacto</label>
+      <input
+        type="text"
+        placeholder="0963501941"
+        class="w-full mt-2 p-2 border border-gray-300 rounded-lg placeholder:text-gray-400 focus:outline-none"
+      />
+    </div>
+    <div>
+      <label class="block font-medium">Email de contacto</label>
+      <input
+        type="email"
+        placeholder="ejemplo@predmed.com"
+        class="w-full mt-2 p-2 border border-gray-300 rounded-lg placeholder:text-gray-400 focus:outline-none"
+      />
+    </div>
+  </div>
+
+  <!-- Botón de guardar -->
+  <div class="flex justify-end">
+    <button
+      (click)="guardarCambios()"
+      type="button"
+      class="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition duration-200 cursor-pointer"
+    >
+      Guardar cambios
+    </button>
+  </div>
+</main>
+
+<div
+  class="transition-all duration-300 ease-in-out transform w-fit pt-6"
+  [ngClass]="{
+    'opacity-100 translate-y-0': showSuccess,
+    'opacity-0 translate-y-4 pointer-events-none': !showSuccess
+  }"
+>
+  <app-alert-save-changes
+    [type]="'success'"
+    [message]="'La configuración se ha guardado correctamente.'"
+    [show]="showSuccess"
+    class="mt-4 mr-4"
+  ></app-alert-save-changes>
+</div>
