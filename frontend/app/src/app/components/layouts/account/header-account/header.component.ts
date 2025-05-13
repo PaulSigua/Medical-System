@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ArrowLeft } from 'lucide-angular';
+import { ArrowLeft, ChevronDown, Home } from 'lucide-angular';
 
 @Component({
   selector: 'app-header-account',
@@ -10,6 +10,8 @@ import { ArrowLeft } from 'lucide-angular';
 export class HeaderComponent {
 
   icons = {
-    ArrowLeft
+    ArrowLeft,
+    Home,
+    ChevronDown
   };
 }

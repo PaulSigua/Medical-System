@@ -8,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class ViewingComponent {
 
+  showSuccess = false;
+
+  guardarCambios() {
+    // Aquí iría tu lógica para guardar los cambios
+    this.showSuccess = true;
+
+    setTimeout(() => {
+      this.showSuccess = false;
+    }, 5000);
+  }
 }

@@ -4,6 +4,7 @@ import { HeaderComponent } from './header-ws/header.component';
 import { SidenavComponent } from './sidenav-ws/sidenav.component';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { AlertsModule } from '../alerts/alerts.module';
 
 
 
@@ -15,7 +16,8 @@ import { LucideAngularModule } from 'lucide-angular';
   imports: [
     CommonModule,
     RouterModule,
-    LucideAngularModule
+    LucideAngularModule,
+    AlertsModule
   ],
   exports: [
     HeaderComponent,

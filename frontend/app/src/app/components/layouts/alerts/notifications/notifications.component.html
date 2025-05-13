@@ -1,0 +1,47 @@
+<!-- Contenedor relativo para el dropdown -->
+<div class="relative inline-block" (click)="$event.stopPropagation()">
+  <!-- Icono de campana -->
+  <button (click)="toggle()" class="p-2 hover:bg-gray-100 rounded-full transition">
+    <!-- Usa tu icono de lucide/angular o similar -->
+      <lucide-icon [name]="icons.Bell" class="w-5 h-5 text-gray-500 cursor-pointer hover:text-sky-500"></lucide-icon>
+  </button>
+
+  <!-- Dropdown -->
+  <div
+    *ngIf="isOpen"
+    class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden"
+  >
+    <!-- Header con botón de cerrar -->
+    <div class="flex justify-between items-center px-4 py-2 border-b border-gray-100">
+      <h3 class="text-gray-800 font-medium">Notificaciones</h3>
+      <button (click)="close()" class="text-gray-400 hover:text-gray-600">
+      <lucide-icon [name]="icons.X" class="w-5 h-5 text-gray-500 cursor-pointer hover:text-sky-500"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Lista de notificaciones -->
+    <ul class="max-h-64 overflow-y-auto">
+      <!-- Ejemplo de ítem -->
+      <li class="px-4 py-3 hover:bg-gray-50 flex items-start">
+        <div class="flex-shrink-0 mr-3">
+      <lucide-icon [name]="icons.Bell" class="w-5 h-5 text-gray-500 cursor-pointer hover:text-sky-500"></lucide-icon>
+        </div>
+        <div class="flex-1">
+          <p class="text-gray-700 text-sm">Tienes un nuevo mensaje de Juan Pérez.</p>
+          <p class="text-gray-400 text-xs mt-1">Hace 2 horas</p>
+        </div>
+      </li>
+      <!-- Repite li para cada notificación -->
+      <!-- <li *ngIf="!notifications?.length" class="p-4 text-gray-500 text-center">
+        No hay notificaciones
+      </li> -->
+    </ul>
+
+    <!-- Footer opcional: ver todas -->
+    <div class="px-4 py-2 border-t border-gray-100 text-center">
+      <a routerLink="/notificaciones" class="text-blue-600 hover:underline text-sm">
+        Ver todas
+      </a>
+    </div>
+  </div>
+</div>
