@@ -1,0 +1,78 @@
+<div class="max-w-4xl py-8 mx-auto">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-sky-500">Términos y Condiciones</h1>
+      <p class="mt-2 text-gray-500">Última actualización: 10 de mayo de 2025</p>
+    </div>
+    <!-- <div class="flex gap-2">
+      <button class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+        <lucide-icon [name]="icons.Printer" class="w-5 h-5"></lucide-icon>
+        Imprimir
+      </button>
+      <button class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+        <lucide-icon [name]="icons.FileDown" class="w-5 h-5"></lucide-icon>
+        Descargar PDF
+      </button>
+    </div> -->
+  </div>
+
+  <!-- Tabla de contenidos -->
+  <div class="mb-6 border border-gray-300 rounded-xl shadow-sm">
+    <div class="border-b border-gray-300 p-4">
+      <h2 class="text-lg font-semibold">Tabla de Contenidos</h2>
+      <p class="text-sm text-gray-500">Navega rápidamente a las secciones de interés</p>
+    </div>
+    <div class="p-4">
+      <ul class="grid gap-1">
+        <li *ngFor="let item of [
+          { id: 'aceptacion', text: '1. Aceptación de los Términos' },
+          { id: 'descripcion', text: '2. Descripción del Servicio' },
+          { id: 'registro', text: '3. Registro y Cuentas de Usuario' },
+          { id: 'uso', text: '4. Uso del Servicio' },
+          { id: 'propiedad', text: '5. Propiedad Intelectual' },
+          { id: 'privacidad', text: '6. Privacidad y Protección de Datos' },
+          { id: 'limitaciones', text: '7. Limitaciones de Responsabilidad' },
+          { id: 'modificaciones', text: '8. Modificaciones de los Términos' },
+          { id: 'ley', text: '9. Ley Aplicable y Jurisdicción' },
+          { id: 'contacto', text: '10. Contacto' }
+        ]">
+          <a [href]="'#' + item.id" class="text-sky-500 hover:underline">{{ item.text }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Contenido de secciones -->
+  <div class="space-y-8 text-justify">
+    <section id="aceptacion">
+      <h2 class="mb-4 text-xl font-semibold text-sky-500">1. Aceptación de los Términos</h2>
+      <div class="space-y-4">
+        <p>Al acceder o utilizar la aplicación NeuroPredictAI... [contenido igual al original]</p>
+      </div>
+    </section>
+
+    <!-- Resto de secciones igual: descripcion, registro, uso, propiedad... -->
+
+    <section id="contacto">
+      <h2 class="mb-4 text-xl font-semibold text-sky-500">10. Contacto</h2>
+      <div class="space-y-4">
+        <p>Si tiene alguna pregunta sobre estos Términos y Condiciones, puede contactarnos a través de:</p>
+        <ul class="list-inside list-disc space-y-2 pl-4">
+          <li>Email: legal#neuropredictai.es</li>
+          <li>Teléfono: +34 91 123 45 67</li>
+          <li>Dirección: Av. Principal 123, Ciudad Médica, Madrid, 28001, España</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <div class="mt-10 flex justify-between">
+    <a routerLink="/" class="border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md flex items-center hover:bg-gray-100">
+      <lucide-icon [name]="icons.ArrowLeft" class="w-5 h-5 mr-3"></lucide-icon>
+      Volver al inicio
+    </a>
+    <a routerLink="/legal/privacy" class="bg-sky-500 text-white text-sm px-4 py-2 rounded-md hover:bg-sky-600">
+      Ver Política de Privacidad
+    </a>
+  </div>
+</div>

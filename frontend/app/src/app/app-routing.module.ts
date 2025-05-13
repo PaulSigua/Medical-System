@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: () => import('./components/pages/user/user.module').then(m => m.UserModule)
   },
   {
+    path: 'legal',
+    loadChildren: () => import('./components/pages/legal/legal.module').then(m => m.LegalModule)
+  },
+  {
     path: '',
     redirectTo: 'auth',
     pathMatch: 'full'
