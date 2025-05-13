@@ -3,14 +3,16 @@ import psycopg2
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 # Obtener la ruta del archivo .env
-env_path = os.path.join(os.path.dirname(__file__), '.env')
+env_path = os.path.join(os.path.dirname(__file__), '..', 'services', '.env')
+load_dotenv(dotenv_path=os.path.abspath(env_path))
 
 DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
+DB_USER = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
@@ -18,7 +20,8 @@ DB_PORT = os.getenv("DB_PORT")
 # Crear la URL de conexión correctamente
 DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
 # Función para obtener conexión usando psycopg2
 def get_db_connection():

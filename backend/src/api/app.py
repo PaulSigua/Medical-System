@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database.db import create_tables
+from services.routes import auth_routes
 
 app = FastAPI(
     title="FastAPI Server",
@@ -67,7 +68,9 @@ async def read_root():
         ]
         return info
 
-create_tables()
+# create_tables()
+
+app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)
