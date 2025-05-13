@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Request, Response, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import uvicorn
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from database.db import create_tables
 
 app = FastAPI(
     title="FastAPI Server",
@@ -65,19 +67,7 @@ async def read_root():
         ]
         return info
 
-    # return """
-    # <html>
-    #     <head style="text-align: center; background-color: #f0f0f0; padding: 20px;">
-    #         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    #         <title>FastAPI Server</title>
-    #     </head>
-    #     <body style="text-align: center; background-color: #f0f0f0; padding: 20px;">
-    #         <h1 style="color: #333;">FastAPI Server</h1>
-    #         <p style="color: #555;">This is a simple FastAPI application serving a React frontend.</p>
-    #         <p style="color: #555;">You can access the frontend at <a href="http://localhost:4200" style="color: #007bff;">http://localhost:4200</a></p>
-    #     </body>
-    # </html>
-    # """
+create_tables()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)
