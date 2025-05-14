@@ -11,17 +11,25 @@
         Ingresa tus credenciales para acceder al sistema
       </p>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700"
             >Correo electrónico</label
           >
           <input
             type="email"
-            formControlName="email"
-            placeholder="Username"
+            formControlName="username"
+            placeholder="Correo"
             class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"  
           />
+          <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+            <small class="text-red-400" *ngIf="loginForm.get('username')?.errors?.['required']">
+              El correo es obligatorio
+            </small>
+            <small class="text-red-400" *ngIf="loginForm.get('username')?.errors?.['email']">
+              Ingresa un correo válido
+            </small>
+          </div>
         </div>
 
         <div class="relative justify-center items-center">
@@ -29,7 +37,7 @@
             <input
               [type]="showPassword ? 'text' : 'password'"
               formControlName="password"
-              placeholder="Password"
+              placeholder="Contraseña"
               class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400 pr-10"
             />
             <button
@@ -53,6 +61,12 @@
                       d="M3 3l18 18"/>
               </svg>
             </button>
+            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+              <small class="text-red-400" *ngIf="loginForm.get('password')?.errors?.['required']">
+                La contraseña es obligatoria
+              </small>
+            </div>
+
           </div>
 
           <div class="flex items-center">
@@ -72,13 +86,15 @@
 
         <button
           type="submit"
-          [disabled]="loginForm.invalid"
           class="w-full py-2 rounded-lg bg-sky-400 text-white font-medium hover:bg-sky-500 cursor-pointer transition duration-200"
-          (click)="goToWorkSpace()"
         >
           Iniciar Sesión
         </button>
       </form>
+
+      <div *ngIf="errorMessage" class="flex text-center justify-center pt-2 text-red-500">
+        {{ errorMessage }}
+      </div>
 
       <p class="mt-6 text-center text-sm text-gray-600">
         ¿No tienes una cuenta?

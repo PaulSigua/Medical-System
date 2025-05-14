@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,35 +9,49 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
-  // loginForm!: FormGroup; — ahora no da error porque TS sabe que se inicializa en ngOnInit
-  loginForm!: FormGroup;
+export class LoginComponent{
+  
+  loginForm: FormGroup;
+  showPassword = false;
+
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-  ) {}
-
-  ngOnInit() {
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       agreeTerms: [false],
     });
+    console.log('Credenciales: ', this.loginForm)
   }
 
-  onSubmit() {
-    /* … */
-  }
-
-  showPassword = false;
-
-  togglePassword() {
+  togglePassword() { 
     this.showPassword = !this.showPassword;
   }
 
-  goToWorkSpace() {
-    this.router.navigate([('/work-space')]);
+  login() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      this.errorMessage = 'Por favor, completa todos los campos correctamente.';
+      return;
+    }
+    
+    this.errorMessage = null;
+
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (res) => {
+        this.authService.saveToken(res.access_token);
+        this.router.navigate(['/work-space']); // Ruta protegida
+      },
+      error: (err) => {
+        console.error('Login error', err);
+        this.errorMessage = 'Credenciales incorrectas. Intenta nuevamente.';
+      },
+    });
   }
-  
+
 }

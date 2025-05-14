@@ -10,8 +10,8 @@ import { RouterModule } from '@angular/router';
     FooterAuthComponent
   ],
   imports: [
-    CommonModule,
-    RouterModule
+      CommonModule,
+      RouterModule
   ],
   exports: [
     FooterAuthComponent

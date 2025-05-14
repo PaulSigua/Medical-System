@@ -26,6 +26,7 @@ app = FastAPI(
 
 origins = [
     "http://localhost:4200",
+    "*"
 ]
 
 app.add_middleware(
@@ -35,6 +36,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+api_prefix = "/api/v1"
+
+app.include_router(auth_routes.router, prefix="/api/v1")
+
 
 @app.get("/", description="Root endpoint")
 async def read_root():
@@ -69,8 +76,6 @@ async def read_root():
         return info
 
 # create_tables()
-
-app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)

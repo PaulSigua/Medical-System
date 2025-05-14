@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Bell, Brain, X } from 'lucide-angular';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header-ws',
@@ -18,6 +19,10 @@ export class HeaderComponent {
     { text: 'Tu reporte está listo.', time: 'Hace 1 día' }
   ];
 
+  constructor (
+    private authService: AuthService
+  ) {}
+
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
     if (this.showUserMenu) this.showNotifications = false;
@@ -34,5 +39,9 @@ export class HeaderComponent {
       this.showUserMenu = false;
       this.showNotifications = false;
     }
+  }
+
+  logOut(){
+    this.authService.logout()
   }
 }
