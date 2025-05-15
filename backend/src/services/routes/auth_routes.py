@@ -4,6 +4,7 @@ from database.db import SessionLocal
 from models.user import User
 from schemas.user_schema import UserCreate, UserLogin
 from utils.security import hash_password, verify_password, create_access_token
+from fastapi import Query
 
 router = APIRouter(
     prefix="/auth",
@@ -23,12 +24,13 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     # Verificar si el usuario ya existe
     user_exist = db.query(User).filter(User.username == user_data.username).first()
     if user_exist:
-        raise HTTPException(status_code=400, detail="El usuario ya existe")
+        raise HTTPException(status_code=409, detail="El usuario ya existe")
 
     # Hashear la contraseña y crear el nuevo usuario
     hashed_pass = hash_password(user_data.password)
     new_user = User(
-        nombre=user_data.nombre,
+        name=user_data.name,
+        last_name = user_data.last_name,
         username=user_data.username,
         password=hashed_pass
     )
@@ -37,6 +39,15 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     return {"message": "Usuario registrado correctamente"}
+
+@router.get("/check-username")
+def check_username(username: str = Query(...), db: Session = Depends(get_db)):
+    """
+    Devuelve {"exists": true} si ya hay un usuario con ese username,
+    o {"exists": false} si está libre.
+    """
+    exists = db.query(User).filter(User.username == username).first() is not None
+    return {"exists": exists}
 
 @router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):

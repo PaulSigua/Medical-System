@@ -11,15 +11,15 @@
         Ingresa tus datos para registrarte en el sistema
       </p>
 
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <form [formGroup]="signupForm" (ngSubmit)="signIn()" class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700"
               >Nombre</label
             >
             <input
-              formControlName="firstName"
-              placeholder="Tu nombre"
+              formControlName="name"
+              placeholder="Nikola"
               class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
             />
           </div>
@@ -28,8 +28,8 @@
               >Apellidos</label
             >
             <input
-              formControlName="lastName"
-              placeholder="Tus apellidos"
+              formControlName="last_name"
+              placeholder="Tesla"
               class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
             />
           </div>
@@ -41,85 +41,152 @@
           >
           <input
             type="email"
-            formControlName="email"
+            formControlName="username"
             placeholder="correo@ejemplo.com"
             class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
           />
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="relative">
-                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input
-                [type]="showPassword ? 'text' : 'password'"
-                formControlName="password"
-                placeholder="Contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700"
+              >Contraseña</label
+            >
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Contraseña"
+              class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
+            />
+            <span
+              class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
+              (click)="togglePassword()"
+            >
+              <svg
+                *ngIf="!showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
-                <span
-                class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
-                (click)="togglePassword()"
-                >
-                <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path strok-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3l18 18"/>
-                </svg>
-                </span>
-            </div>
-            <div class="relative">
-                <label class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
-                <input
-                [type]="showConfirmPassword ? 'text' : 'password'"
-                formControlName="confirmPassword"
-                placeholder="Repite contraseña"
-                class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
+                <path
+                  strok-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                 />
-                <span
-                class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
-                (click)="toggleConfirmPassword()"
-                >
-                <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3l18 18"/>
-                </svg>
-                </span>
-            </div>
+              </svg>
+              <svg
+                *ngIf="showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3l18 18"
+                />
+              </svg>
+            </span>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700"
+              >Confirmar contraseña</label
+            >
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Repite contraseña"
+              class="mt-1 block w-full px-3 py-2 border border-sky-100 rounded-lg focus:outline-1 focus:outline-sky-100 pr-10 placeholder:text-gray-400"
+            />
+            <span
+              class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
+              (click)="toggleConfirmPassword()"
+            >
+              <svg
+                *ngIf="!showConfirmPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              <svg
+                *ngIf="showConfirmPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3l18 18"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
 
-        <div class="flex items-center">
+        <div
+          class="flex items-center"
+        >
           <input
             type="checkbox"
-            formControlName="agreeTerms"
+            formControlName="agree_terms"
             id="terms"
             class="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
           />
-          <label for="terms" class="ml-2 text-sm text-gray-600">
+          <label
+            for="terms"
+            class="ml-2 text-sm"
+          >
             Acepto los
             <a routerLink="/legal/terms" class="text-sky-500 hover:underline"
+                target="_blank"
               >términos y condiciones</a
             >
             y la
             <a routerLink="/legal/privacy" class="text-sky-500 hover:underline"
+                target="_blank"
               >política de privacidad</a
             >
           </label>
@@ -127,12 +194,38 @@
 
         <button
           type="submit"
-          [disabled]="signupForm.invalid"
           class="w-full py-2 rounded-lg bg-sky-400 text-white font-medium hover:bg-sky-500 cursor-pointer"
         >
           Crear cuenta
         </button>
+
+         <div>
+            <p
+              formControlName="username"
+              *ngIf="
+                signupForm.get('username')?.hasError('usernameTaken') &&
+                signupForm.get('username')?.touched
+              "
+              class="text-red-500 text-sm"
+            >
+              Ya existe un usuario con este correo.
+            </p>
+        </div>
       </form>
+
+      <div
+        *ngIf="succesfullMessage"
+        class="flex text-center justify-center text-green-500"
+      >
+        {{ succesfullMessage }}
+      </div>
+
+      <div
+        *ngIf="errorMessage"
+        class="flex text-center justify-center text-red-500"
+      >
+        {{ errorMessage }}
+      </div>
 
       <p class="mt-6 text-center text-sm text-gray-600">
         ¿Ya tienes una cuenta?

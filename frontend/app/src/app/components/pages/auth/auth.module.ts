@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { SigninComponent } from './signin/signin.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthLayoutModule } from '../../layouts/auth/auth-layout.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from '../../../../environments/environment.development';
@@ -51,7 +51,8 @@ let API_URL: string = environment.API_URL
         disallowedRoutes: [`${API_URL}/auth/login`, `${API_URL}/auth/register`],
       },
     }),
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   exports: [
     RouterModule
