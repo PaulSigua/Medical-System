@@ -21,6 +21,10 @@ const routes: Routes = [
     path: 'legal',
     loadChildren: () => import('./components/pages/legal/legal.module').then(m => m.LegalModule)
   },
+    {
+    path: 'upload',
+    loadChildren: () => import('./components/pages/work-space/upload/upload.module').then(m => m.UploadModule)
+  },
   {
     path: '',
     redirectTo: 'auth',

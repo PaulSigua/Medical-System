@@ -1,0 +1,71 @@
+<div class="flex h-screen overflow-visible">
+    <!-- Sidebar o cualquier otro componente -->
+    <app-sidenav class="relative z-20"></app-sidenav>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col overflow-visible">
+        <!-- Header -->
+        <app-header class="relative z-0"></app-header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto p-6">
+            <div class="shadow-lg rounded-lg p-6 border border-blue-200">
+                <!-- Título -->
+                <h1 class="text-center text-sky-500 text-xl font-semibold mb-2">
+                    Predicción de Cáncer Cerebral
+                </h1>
+                <p class="text-center text-sm text-gray-500 mb-4">
+                    Sube imágenes de resonancia magnética para obtener un análisis predictivo.
+                </p>
+
+                <!-- Formulario de carga de imágenes -->
+                <div class="border border-gray-300 rounded-lg p-8 bg-white-50 text-left">
+                    <!-- Título y descripción -->
+                    <h2 class="text-xl font-semibold text-gray-800 mb-1">Subir Imágenes</h2>
+                    <p class="text-sm text-gray-500 mb-6">
+                        Sube imágenes de resonancia magnética en formato T1, T1C, T2F y T2W.
+                    </p>
+
+                    <!-- Zona de arrastrar y seleccionar -->
+                    <div *ngIf="showUploadZone"
+                        class="border border-dashed border-blue-200 rounded-lg p-8 bg-blue-50 flex flex-col items-center justify-center space-y-4">
+                        <div class="bg-blue-100 p-4 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v9m0 0l-3-3m3 3l3-3m0-6a4 4 0 10-8 0 4 4 0 008 0z" />
+                            </svg>
+                        </div>
+                        <p class="font-semibold text-gray-700">Arrastra y suelta tus archivos aquí</p>
+                        <p class="text-gray-500 text-sm">O haz clic para seleccionar archivos</p>
+
+                        <label
+                            class="cursor-pointer inline-flex items-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded hover:bg-blue-600 transition">
+                            <input type="file" accept=".nii.gz" class="hidden" multiple (change)="onFileSelected($event)"
+                                #fileInput />
+                            Seleccionar archivos
+                        </label>
+                        <p *ngIf="errorMessage" class="text-red-500 text-sm mt-4">{{ errorMessage }}</p>
+                    </div>
+                    <!-- Lista de archivos seleccionados -->
+                    <div *ngIf="archivosInfo.length > 0" class="mt-6 w-full">
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Archivos seleccionados:</h3>
+                        <ul class="text-sm text-gray-600 list-disc list-inside space-y-1">
+                            <li *ngFor="let archivo of archivosInfo">
+                                {{ archivo.nombre }} – {{ archivo.tamano }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-end mt-6">
+                    <button *ngIf="fileSelected && archivosInfo.length > 0" routerLink="/upload/visualization"
+                        class="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
