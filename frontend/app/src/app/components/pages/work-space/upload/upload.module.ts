@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ImageComponent } from './image/image.component';
 import { VisualizationComponent } from './visualization/visualization.component';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutsModule } from "../../../layouts/layouts.module";
 import { FormsModule } from '@angular/forms';
+import { WorkSpaceModule } from '../../../layouts/work-space/work-space.module';
 
 
 const routes: Routes = [
@@ -31,8 +31,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    LayoutsModule,
-    FormsModule
+    FormsModule,
+    WorkSpaceModule
 ],
 exports: [
     RouterModule
