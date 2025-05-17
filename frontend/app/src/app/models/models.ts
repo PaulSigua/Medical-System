@@ -1,8 +1,19 @@
-export class User {
-    id?: number;
+export class Users {
+    user_id?: number;
     name?: String;
     last_name?: String;
     username?: String;
     password?: String;
     agree_terms?: boolean;
+}
+
+export class Patients {
+    user_id?: number
+    patient_id?: string
+    numero_historia_clinica?: string
+    survey_completed?: boolean;
+    t1ce_path?: string
+    t2_path?: string
+    flair_path?: string
+    coincidenciaIA?: 'baja' | 'media' | 'alta';
 }

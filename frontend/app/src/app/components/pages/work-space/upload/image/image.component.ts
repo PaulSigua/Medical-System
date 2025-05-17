@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Upload } from 'lucide-angular';
 
 @Component({
   selector: 'app-image',
@@ -7,6 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './image.component.css',
 })
 export class ImageComponent {
+
+  icons = {
+    Upload
+  }
+
   fileSelected: boolean = false;
   archivosInfo: { nombre: string; tamano: string }[] = [];
   errorMessage: string = '';

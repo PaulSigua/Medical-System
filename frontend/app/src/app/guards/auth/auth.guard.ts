@@ -11,9 +11,11 @@ export class AuthGuard implements CanActivate {
   constructor(private authSer: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    if (this.authSer.getToken()) return true;
+    const token = this.authSer.getToken();
+    if (token) return true;
 
-    this.router.navigate(['/auth/login']);
+    // Esto evita parpadeos extraños y asegura navegación
+    this.router.navigate(['/auth/login'], { replaceUrl: true });
     return false;
   }
 }

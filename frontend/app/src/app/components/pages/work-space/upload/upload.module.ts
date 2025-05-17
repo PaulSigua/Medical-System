@@ -5,6 +5,7 @@ import { VisualizationComponent } from './visualization/visualization.component'
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WorkSpaceModule } from '../../../layouts/work-space/work-space.module';
+import { LucideAngularModule } from 'lucide-angular';
 
 
 const routes: Routes = [
@@ -32,10 +33,12 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
-    WorkSpaceModule
-],
-exports: [
-    RouterModule
-    ],
+    WorkSpaceModule,
+    LucideAngularModule
+  ],
+  exports: [
+      RouterModule
+  ]
+
 })
 export class UploadModule { }

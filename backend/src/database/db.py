@@ -68,7 +68,7 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         patient_id VARCHAR(255) NOT NULL UNIQUE,
-        numero_historia_clinica VARCHAR(255) NOT NULL,
+        numero_historia_clinica CHAR(1) NOT NULL,
         survey_completed BOOLEAN DEFAULT FALSE,
         t1ce_path TEXT,
         t2_path TEXT,
