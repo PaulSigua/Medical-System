@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
+import { Patients } from '../../models/models';
 import { Observable } from 'rxjs';
-import { Users } from '../../models/models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InfoService {
+export class PatientService {
 
   private apiUrl = environment.API_URL;
 
@@ -15,7 +15,11 @@ export class InfoService {
     private http: HttpClient
   ) {}
 
-  getCurrentUser(): Observable<Users> {
-    return this.http.get<Users>(`${this.apiUrl}/users/me`);
+  registerPatient(data: Patients): Observable<any> {
+    return this.http.post(`${this.apiUrl}/patients/register`, data)
+  }
+
+  getMyPatients(): Observable<Patients[]> {
+    return this.http.get<Patients[]>(`${this.apiUrl}/patients/me`);
   }
 }

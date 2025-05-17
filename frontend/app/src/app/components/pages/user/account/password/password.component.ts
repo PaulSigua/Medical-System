@@ -10,6 +10,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class PasswordComponent {
   signupForm!: FormGroup;
 
+  showSuccess = false;
+
   constructor(private fb: FormBuilder) {}
   
   passwordsMatch(group: FormGroup) {
@@ -25,9 +27,14 @@ export class PasswordComponent {
     }
   }
 
+  showCurrentPassword = false;
   showPassword = false;
   showConfirmPassword = false;
   
+  toggleRecurrentPassword() {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -35,8 +42,6 @@ export class PasswordComponent {
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
-
-  showSuccess = false;
 
   guardarCambios() {
     // Aquí iría tu lógica para guardar los cambios

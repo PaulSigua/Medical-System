@@ -8,6 +8,10 @@ import { HelpComponent } from './help/help.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { WorkSpaceModule as LayoutWorkSpaceModule } from "../../layouts/work-space/work-space.module";
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
+import { AlertsModule } from '../../layouts/alerts/alerts.module';
 
 const routes: Routes = [
   {
@@ -54,7 +58,15 @@ const routes: Routes = [
     SettingsComponent,
     HelpComponent,
   ],
-  imports: [CommonModule, RouterModule.forChild(routes), LayoutWorkSpaceModule],
+  imports: [
+    CommonModule, 
+    RouterModule.forChild(routes), 
+    LayoutWorkSpaceModule,
+    FormsModule,
+    ReactiveFormsModule,
+    LucideAngularModule,
+    AlertsModule
+  ],
   exports: [RouterModule],
 })
 export class WorkSpaceModule {}

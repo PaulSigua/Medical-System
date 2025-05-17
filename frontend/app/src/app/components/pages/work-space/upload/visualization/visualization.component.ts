@@ -9,16 +9,16 @@ import { Router } from '@angular/router';
   styleUrl: './visualization.component.css',
 })
 export class VisualizationComponent {
-  diagnosticoSeleccionado: string = '';
-  observaciones: string = '';
+  diagnosticSelected: string = '';
+  observations: string = '';
 
   constructor(private router: Router) { }
 
-  enviarFormulario() {
-    if (this.diagnosticoSeleccionado && this.observaciones) {
+  sendForm() {
+    if (this.diagnosticSelected && this.observations) {
       // Aquí puedes manejar el envío del formulario
-      console.log('Diagnóstico seleccionado:', this.diagnosticoSeleccionado);
-      console.log('Observaciones:', this.observaciones);
+      console.log('Diagnóstico seleccionado:', this.diagnosticSelected);
+      console.log('observations:', this.observations);
       // Redirigir a otra página o realizar alguna acción adicional
       this.router.navigate(['/upload/image']) // Cambia '/next-page' por la ruta deseada
     }

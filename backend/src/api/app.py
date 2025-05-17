@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database.db import create_tables
-from services.routes import auth_routes
+from services.routes import auth_routes, patient_routes, user_routes
 
 app = FastAPI(
     title="FastAPI Server",
@@ -26,7 +26,7 @@ app = FastAPI(
 
 origins = [
     "http://localhost:4200",
-    "*"
+    # "*"
 ]
 
 app.add_middleware(
@@ -40,8 +40,9 @@ app.add_middleware(
 
 api_prefix = "/api/v1"
 
-app.include_router(auth_routes.router, prefix="/api/v1")
-
+app.include_router(auth_routes.router, prefix=api_prefix)
+app.include_router(patient_routes.router, prefix=api_prefix)
+app.include_router(user_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { User } from 'lucide-angular';
+import { InfoService } from '../../../../../services/user/info.service';
+import { Patients, Users } from '../../../../../models/models';
+import { PatientService } from '../../../../../services/patients/patient.service';
 
 @Component({
   selector: 'app-information',
@@ -15,12 +18,25 @@ export class InformationComponent {
 
   showSuccess = false;
 
+  user!: Users;
+  patients: Patients[] = [];
+
+  constructor(
+    private userService: InfoService,
+  ) {}
+
   guardarCambios() {
-    // Aquí iría tu lógica para guardar los cambios
     this.showSuccess = true;
 
     setTimeout(() => {
       this.showSuccess = false;
     }, 5000);
+  }
+
+  ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe((data) => {
+      this.user = data;
+      console.log(data)
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-alert-save-changes',
@@ -9,6 +9,21 @@ import { Component, Input } from '@angular/core';
 export class AlertSaveChangesComponent {
 
   @Input() type: 'success' | 'error' | 'warning' = 'success';
-  @Input() message = '';
-  @Input() show = false;
+  @Input() message: string = '';
+  @Input() show: boolean = false;
+  @Input() duration: number = 5000; // auto-dismiss in ms
+  @Output() closed = new EventEmitter<void>();
+
+  visible: boolean = false;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['show'] && this.show) {
+      this.visible = true;
+      // auto dismiss
+      setTimeout(() => {
+        this.visible = false;
+        this.closed.emit();
+      }, this.duration);
+    }
+  }
 }

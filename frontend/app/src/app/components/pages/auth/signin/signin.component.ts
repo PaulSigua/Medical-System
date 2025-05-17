@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { catchError, debounceTime, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../../../../services/auth/auth.service';
-import { User } from '../../../../models/models';
+import { Users } from '../../../../models/models';
 
 export function usernameTakenValidator(
   authService: AuthService
@@ -42,7 +42,7 @@ export class SigninComponent implements OnInit {
   errorMessage: string | null = null;
   succesfullMessage: string | null = null;
 
-  user: User = new User();
+  user: Users = new Users();
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.signupForm = this.fb.group(

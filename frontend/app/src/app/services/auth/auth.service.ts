@@ -2,47 +2,61 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
-import { User } from '../../models/models';
+import { Users } from '../../models/models';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AuthService {
 
+export class AuthService {
   private apiUrl = environment.API_URL;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, credentials);
   }
 
-  register(data: User): Observable<any> {
+  register(data: Users): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, data);
   }
 
   checkUsername(username: string): Observable<boolean> {
     return this.http
-      .get<{ exists: boolean }>(
-        `${this.apiUrl}/auth/check-username`,
-        { params: { username } }
-      )
-      .pipe(map(res => res.exists));
+      .get<{ exists: boolean }>(`${this.apiUrl}/auth/check-username`, {
+        params: { username },
+      })
+      .pipe(map((res) => res.exists));
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
+    if (typeof window !== 'undefined' && localStorage) {
+      localStorage.removeItem('access_token');
+      this.router.navigate(['/auth/login']);
+    }
   }
 
   saveToken(token: string): void {
-    localStorage.setItem('access_token', token);
+    if (typeof window !== 'undefined' && localStorage) {
+      localStorage.setItem('access_token', token);
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
+    if (typeof window !== 'undefined' && localStorage) {
+      return localStorage.getItem('access_token');
+    }
+    return null;
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('access_token');
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      return !!localStorage.getItem('access_token');
+    }
+    return false;
   }
 }
