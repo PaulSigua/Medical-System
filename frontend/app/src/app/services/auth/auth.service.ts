@@ -35,11 +35,16 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
-    localStorage.setItem('access_token', token);
+    if (typeof window !== 'undefined' && localStorage) {
+      localStorage.setItem('access_token', token)
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
+    if (typeof window !== 'undefined' && localStorage) {
+      return localStorage.getItem('access_token');
+    }
+    return null;
   }
 
   isLoggedIn(): boolean {
