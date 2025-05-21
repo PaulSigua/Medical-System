@@ -28,6 +28,7 @@ export class PatientsComponent implements OnInit {
   showAlert = false;
   alertType: 'success' | 'error' | 'warning' = 'success';
   alertMessage = '';
+  selectedPatientId: string | null = null;
 
   // cuando quieras disparar:
   // this.alertType    = 'success';
@@ -189,8 +190,10 @@ export class PatientsComponent implements OnInit {
     console.log('Eliminando paciente:', patient);
   }
 
-  generateDiagnosis() {
-    this.router.navigate([('/upload')])
+  generateDiagnosis(patient_id: string) {
+    this.selectedPatientId = patient_id;
+    this.router.navigate(['/upload'], { queryParams: { patient_id: patient_id } });
+    console.log('Paciente seleccionado:', this.selectedPatientId);
     console.log('go')
   }
 }

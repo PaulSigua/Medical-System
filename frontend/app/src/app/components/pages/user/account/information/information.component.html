@@ -1,57 +1,91 @@
 <main class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Perfil -->
-    <div class="bg-white p-6 rounded-lg shadow">
-        <div class="mb-4">
-            <p class="text-gray-600">Aquí puedes gestionar tu información personal y preferencias de cuenta.</p>
-        </div>
-        <h2 class="text-md font-semibold mb-2">Foto de perfil</h2>
-        <p class="text-gray-600 pb-6">Esta imagen aparecerá en tu perfil</p>
-        <div class="w-32 h-32 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-            <!-- Aquí puede ir una imagen de perfil real -->
-            <span class="text-gray-400">Sin foto</span>
-        </div>
-        <div class="w-full">
-            <label for="myFile" class="w-full inline-block bg-white border border-gray-300 rounded py-2 px-4 text-center hover:bg-gray-100 cursor-pointer">
-              Cambiar foto
-            </label>
-            <input type="file" id="myFile" name="filename" class="hidden" />
-        </div>          
+  <!-- Perfil -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="mb-4">
+      <p class="text-gray-600">
+        Aquí puedes gestionar tu información personal y preferencias de cuenta.
+      </p>
     </div>
-  
-    <!-- Información personal -->
-    <div class="md:col-span-2 bg-white p-6 rounded-lg shadow">
-      <h2 class="text-2xl font-bold pb-3">Información Personal</h2>
-      <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" placeholder="Nombre" class="border border-gray-300 focus:outline-0 rounded placeholder:text-gray-400 px-3 py-2" />
-        <input type="text" placeholder="Apellidos" class="border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2" />
-        <input type="email" placeholder="Correo electrónico" class="col-span-2 border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2" />
-        <input type="tel" placeholder="Teléfono" class="col-span-2 border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2" />
-        <input type="text" placeholder="Especialidad" class="border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2" />
-        <input type="text" placeholder="Centro médico" class="border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2" />
-        <textarea rows="3" placeholder="Biografía" class="col-span-2 border border-gray-300 focus:outline-0  rounded placeholder:text-gray-400 px-3 py-2 min-h-16 max-h-72"></textarea>
-        <div class="flex w-fit">
-          <button
-            (click)="guardarCambios()"
-            type="button"
-            class="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition duration-200 cursor-pointer"
-          >
-            Guardar cambios
-          </button>
-        </div>
-      </form>
+    <h2 class="text-md font-semibold mb-2">Foto de perfil</h2>
+    <p class="text-gray-600 pb-6">Esta imagen aparecerá en tu perfil</p>
+    <div
+      class="w-32 h-32 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center"
+    >
+      <!-- Aquí puede ir una imagen de perfil real -->
+      <span class="text-gray-400">Sin foto</span>
     </div>
+    <div class="w-full">
+      <label
+        for="myFile"
+        class="w-full inline-block bg-white border border-gray-300 rounded py-2 px-4 text-center hover:bg-gray-100 cursor-pointer"
+      >
+        Cambiar foto
+      </label>
+      <input type="file" id="myFile" name="filename" class="hidden" />
+    </div>
+  </div>
+
+  <!-- Información personal -->
+  <div class="md:col-span-2 bg-white p-6 rounded-lg shadow">
+    <h2 class="text-2xl font-bold pb-3">Información Personal</h2>
+    <!-- Botón para habilitar edición -->
+    <button
+      (click)="toggleEdit()"
+      type="button"
+      class="mb-4 bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer"
+    >
+      {{ isEditable ? "Cancelar" : "Editar información" }}
+    </button>
+
+    <!-- Formulario -->
+    <form
+      [formGroup]="form"
+      (submit)="guardarCambios()"
+      class="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
+      <input
+        type="text"
+        placeholder="Nombre"
+        formControlName="name"
+        class="border border-gray-300 rounded px-3 py-2 placeholder:text-gray-400"
+      />
+
+      <input
+        type="text"
+        placeholder="Apellidos"
+        formControlName="last_name"
+        class="border border-gray-300 rounded px-3 py-2 placeholder:text-gray-400"
+      />
+
+      <input
+        type="text"
+        placeholder="Teléfono"
+        formControlName="phone"
+        class="col-span-2 border border-gray-300 focus:outline-0 rounded placeholder:text-gray-400 px-3 py-2"
+      />
+
+      <input
+        type="text"
+        placeholder="Especialidad"
+        formControlName="specialty"
+        class="border border-gray-300 focus:outline-0 rounded placeholder:text-gray-400 px-3 py-2"
+      />
+
+      <div class="flex w-fit" *ngIf="isEditable">
+        <button
+          type="submit"
+          [disabled]="form.invalid"
+          class="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition duration-200 cursor-pointer"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </div>
 </main>
 
-<div
-  class="fixed top-12 right-6 z-50 w-full max-w-lg transition-all duration-300 ease-in-out"
-  [ngClass]="{
-    'opacity-100 translate-y-0': showSuccess,
-    'opacity-0 translate-y-4 pointer-events-none': !showSuccess
-  }"
->
-  <app-alert-save-changes
-    [type]="'success'"
-    [message]="'La configuración se ha guardado correctamente.'"
-    [show]="showSuccess"
-  ></app-alert-save-changes>
-</div>
+<app-alert-save-changes
+  [type]="'success'"
+  [message]="'La información se guardo correctamente.'"
+  [show]="showSuccess"
+></app-alert-save-changes>

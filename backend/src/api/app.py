@@ -4,8 +4,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
-from services.routes import auth_routes, patient_routes, user_routes
+from routes import auth_routes, patient_routes, user_routes, graph_routes
 
 app = FastAPI(
     title="FastAPI Server",
@@ -29,6 +30,7 @@ origins = [
     # "*"
 ]
 
+# 1) CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -37,12 +39,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 2) Session middleware
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="by$3n%5i*!j!e**%czytj+or22eyw-r*td$9yl-9yw077_&cb",
+    session_cookie="session",
+    max_age=14 * 24 * 60 * 60,
+    same_site="lax",
+)
+
 
 api_prefix = "/api/v1"
 
 app.include_router(auth_routes.router, prefix=api_prefix)
 app.include_router(patient_routes.router, prefix=api_prefix)
 app.include_router(user_routes.router, prefix=api_prefix)
+app.include_router(graph_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():

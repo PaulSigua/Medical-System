@@ -42,7 +42,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'work-space',
+    redirectTo: 'auth',
     pathMatch: 'full',
   },
 ];

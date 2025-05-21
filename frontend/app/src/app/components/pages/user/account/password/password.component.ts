@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-password',
   standalone: false,
   templateUrl: './password.component.html',
-  styleUrl: './password.component.css'
+  styleUrl: './password.component.css',
 })
 export class PasswordComponent {
-  signupForm!: FormGroup;
+  passForm!: FormGroup;
 
   showSuccess = false;
 
-  constructor(private fb: FormBuilder) {}
-  
+  constructor(private fb: FormBuilder) {
+    this.passForm = this.fb.group({
+      password: ['', Validators.required],
+      newPassword: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    });
+  }
+
   passwordsMatch(group: FormGroup) {
     const pass = group.get('password')?.value;
     const confirm = group.get('confirmPassword')?.value;
@@ -21,8 +27,8 @@ export class PasswordComponent {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      console.log('Signup', this.signupForm.value);
+    if (this.passForm.valid) {
+      console.log('Signup', this.passForm.value);
       // TODO: invocar servicio de registro
     }
   }
@@ -30,7 +36,7 @@ export class PasswordComponent {
   showCurrentPassword = false;
   showPassword = false;
   showConfirmPassword = false;
-  
+
   toggleRecurrentPassword() {
     this.showCurrentPassword = !this.showCurrentPassword;
   }
@@ -38,7 +44,7 @@ export class PasswordComponent {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
-  
+
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }

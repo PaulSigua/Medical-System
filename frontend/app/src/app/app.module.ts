@@ -7,6 +7,9 @@ import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/auth/auth.interceptor';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';  // <- aquí
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -15,7 +18,12 @@ import { TokenInterceptor } from './interceptors/auth/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,  // <-- una sola vez en AppModule
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     provideClientHydration(withEventReplay()),
