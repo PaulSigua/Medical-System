@@ -15,7 +15,7 @@ class PatientOut(BaseModel):
     flair_path: str | None = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class PatientUpdate(BaseModel):
     user_id: Optional[int] = None

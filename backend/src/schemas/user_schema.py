@@ -20,7 +20,7 @@ class UserOut(BaseModel):
     agree_terms: bool
     
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class UserUpdate(BaseModel):
     name: Optional[str] = None
