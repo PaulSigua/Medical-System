@@ -47,7 +47,9 @@ def create_tables():
         last_name VARCHAR(255),
         username VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
-        agree_terms BOOLEAN DEFAULT FALSE
+        agree_terms BOOLEAN DEFAULT FALSE,
+        phone VARCHAR(10) NULL,
+        specialty VARCHAR(150) NULL
     );
 
     CREATE TABLE IF NOT EXISTS predictions (

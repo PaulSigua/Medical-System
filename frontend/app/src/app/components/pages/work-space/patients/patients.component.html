@@ -184,7 +184,7 @@
             <div class="flex card-body justify-center text-center">
               <button
                 class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
-                (click)="generateDiagnosis()"
+                (click)="generateDiagnosis(patient.patient_id!)"
               >
                 <p>Generar diagnóstico {{ patient.survey_completed }}</p>
                 <lucide-icon
@@ -192,6 +192,7 @@
                   class="w-15 h-15"
                 ></lucide-icon>
               </button>
+
             </div>
           </div>
 
