@@ -53,10 +53,14 @@ def check_username(username: str = Query(...), db: Session = Depends(get_db)):
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     
-    # Validar existencia y contraseña
-    if not db_user or not verify_password(user.password, db_user.password):
-        raise HTTPException(status_code=401, detail="Credenciales inválidas")
-    
-    # Generar y retornar el token
+    # Validar usuario
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Validar contraseña
+    if not verify_password(user.password, db_user.password):
+        raise HTTPException(status_code=401, detail="Contraseña incorrecta")
+
+    # Validar y retornar token
     token = create_access_token(data={"sub": db_user.username, "user_id": db_user.id})
     return {"access_token": token, "token_type": "bearer"}

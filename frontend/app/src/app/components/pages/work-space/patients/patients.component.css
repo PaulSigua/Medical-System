@@ -1,0 +1,28 @@
+.card-info {
+  width: 210px;         /* equivalente a w-50 aprox */
+  height: auto;        /* equivalente a h-70 aprox */
+  border-right: 1px solid #D1D5DB; /* tailwind border-gray-300 */
+  color: var(--colour-text);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #27A2FA; /* tailwind bg-sky-500 */
+  color: white;
+  padding: 1.5rem; /* tailwind p-6 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 80px;
+}
+
+.card-body {
+  display: flex;
+  padding: 1rem; /* tailwind p-4 */
+  height: 200px;
+  width: auto;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}

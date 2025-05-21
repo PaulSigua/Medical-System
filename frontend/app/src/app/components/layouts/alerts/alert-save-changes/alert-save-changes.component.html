@@ -1,51 +1,33 @@
 <div
-  *ngIf="show"
+  *ngIf="visible"
+  class="fixed top-22 right-6 z-50 w-full max-w-lg transition-all duration-300 ease-in-out"
   [ngClass]="{
-    'bg-green-50 border-green-300 text-green-800': type === 'success',
-    'bg-red-50 border-red-300 text-red-800': type === 'error',
-    'bg-yellow-50 border-yellow-300 text-yellow-800': type === 'warning'
+    'opacity-100 translate-y-0': visible,
+    'opacity-0 translate-y-4 pointer-events-none': !visible
   }"
-  class="mb-4 rounded border px-4 py-3 text-sm w-full"
 >
-  <div class="flex items-center gap-2">
-    <svg
-      *ngIf="type === 'success'"
-      class="w-5 h-5 text-green-600"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      viewBox="0 0 24 24"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-    <svg
-      *ngIf="type === 'error'"
-      class="w-5 h-5 text-red-600"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-    <svg
-      *ngIf="type === 'warning'"
-      class="w-5 h-5 text-yellow-600"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M12 9v2m0 4h.01M12 6a9 9 0 110 18 9 9 0 010-18z"
-      />
-    </svg>
-    <span [innerHTML]="message"></span>
+  <div
+    [ngClass]="{
+      'bg-green-50 border-green-300 text-green-800 shadow-green-200': type === 'success',
+      'bg-red-50 border-red-300 text-red-800 shadow-red-200': type === 'error',
+      'bg-yellow-50 border-yellow-300 text-yellow-800 shadow-yellow-200': type === 'warning'
+    }"
+    class="rounded-xl border px-5 py-4 text-sm shadow-lg flex items-start gap-3"
+  >
+    <ng-container [ngSwitch]="type">
+      <svg *ngSwitchCase="'success'" class="w-5 h-5 mt-0.5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <svg *ngSwitchCase="'error'" class="w-5 h-5 mt-0.5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+      <svg *ngSwitchCase="'warning'" class="w-5 h-5 mt-0.5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 6a9 9 0 110 18 9 9 0 010-18z" />
+      </svg>
+    </ng-container>
+    <span class="flex-1 leading-relaxed">{{ message }}</span>
+    <button (click)="visible = false; closed.emit()" class="text-gray-400 hover:text-gray-600 transition">
+      ✕
+    </button>
   </div>
 </div>

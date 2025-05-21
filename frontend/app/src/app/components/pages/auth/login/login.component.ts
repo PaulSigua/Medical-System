@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required, Validators.email],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
     this.loginForm.valueChanges.subscribe(() => {
@@ -63,8 +63,20 @@ export class LoginComponent implements OnInit {
         this.loginForm.reset();
       },
       error: (err) => {
-        console.error('Login error', err);
-        this.errorMessage = 'Credenciales incorrectas. Intenta nuevamente.';
+      console.error('Login error', err);
+
+        switch (err.status) {
+          case 404:
+            this.errorMessage = 'El usuario no existe.';
+            break;
+          case 401:
+            this.errorMessage = 'Contraseña incorrecta.';
+            break;
+          default:
+            this.errorMessage = 'Ocurrió un error. Intenta nuevamente.';
+            break;
+        }
+        this.loginForm.reset()
       },
     });
   }

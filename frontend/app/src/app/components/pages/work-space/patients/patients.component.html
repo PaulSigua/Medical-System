@@ -1,15 +1,315 @@
 <div class="flex h-screen overflow-visible">
-  <!-- Sidebar con sombra derecha -->
-  <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
+  <app-sidenav-ws class="relative z-[99999]"></app-sidenav-ws>
 
   <!-- Main content -->
-  <div class="flex-1 flex flex-col overflow-visible">
-    <!-- Header “detrás” de la sombra -->
-    <app-header-ws class="relative z-0"></app-header-ws>
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header fijo -->
+    <app-header-ws class="relative z-[9999] h-[64px] shrink-0"></app-header-ws>
 
     <!-- Page Content -->
-    <main class="flex-1 overflow-y-auto p-6">
-      
+    <main
+      class="flex-1 p-6 relative"
+      [ngClass]="{
+        'overflow-hidden': modalOpen,
+        'overflow-y-auto': !modalOpen
+      }"
+    >
+      <!-- Contenido del main -->
+      <div
+        class="bg-white border border-sky-100 rounded-lg p-6 w-full h-auto flex flex-col"
+      >
+        <div>
+          <h1 style="color: var(--colour-h1)" class="text-2xl">Pacientes</h1>
+          <p style="color: var(--colour-p)" class="pt-2 pb-3">
+            Aqui podrá registrar sus pacientes
+          </p>
+        </div>
+        <div>
+          <button
+            type="button"
+            (click)="modalOpen = true"
+            class="text-white bg-sky-500 rounded-lg p-2 hover:bg-sky-600 transition cursor-pointer"
+          >
+            Agregar Paciente
+          </button>
+
+          <!-- Modal solo cubre el <main> -->
+          <div
+            [class.hidden]="!modalOpen"
+            [class.opacity-0]="!modalOpen"
+            class="absolute inset-0 z-10 flex items-center justify-center bg-white/10 backdrop-blur-sm transition-opacity duration-300 ease-in-out"
+          >
+            <div
+              class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-md mx-4 transform transition-all duration-300 ease-in-out"
+              [ngClass]="{
+                'opacity-100 scale-100': modalOpen,
+                'opacity-0 scale-95': !modalOpen
+              }"
+            >
+              <h2 class="text-xl font-bold mb-4">Agregar Paciente</h2>
+              <form
+                [formGroup]="addPatientForm"
+                (ngSubmit)="registerPatients()"
+              >
+                <div class="mb-4">
+                  <label class="block text-sm font-medium pb-1"
+                    >Cédula del Paciente</label
+                  >
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    formControlName="patient_id"
+                    maxlength="10"
+                    pattern="\d*"
+                    class="w-full border outline-0 rounded p-2"
+                    style="border-color: var(--colour-border)"
+                  />
+
+                  <!-- Error: cédula inválida -->
+                  <p
+                    *ngIf="
+                      addPatientForm
+                        .get('patient_id')
+                        ?.hasError('cedulaInvalida')
+                    "
+                    class="text-red-500 text-sm pt-2"
+                  >
+                    Cédula ingresada no es válida.
+                  </p>
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-sm font-medium pb-1"
+                    >Historia Clínica</label
+                  >
+                  <input
+                    type="text"
+                    name="numHistoryCli"
+                    inputmode="numeric"
+                    formControlName="numero_historia_clinica"
+                    class="w-full border outline-0 rounded p-2"
+                    style="border-color: var(--colour-border)"
+                    maxlength="1"
+                    pattern="[0-1]*"
+                    (input)="onHistoryCli($event)"
+                  />
+                </div>
+
+                <div class="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    (click)="modalOpen = false"
+                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    [disabled]="!addPatientForm.valid"
+                    class="px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600"
+                  >
+                    Agregar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <form [formGroup]="searchPatientForm" (ngSubmit)="searchPatients()">
+            <div>
+              <p style="color: var(--colour-p)" class="pt-3 pb-3">
+                Buscar Paciente
+              </p>
+              <div class="flex gap-2 text-center items-center">
+                <div
+                  class="flex w-fit border border-gray-300 outline-0 rounded p-2"
+                >
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    formControlName="searchPatientId"
+                    maxlength="10"
+                    pattern="\d*"
+                    class="border-none focus:outline-0 placeholder:text-gray-300"
+                    placeholder="0123456789"
+                  />
+
+                  <lucide-icon
+                    [name]="icons.Search"
+                    class="w-5 h-6 text-sky-400"
+                  ></lucide-icon>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div
+          class="flex bg-white mt-6 justify-center items-center rounded-l-3xl w-fit shadow"
+          style="
+            border-top-left-radius: 20px;
+            border-end-start-radius: 20px;
+            border-end-end-radius: 20px;
+            border-top-right-radius: 20px;
+          "
+          *ngFor="let patient of filteredPatients"
+        >
+          <div
+            class="card-info"
+            style="border-top-left-radius: 20px; border-end-start-radius: 20px"
+          >
+            <div class="card-header">
+              <h1>Cédula del Paciente</h1>
+            </div>
+            <div class="card-body">
+              <p>{{ patient.patient_id }}</p>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Número de Historial Clínico</h1>
+            </div>
+            <div class="card-body">
+              <p>{{ patient.numero_historia_clinica }}</p>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Diagnóstico del Médico</h1>
+            </div>
+            <div class="flex card-body justify-center text-center">
+              <button
+                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+                (click)="generateDiagnosis()"
+              >
+                <p>Generar diagnóstico {{ patient.survey_completed }}</p>
+                <lucide-icon
+                  [name]="icons.ClipboardPlusIcon"
+                  class="w-15 h-15"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Evaluación IA</h1>
+            </div>
+            <div class="flex card-body justify-center text-center">
+              <button
+                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+              >
+                <p>Prediagnóstico IA {{ patient.survey_completed }}</p>
+                <lucide-icon
+                  [name]="icons.Brain"
+                  class="w-15 h-15"
+                ></lucide-icon>
+              </button>
+            </div>
+            <!-- <p>{{ patient.evaluacionIA }}</p> -->
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Coincidencia Médico - IA</h1>
+            </div>
+            <div class="card-body">
+              <!-- Semáforo visual -->
+              <div class="flex items-center gap-3">
+                <span class="font-medium text-gray-700">Discrepancia</span>
+                <div
+                  class="flex flex-col items-center space-y-1 bg-black p-1.5"
+                >
+                  <div
+                    class="w-5 h-5 rounded-full transition-all duration-300"
+                    [ngClass]="{
+                      'bg-red-500 shadow-lg shadow-red-500/60':
+                        patient.coincidenciaIA === 'baja',
+                      'bg-gray-300': patient.coincidenciaIA !== 'baja'
+                    }"
+                  ></div>
+                  <div
+                    class="w-5 h-5 rounded-full transition-all duration-300"
+                    [ngClass]="{
+                      'bg-yellow-400 shadow-lg shadow-yellow-400/60':
+                        patient.coincidenciaIA === 'media',
+                      'bg-gray-300': patient.coincidenciaIA !== 'media'
+                    }"
+                  ></div>
+                  <div
+                    class="w-5 h-5 rounded-full transition-all duration-300"
+                    [ngClass]="{
+                      'bg-green-500 shadow-lg shadow-green-500/60':
+                        patient.coincidenciaIA === 'alta',
+                      'bg-gray-300': patient.coincidenciaIA !== 'alta'
+                    }"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Comparación de regiones tumorales</h1>
+            </div>
+            <div class="card-body">
+              <button
+                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+              >
+                <p>Cargar y comparar Segmentación Tumoral</p>
+              </button>
+              <!-- <p>{{ patient.comparacionTumoral }}</p> -->
+            </div>
+          </div>
+
+          <div class="card-info">
+            <div class="card-header">
+              <h1>Encuesta</h1>
+            </div>
+            <div class="card-body">
+              <button
+                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+              >
+                <lucide-icon
+                  [name]="icons.NotebookPenIcon"
+                  class="w-15 h-15"
+                ></lucide-icon>
+              </button>
+              <!-- <p>{{ patient.encuesta }}</p> -->
+            </div>
+          </div>
+
+          <div
+            class="card-info"
+            style="border-end-end-radius: 20px; border-top-right-radius: 20px"
+          >
+            <div class="card-header">
+              <h1>Eliminar Diagnóstico</h1>
+            </div>
+            <div class="card-body">
+              <button
+                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+              >
+                <lucide-icon
+                  [name]="icons.Trash2Icon"
+                  class="w-15 h-15"
+                ></lucide-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </div>
+<app-alert-save-changes
+  [type]="alertType"
+  [message]="alertMessage"
+  [show]="showAlert"
+  (closed)="showAlert = false"
+></app-alert-save-changes>
