@@ -7,6 +7,7 @@ from models.user import User
 from schemas.patient_schema import PatientCreate, PatientOut
 from typing import List
 from utils.security import get_current_user
+import traceback
 
 from services.processing import preprocessing, patient_db, file_handler
 
@@ -96,16 +97,19 @@ def get_current_user_id(
 @router.post("/upload/files")
 async def upload_and_process_files(
     files: List[UploadFile] = File(...),
-    patient_id: str = Form(...),    
+    patient_id: str = Form(...),
     user_id: int = Depends(get_current_user_id)
 ):
     try:
+        print(f"Subiendo archivos para paciente {patient_id} por usuario {user_id}...")
+
         # 1. Guardar archivos localmente
-        file_handler.save_uploaded_files(files, patient_id)
+        await file_handler.save_uploaded_files(files, patient_id)
 
         # 2. Verificar si ya existen
         existing_paths = patient_db.get_patient_paths(patient_id, user_id)
         if existing_paths and all(existing_paths):
+            print("Archivos ya existen en la base de datos.")
             return JSONResponse(content={"message": "Archivos ya existen."})
 
         # 3. Obtener archivos subidos
@@ -115,10 +119,13 @@ async def upload_and_process_files(
         t1   = file_handler.get_latest_patient_file(patient_id, "t1n")
 
         if not all([t1ce, t2, flair, t1]):
-            raise HTTPException(status_code=400, detail="Faltan archivos.")
+            raise HTTPException(status_code=400, detail="Faltan archivos de modalidades.")
 
-        # 4. Guardar en la DB
+        print(f"Archivos detectados:\n - T1CE: {t1ce}\n - T2: {t2}\n - FLAIR: {flair}\n - T1: {t1}")
+
+        # 4. Guardar paths en la DB
         patient_db.update_patient_paths(patient_id, user_id, t1ce, t2, flair, t1)
+        print("Paths guardados en base de datos.")
 
         # 5. Cargar y procesar
         t1ce_img = preprocessing.load_and_normalize(t1ce)
@@ -129,7 +136,9 @@ async def upload_and_process_files(
         preprocessing.process_images_for_segmentation(patient_id, t1ce_img, t2_img, flair_img)
         preprocessing.process_images_for_classification(patient_id, t1_img, t1ce_img, t2_img, flair_img)
 
+        print("Procesamiento completado.")
         return JSONResponse(content={"message": "Archivos procesados correctamente."})
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {e}")
+        print(f"Error durante procesamiento:\n{traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {str(e)}")

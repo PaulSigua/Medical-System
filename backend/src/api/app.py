@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
 from routes import auth_routes, patient_routes, user_routes, graph_routes
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
     title="FastAPI Server",
@@ -47,6 +48,17 @@ app.add_middleware(
     max_age=14 * 24 * 60 * 60,
     same_site="lax",
 )
+
+
+# Ruta absoluta al directorio 'src/static'
+base_dir = os.path.dirname(os.path.abspath(__file__))  # src/api/
+static_dir = os.path.abspath(os.path.join(base_dir, "..", "static"))
+
+# Crear el directorio si no existe
+os.makedirs(static_dir, exist_ok=True)
+
+# Montar los archivos estáticos
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 api_prefix = "/api/v1"

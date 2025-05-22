@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Patients } from '../../models/models';
-import { finalize, Observable } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 import { LoaderService } from '../upload/loader.service';
-import { GraphResponse } from '../../models/patient';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+export type GraphType = 'graph6' | 'graph3D';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ export class PatientService {
 
   constructor(
     private http: HttpClient,
+    private sanitizer: DomSanitizer,
     private loaderService: LoaderService
   ) {}
 
@@ -53,14 +56,24 @@ export class PatientService {
    * @param {string} patientId - ID del paciente.
    * @returns {Observable<any>} Observable con la respuesta del servidor.
    */
-  predict6(patientId: string): Observable<GraphResponse> {
+  fetchGraph(patientId: string, type: GraphType): Observable<SafeResourceUrl> {
+    const endpoint = type === 'graph6' ? 'generate-graph6' : 'generate-graph3D';
     this.loaderService.show();
-    return this.http.post<GraphResponse>(
-      `${this.apiUrl}/graphs/generate-graph6`,
-      { patient_id: patientId },
-      { withCredentials: true }
-    ).pipe(
-      finalize(() => this.loaderService.hide())
-    );
+    return this.http
+      .post<{ html_url6?: string; html_url3D?: string }>(
+        `${this.apiUrl}/graphs/${endpoint}`,
+        { patient_id: patientId },
+        { withCredentials: true }
+      )
+      .pipe(
+        map(res => {
+          const raw = type === 'graph6' ? res.html_url6 : res.html_url3D;
+          if (!raw) throw new Error('No URL recibida');
+          // Usa la URL base sin /api
+          const fullUrl = `${environment.BACKEND_URL}${raw}`;
+          return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
+        }),
+        finalize(() => this.loaderService.hide())
+      );
   }
 }
