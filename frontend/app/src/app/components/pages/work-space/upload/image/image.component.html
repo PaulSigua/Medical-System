@@ -1,4 +1,3 @@
-<!-- image.component.html -->
 <div class="flex h-screen overflow-visible">
   <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
 
@@ -6,100 +5,100 @@
   <div class="flex-1 flex flex-col overflow-visible">
     <app-header-ws class="relative z-0"></app-header-ws>
 
-    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+    <main class="relative flex-1 overflow-y-auto p-6 bg-gray-50">
+      <!-- Spinner de carga -->
+      <div
+        *ngIf="isLoading"
+        class="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center"
+      >
+        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+
+        <!-- Error -->
+        <div *ngIf="!isLoading && !archivosInfo" class="text-red-500 mt-4">
+          No se pudo cargar la visualización.
+        </div>
       <div class="shadow-lg rounded-lg p-6 border border-sky-200 bg-white">
-        <h1 class="text-center text-sky-500 text-2xl font-semibold mb-4">
+        <!-- Título principal -->
+        <h1 class="text-center text-sky-500 text-xl font-semibold mb-2">
           Predicción de Cáncer Cerebral
         </h1>
-        <p class="text-center text-sm text-gray-500 mb-6">
-          Sube imágenes de resonancia magnética para obtener un análisis predictivo.
+        <p class="text-center text-sm text-gray-500 mb-4">
+          Sube imágenes de resonancia magnética para obtener un análisis
+          predictivo.
         </p>
 
-        <!-- split-container -->
-        <div class="flex flex-col lg:flex-row gap-6">
-          <!-- Panel izquierdo -->
-          <div class="flex-1 bg-sky-50 rounded-lg p-6 space-y-6">
-            <!-- Subida de Modalidades -->
-            <div>
-              <label
-                for="fileInput"
-                class="inline-block px-4 py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-600 transition"
-              >
-                Subir Modalidades T1, T1C, T2F y T2W
-              </label>
+        <!-- Panel de carga -->
+        <div
+          class="border border-gray-300 rounded-lg p-8 bg-white-50 text-left"
+        >
+          <h2 class="text-xl font-semibold text-gray-800 mb-1">
+            Subir Imágenes
+          </h2>
+          <p class="text-sm text-gray-500 mb-6">
+            Sube imágenes de resonancia magnética en formato T1, T1C, T2F y T2W.
+          </p>
+
+          <!-- Zona arrastrar y seleccionar -->
+          <div
+            *ngIf="showUploadZone"
+            class="border border-dashed border-sky-200 rounded-lg p-8 bg-sky-50 flex flex-col items-center justify-center space-y-4"
+          >
+            <div class="bg-sky-100 p-4 rounded-full">
+              <lucide-icon
+                [name]="icons.Upload"
+                class="w-10 h-10 text-sky-400"
+              ></lucide-icon>
+            </div>
+            <p class="font-semibold text-gray-700">
+              Arrastra y suelta tus archivos aquí
+            </p>
+            <p class="text-gray-500 text-sm">
+              O haz clic para seleccionar archivos
+            </p>
+
+            <label
+              class="cursor-pointer inline-flex items-center px-4 py-2 bg-sky-500 text-white text-sm font-medium rounded hover:bg-sky-600 transition"
+            >
               <input
                 type="file"
-                id="fileInput"
-                name="files"
-                multiple
                 accept=".nii.gz"
                 class="hidden"
+                multiple
                 (change)="onFileChange($event)"
+                #fileInput
               />
-              <p *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
-                {{ errorMessage }}
-              </p>
-            </div>
+              Seleccionar archivos
+            </label>
 
-            <!-- Selección de gráfica con <select> puro -->
-            <div>
-              <h2 class="text-lg font-medium text-gray-800 mb-2">Selecciona una Gráfica</h2>
-              <select
-                [(ngModel)]="selectedGraph"
-                class="w-full max-w-xs block bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              >
-                <option value="" disabled>-- Elige una opción --</option>
-                <option *ngFor="let g of graphOptions" [value]="g.value">
-                  {{ g.viewValue }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Visualización gráfica 2D -->
-            <div *ngIf="selectedGraph === 'graph6' && htmlUrl6">
-              <h3 class="text-md font-semibold text-gray-700 mb-2">
-                Visualización Interactiva de Modalidades
-              </h3>
-              <iframe
-                [src]="htmlUrl6"
-                class="w-full h-64 border rounded"
-              ></iframe>
-            </div>
-
-            <!-- Visualización gráfica 3D -->
-            <div *ngIf="selectedGraph === 'graph3D' && htmlUrl3D">
-              <h3 class="text-md font-semibold text-gray-700 mb-2">
-                Visualización Cerebral 3D
-              </h3>
-              <iframe
-                [src]="htmlUrl3D"
-                class="w-full h-64 border rounded"
-              ></iframe>
-            </div>
+            <p *ngIf="errorMessage" class="text-red-500 text-sm mt-4">
+              {{ errorMessage }}
+            </p>
           </div>
 
-          <!-- Panel derecho -->
-          <div class="flex-1 bg-white rounded-lg p-6 space-y-6 border border-gray-200 flex flex-col">
-            <!-- Resultados de la predicción -->
-            <div *ngIf="prediccion_clasificacion" class="mb-4">
-              <h2 class="text-lg font-medium text-gray-800 mb-2">
-                Resultados de la Predicción
-              </h2>
-              <p class="text-gray-700">{{ prediccion_clasificacion }}</p>
-            </div>
-
-            <!-- Botón Regresar al pie -->
-            <!-- <div class="mt-auto">
-              <button
-                (click)="navigateToChips()"
-                class="w-full text-center px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600 transition"
-              >
-                Regresar
-              </button>
-            </div> -->
+          <!-- Lista de archivos seleccionados -->
+          <div *ngIf="archivosInfo.length > 0" class="mt-6 w-full">
+            <h3 class="text-sm font-medium text-gray-700 mb-2">
+              Archivos seleccionados:
+            </h3>
+            <ul class="text-sm text-gray-600 list-disc list-inside space-y-1">
+              <li *ngFor="let archivo of archivosInfo">
+                {{ archivo.nombre }} – {{ archivo.tamano }}
+              </li>
+            </ul>
           </div>
         </div>
-        <!-- fin split-container -->
+
+        <!-- Botón continuar -->
+        <div class="flex justify-end mt-6">
+          <button
+            *ngIf="fileSelected && archivosInfo.length > 0"
+            routerLink="/upload/visualization"
+            class="px-4 py-2 text-sm bg-sky-500 text-white rounded hover:bg-sky-600 transition"
+          >
+            Continuar
+          </button>
+        </div>
       </div>
     </main>
   </div>

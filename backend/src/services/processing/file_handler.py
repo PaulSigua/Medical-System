@@ -6,14 +6,16 @@ from fastapi import UploadFile
 UPLOAD_FOLDER = "src/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-def save_uploaded_files(files, patient_id):
+async def save_uploaded_files(files, patient_id):
     for file in files:
         filename = file.filename
         if patient_id not in filename:
             filename = f"{patient_id}_{filename}"
         path = os.path.join(UPLOAD_FOLDER, filename)
         with open(path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            contents = await file.read()
+            buffer.write(contents)
+        file.file.close()
 
 def get_latest_patient_file(patient_id: str, suffix: str):
     pattern = os.path.join(UPLOAD_FOLDER, f"*{suffix}.nii.gz")

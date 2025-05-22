@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WorkSpaceModule } from '../../../layouts/work-space/work-space.module';
 import { LucideAngularModule } from 'lucide-angular';
+import { GraphsModule } from "../../../layouts/graphs/graphs.module";
 
 
 const routes: Routes = [
@@ -34,8 +35,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     WorkSpaceModule,
-    LucideAngularModule
-  ],
+    LucideAngularModule,
+    GraphsModule
+],
   exports: [
       RouterModule
   ]

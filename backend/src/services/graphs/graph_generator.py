@@ -68,7 +68,13 @@ def generate_graph6_no_prediction(test_img: np.ndarray) -> str:
 
     fig.update_layout(**layout_updates)
 
-    filename = f"graph6_no_prediction_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
-    file_path = os.path.join('static', filename)
+    # Nombre de fichero y carpeta
+    filename = f"graph6_no_prediction_{datetime.now():%Y%m%d_%H%M%S}.html"
+    static_dir = os.path.join("src", "static")
+    os.makedirs(static_dir, exist_ok=True)
+
+    # Ruta completa al archivo
+    file_path = os.path.join(static_dir, filename)
     fig.write_html(file_path)
+
     return filename
