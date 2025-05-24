@@ -203,7 +203,8 @@
             <div class="flex card-body justify-center text-center">
               <button
                 class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
-              >
+                (click)="goToIaDiagnosis()"
+                >
                 <p>Prediagnóstico IA {{ patient.survey_completed }}</p>
                 <lucide-icon
                   [name]="icons.Brain"

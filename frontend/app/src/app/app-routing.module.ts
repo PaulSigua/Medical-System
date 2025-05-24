@@ -41,6 +41,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'ia',
+    loadChildren: () => 
+      import('./components/pages/work-space/ia/ia.module').then(
+        (m) => m.IaModule
+      ),
+      canActivate: [AuthGuard],
+  },
+  {
     path: '',
     redirectTo: 'auth',
     pathMatch: 'full',

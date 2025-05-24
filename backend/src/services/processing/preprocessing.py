@@ -7,7 +7,7 @@ import os
 
 PROCESSED_FOLDER = "src/processed_files"
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
-print("Ruta absoluta de PROCESSED_FOLDER:", os.path.abspath(PROCESSED_FOLDER))
+# print("Ruta absoluta de PROCESSED_FOLDER:", os.path.abspath(PROCESSED_FOLDER))
 TARGET_SHAPE = (128, 128, 128)
 
 def load_and_normalize(path):

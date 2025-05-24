@@ -9,10 +9,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export type GraphType = 'graph6' | 'graph3D';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PatientService {
-
   private apiUrl = environment.API_URL;
 
   constructor(
@@ -45,12 +44,14 @@ export class PatientService {
    */
   uploadFiles(formData: FormData): Observable<any> {
     this.loaderService.show();
-    return this.http.post(`${this.apiUrl}/patients/upload/files`, formData, { withCredentials: true }).pipe(
-      finalize(() => this.loaderService.hide())
-    );
+    return this.http
+      .post(`${this.apiUrl}/patients/upload/files`, formData, {
+        withCredentials: true,
+      })
+      .pipe(finalize(() => this.loaderService.hide()));
   }
 
-    /**
+  /**
    * Genera un gráfico de tipo 6 para un paciente.
    *
    * @param {string} patientId - ID del paciente.
@@ -59,6 +60,7 @@ export class PatientService {
   fetchGraph(patientId: string, type: GraphType): Observable<SafeResourceUrl> {
     const endpoint = type === 'graph6' ? 'generate-graph6' : 'generate-graph3D';
     this.loaderService.show();
+    console.log('Llamando fetchGraph con tipo:', type);
     return this.http
       .post<{ html_url6?: string; html_url3D?: string }>(
         `${this.apiUrl}/graphs/${endpoint}`,
@@ -66,7 +68,7 @@ export class PatientService {
         { withCredentials: true }
       )
       .pipe(
-        map(res => {
+        map((res) => {
           const raw = type === 'graph6' ? res.html_url6 : res.html_url3D;
           if (!raw) throw new Error('No URL recibida');
           // Usa la URL base sin /api

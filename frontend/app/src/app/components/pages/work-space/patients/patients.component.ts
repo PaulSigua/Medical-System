@@ -196,4 +196,8 @@ export class PatientsComponent implements OnInit {
     console.log('Paciente seleccionado:', this.selectedPatientId);
     console.log('go')
   }
+
+  goToIaDiagnosis() {
+    this.router.navigate([('/ia')])
+  }
 }

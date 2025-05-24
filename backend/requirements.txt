@@ -14,3 +14,5 @@ nibabel
 scikit-learn
 scikit-image
 itsdangerous
+tensorflow
+keras   
