@@ -60,11 +60,9 @@ export class VisualizationComponent {
   
   sendForm() {
     if (this.diagnosticSelected && this.observations) {
-      // Aquí puedes manejar el envío del formulario
       console.log('Diagnóstico seleccionado:', this.diagnosticSelected);
       console.log('observations:', this.observations);
-      // Redirigir a otra página o realizar alguna acción adicional
-      this.router.navigate(['/upload/image']); // Cambia '/next-page' por la ruta deseada
+      this.router.navigate(['/work-space/patients']);
     }
   }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { VisualizationComponent } from './visualization/visualization.component';
 import { WorkSpaceModule } from '../../../layouts/work-space/work-space.module';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     WorkSpaceModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FormsModule
   ]
 })
 export class IaModule { }

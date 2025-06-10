@@ -1,55 +1,41 @@
-<div class="flex h-screen overflow-hidden">
-  <!-- Sidebar -->
-  <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
-
-  <!-- Main content -->
+<div class="flex h-screen overflow-hidden bg-gray-100">
+  <app-sidenav-ws class="z-20 w-64 border-r border-gray-200 bg-white"></app-sidenav-ws>
   <div class="flex flex-1 flex-col overflow-hidden">
-    <!-- Header -->
-    <app-header-ws class="relative z-0"></app-header-ws>
+    <app-header-ws class="z-10 border-b border-gray-200 bg-white"></app-header-ws>
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg h-full flex flex-col space-y-6">
 
-    <!-- Page Content -->
-    <main class="flex-1 overflow-y-auto p-6 min-h-0 bg-gray-50">
-      <div
-        class="p-6 border border-sky-200 rounded-lg shadow-lg bg-white h-full overflow-hidden flex flex-col"
-      >
-        <!-- Contenedor principal -->
-        <div class="grid grid-cols-5 gap-6 pb-10">
-          <!-- Panel izquierdo -->
-          <div class="col-span-4 flex flex-col space-y-4 min-h-0">
-            <!-- Selector de gráfica -->
-            <div
-              class="p-4 border border-gray-300 rounded-lg shadow bg-white h-full"
-            >
-              <!-- Título -->
-              <h1 class="mb-2 text-xl font-semibold text-center text-sky-500">
-                Visualización de resonancia magnética
-              </h1>
-              <p class="mb-4 text-sm text-center text-gray-500">
-                Visualiza las imágenes de resonancia magnética subidas en sus
-                diferentes formatos.
-              </p>
-
-              <div class="grid p-6 border border-gray-300 rounded h-auto">
-                <h2 class="mb-2 text-lg font-medium text-gray-800 pl-3">
-                  Selecciona una gráfica
-                </h2>
-                <!-- <select
-                    [(ngModel)]="selectedGraph"
-                    (change)="loadGraph()"
-                    class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 transition"
-                  >
-
-                  <option *ngFor="let g of graphOptions" [value]="g.value" class="hover:text-sky-300">
-                    {{ g.viewValue }}
-                  </option>
-                </select> -->
-              </div>
-            </div>
-          </div>
+        <!-- Mensaje IA -->
+        <div *ngIf="detectionMessage" class="text-center">
+          <h2 class="text-2xl font-semibold text-sky-600">{{ detectionMessage }}</h2>
         </div>
-        <div
-          class="flex-1 border border-gray-300 rounded-lg shadow bg-white p-4 overflow-hidden"
-        ></div>
+
+        <!-- Selector -->
+        <div class="border border-gray-300 rounded-lg p-4 bg-white shadow">
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Selecciona una gráfica</h3>
+          <select
+            [(ngModel)]="selectedGraphId"
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-400 transition"
+          >
+            <option *ngFor="let g of graphList" [value]="g.id">
+              {{ g.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Contenedor de la gráfica -->
+        <div class="flex-1 border border-gray-300 rounded-lg shadow bg-white p-4 overflow-hidden">
+          <ng-container *ngFor="let g of graphList">
+            <div *ngIf="g.id === selectedGraphId" class="h-full flex flex-col">
+              <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ g.title }}</h3>
+              <iframe
+                [src]="g.url!"
+                class="flex-1 w-full border-0 rounded"
+              ></iframe>
+            </div>
+          </ng-container>
+        </div>
+
       </div>
     </main>
   </div>

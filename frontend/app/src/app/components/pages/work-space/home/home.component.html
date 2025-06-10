@@ -1,39 +1,97 @@
 <div class="flex h-screen overflow-visible">
-  
   <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
 
   <!-- Main content -->
   <div class="flex-1 flex flex-col overflow-visible">
-    
     <app-header-ws class="relative z-0"></app-header-ws>
 
     <!-- Page Content -->
     <main class="flex-1 overflow-y-auto p-6">
-      <section class="bg-white border border-sky-100 rounded-lg p-6 w-full h-auto flex flex-col">
-        <header class="mb-4">
-          <h1 class="text-xl font-semibold text-gray-800">Histograma de distribución de Datos</h1>
-          <p class="text-gray-600">Aquí puedes ver el histograma de la distribución de datos.</p>
-        </header>
-    
-        <div class="flex flex-col items-center justify-center">
-          <div class="flex flex-wrap gap-4 w-full justify-center">
+      <div class="gap-8 flex pb-4 w-full">
+        <div class="p-4 bg-white border border-sky-100 rounded-lg w-full">
+          <h2>Predicciones Totales</h2>
+          <p style="color: var(--colour-p)"><strong>1.248</strong></p>
+        </div>
+
+        <div class="p-4 bg-white border border-sky-100 rounded-lg w-full">
+          <h2>Pacientes</h2>
+          <p style="color: var(--colour-p)"><strong>1.248</strong></p>
+        </div>
+
+        <div class="p-4 bg-white border border-sky-100 rounded-lg w-full">
+          <h2>Ultima predicción</h2>
+          <p style="color: var(--colour-p)"><strong>1.248</strong></p>
+        </div>
+      </div>
+
+      <section class="p-2 w-full h-auto flex flex-col">
+        <div class="flex items-center justify-center gap-5">
+          <div
+            class="bg-white border border-sky-100 rounded-lg grid gap-4 w-fit justify-center p-6"
+          >
+            <header class="mb-4">
+              <h1 class="text-xl font-semibold text-gray-800">
+                Histograma de distribución de Datos
+              </h1>
+              <p class="text-gray-600">
+                Aquí puedes ver el histograma de la distribución de datos.
+              </p>
+            </header>
             <article class="w-full max-w-2xl">
-              <img
-                src="https://webusupload.apowersoft.info/gitmind/wp-content/uploads/2021/12/gitmind-sample.jpg"
-                alt="Histograma 1"
-                class="w-full h-auto rounded-md"
-              />
+              <app-histogram
+                [labels]="['Caso 1', 'Caso 2', 'Caso 3']"
+                [chartTradicional]="[
+                  {
+                    label: 'IA Tradicional',
+                    data: [70, 72, 68],
+                    backgroundColor: '#3B82F6'
+                  }
+                ]"
+                [chartAvanzada]="[
+                  {
+                    label: 'IA Avanzada',
+                    data: [85, 87, 86],
+                    backgroundColor: '#10B981'
+                  }
+                ]"
+                [options]="{
+                  responsive: true,
+                  plugins: {
+                    title: { display: true, text: 'Comparación de IA Médica' }
+                  },
+                  scales: {
+                    x: { title: { display: true, text: 'Casos' } },
+                    y: {
+                      title: { display: true, text: 'Precisión (%)' },
+                      beginAtZero: true
+                    }
+                  }
+                }"
+              ></app-histogram>
             </article>
-            <article class="w-full max-w-2xl">
-              <img
-                src="https://webusupload.apowersoft.info/gitmind/wp-content/uploads/2021/12/gitmind-sample.jpg"
-                alt="Histograma 2"
-                class="w-full h-auto rounded-md"
-              />
-            </article>
+          </div>
+          <div class="bg-white border border-sky-100 rounded-lg grid gap-4 w-1/2 h-full justify-center p-6">
+            <div>
+              <h2 class=""><strong>Accciones rápidas</strong></h2>
+              <p style="color: var(--colour-p);">Accede rápidamente a las funciones principales</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <h2>Pacientes</h2>
+                </div>
+                                <div>
+                  <h2>Pacientes</h2>
+                </div>
+                                <div>
+                  <h2>Pacientes</h2>
+                </div>
+                                <div>
+                  <h2>Pacientes</h2>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-    </main>    
+    </main>
   </div>
 </div>

@@ -14,6 +14,16 @@
         'overflow-y-auto': !modalOpen
       }"
     >
+      <!-- Spinner de carga -->
+      <div
+        *ngIf="isLoading"
+        class="absolute inset-0 z-[9998] bg-white/70 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300"
+      >
+        <div
+          class="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"
+        ></div>
+      </div>
+
       <!-- Contenido del main -->
       <div
         class="bg-white border border-sky-100 rounded-lg p-6 w-full h-auto flex flex-col"
@@ -183,16 +193,15 @@
             </div>
             <div class="flex card-body justify-center text-center">
               <button
-                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+                class="flex flex-col items-center justify-center cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
                 (click)="generateDiagnosis(patient.patient_id!)"
               >
-                <p>Generar diagnóstico {{ patient.survey_completed }}</p>
                 <lucide-icon
                   [name]="icons.ClipboardPlusIcon"
-                  class="w-15 h-15"
+                  class="w-15 h-15 mb-1"
                 ></lucide-icon>
-              </button>
-
+                <p>Generar diagnóstico {{ patient.survey_completed }}</p>
+              </button> 
             </div>
           </div>
 
@@ -202,14 +211,14 @@
             </div>
             <div class="flex card-body justify-center text-center">
               <button
-                class="flex justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
-                (click)="goToIaDiagnosis()"
-                >
-                <p>Prediagnóstico IA {{ patient.survey_completed }}</p>
+                class="flex flex-col justify-center items-center gap-2 cursor-pointer p-3 rounded transition-transform duration-300 transform hover:scale-105 hover:shadow hover:text-sky-600 w-full h-full"
+                (click)="generateAIDiagnosis(patient.patient_id!)"
+              >
                 <lucide-icon
                   [name]="icons.Brain"
                   class="w-15 h-15"
                 ></lucide-icon>
+                <p>Prediagnóstico IA {{ patient.survey_completed }}</p>
               </button>
             </div>
             <!-- <p>{{ patient.evaluacionIA }}</p> -->

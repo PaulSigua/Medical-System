@@ -1,3 +1,5 @@
+import { SafeResourceUrl } from "@angular/platform-browser";
+
 export class Users {
     id?: number;
     name?: String;
@@ -26,4 +28,12 @@ export class Patients {
     t2_path?: string
     flair_path?: string
     coincidenciaIA?: 'baja' | 'media' | 'alta';
+}
+
+// Añade este tipo para tipar las gráficas
+export interface GraphData {
+  id: string;
+  title: string;
+  label: string;
+  url: SafeResourceUrl | null;
 }
