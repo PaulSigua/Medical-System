@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import {
   Chart,
   ChartConfiguration,
-  ChartType,
+  ChartDataset,
   registerables
 } from 'chart.js';
 
@@ -17,34 +17,20 @@ Chart.register(...registerables);
 })
 export class HistogramComponent implements AfterViewInit {
   @Input() labels: string[] = [];
-  @Input() chartTradicional: ChartConfiguration['data']['datasets'] = [];
-  @Input() chartAvanzada: ChartConfiguration['data']['datasets'] = [];
-  @Input() options: ChartConfiguration['options'] = {};
+  @Input() data: ChartDataset<'bar'>[] = [];
+  @Input() options: ChartConfiguration<'bar'>['options'] = {};
 
-  @ViewChild('chartCanvas1') chartCanvas1!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartCanvas2') chartCanvas2!: ElementRef<HTMLCanvasElement>;
-
-  chart1?: Chart;
-  chart2?: Chart;
+  @ViewChild('chartCanvas', { static: true }) chartCanvas!: ElementRef<HTMLCanvasElement>;
+  chart?: Chart<'bar'>;
 
   ngAfterViewInit(): void {
-    if (this.chartCanvas1 && this.chartTradicional.length) {
-      this.chart1 = new Chart(this.chartCanvas1.nativeElement, {
-        type: 'bar' as ChartType,
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    if (ctx) {
+      this.chart = new Chart(ctx, {
+        type: 'bar',
         data: {
           labels: this.labels,
-          datasets: this.chartTradicional
-        },
-        options: this.options
-      });
-    }
-
-    if (this.chartCanvas2 && this.chartAvanzada.length) {
-      this.chart2 = new Chart(this.chartCanvas2.nativeElement, {
-        type: 'bar' as ChartType,
-        data: {
-          labels: this.labels,
-          datasets: this.chartAvanzada
+          datasets: this.data
         },
         options: this.options
       });

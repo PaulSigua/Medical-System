@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Brain, PersonStanding, User } from 'lucide-angular';
 
 @Component({
   selector: 'app-home',
@@ -8,4 +9,8 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
+  icons = {
+    PersonStanding,
+    Brain
+  }
 }
