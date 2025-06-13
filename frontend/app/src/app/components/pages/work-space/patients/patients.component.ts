@@ -260,4 +260,8 @@ export class PatientsComponent implements OnInit {
       this.isLoading = false;
     }
   }
+
+  uploadComparisonSegmentation(){
+    this.router.navigate([('/work-space/upload/segmentation')])
+  }
 }
