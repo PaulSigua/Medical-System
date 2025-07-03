@@ -3,9 +3,9 @@
     <div>
       <div class="flex items-center space-x-2">
         <!-- <img src="assets/logo-icon.svg" alt="Logo" class="h-6 w-6"> -->
-        <span class="font-semibold text-sky-600">NeuroPredictAI</span>
+        <span class="font-semibold text-sky-600">{{info.name}}</span>
       </div>
-      <p class="mt-2 text-gray-500">Aplicación para la predicción de cáncer cerebral mediante inteligencia artificial</p>
+      <p class="mt-2 text-gray-500">{{info.description}}</p>
     </div>
 
     <div>
@@ -18,13 +18,13 @@
 
     <div>
       <h3 class="text-gray-800 font-semibold uppercase mb-2">Contacto</h3>
-      <p class="text-gray-500">Av. Calle Vieja</p>
-      <p class="text-gray-500">Cuenca, Ecuador</p>
-      <p class="text-gray-500"><a href="https://ups.edu.ec/contactos" target="_blank" class="hover:text-blue-600">ups.edu.ec</a></p>
-      <a href="mailto:contacto&#64;neuropredictai.es" class="text-sky-600 hover:underline">contacto&#64;neuropredictai.es</a>
+      <p class="text-gray-500">{{info.address_street}}</p>
+      <p class="text-gray-500">{{info.address_city}},{{info.address_country}}</p>
+      <p class="text-gray-500"><a href="https://ups.edu.ec/contactos" target="_blank" class="hover:text-blue-600">{{info.hostname}}</a></p>
+      <a href="mailto:contacto&#64;craniusai.es" class="text-sky-600 hover:underline">{{info.email}}</a>
     </div>
   </div>
   <div class="border-t border-gray-200 text-center py-4 text-xs text-gray-400">
-    © 2025 NeuroPredictAI. Todos los derechos reservados.
+    © 2025 {{info.name}}. Todos los derechos reservados.
   </div>
 </footer>

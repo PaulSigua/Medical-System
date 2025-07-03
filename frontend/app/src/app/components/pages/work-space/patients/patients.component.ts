@@ -264,4 +264,8 @@ export class PatientsComponent implements OnInit {
   uploadComparisonSegmentation(){
     this.router.navigate([('/work-space/upload/segmentation')])
   }
+
+  deletePatient(id: string) {
+    
+  } 
 }

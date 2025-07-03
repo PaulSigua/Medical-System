@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BarChart2, Brain, FileText, HelpCircle, Home, Settings, Upload, Users } from 'lucide-angular';
+import { InfoPage } from '../../../../models/InfoPage';
 
 @Component({
   selector: 'app-sidenav-ws',
@@ -9,6 +10,8 @@ import { BarChart2, Brain, FileText, HelpCircle, Home, Settings, Upload, Users }
 })
 export class SidenavComponent {
 
+  info: InfoPage = new InfoPage();
+  
   icons = {
     Home,
     Brain,

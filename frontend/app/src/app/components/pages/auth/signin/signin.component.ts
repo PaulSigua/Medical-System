@@ -9,6 +9,7 @@ import {
 import { catchError, debounceTime, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { Users } from '../../../../models/models';
+import { InfoPage } from '../../../../models/InfoPage';
 
 export function usernameTakenValidator(
   authService: AuthService
@@ -34,6 +35,7 @@ export function usernameTakenValidator(
   styleUrl: './signin.component.css',
 })
 export class SigninComponent implements OnInit {
+  info: InfoPage = new InfoPage();
   signupForm!: FormGroup;
 
   showPassword = false;

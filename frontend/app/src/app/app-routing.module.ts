@@ -42,11 +42,11 @@ const routes: Routes = [
   },
   {
     path: 'ia',
-    loadChildren: () => 
+    loadChildren: () =>
       import('./components/pages/work-space/ia/ia.module').then(
         (m) => m.IaModule
       ),
-      canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: '',

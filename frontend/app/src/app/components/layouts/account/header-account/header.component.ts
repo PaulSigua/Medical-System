@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ArrowLeft, ChevronDown, Home } from 'lucide-angular';
+import { InfoPage } from '../../../../models/InfoPage';
 
 @Component({
   selector: 'app-header-account',
@@ -8,6 +9,8 @@ import { ArrowLeft, ChevronDown, Home } from 'lucide-angular';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+
+  info: InfoPage = new InfoPage();
 
   icons = {
     ArrowLeft,

@@ -114,7 +114,7 @@ async def upload_and_process_files(
 
         # 3. Obtener archivos subidos
         t1ce = file_handler.get_latest_patient_file(patient_id, "t1c")
-        t2   = file_handler.get_latest_patient_file(patient_id, "t2W")
+        t2   = file_handler.get_latest_patient_file(patient_id, "t2w")
         flair= file_handler.get_latest_patient_file(patient_id, "t2f")
         t1   = file_handler.get_latest_patient_file(patient_id, "t1n")
 

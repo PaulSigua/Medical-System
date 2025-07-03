@@ -6,7 +6,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
-from routes import auth_routes, patient_routes, user_routes, graph_routes, detection_routes
+from routes import auth_routes, patient_routes, user_routes, graph_routes
+from routes.ai import segmentation_route, detection_routes
 from fastapi.staticfiles import StaticFiles
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -54,14 +55,19 @@ app.add_middleware(
 
 # Ruta absoluta al directorio 'src/static'
 base_dir = os.path.dirname(os.path.abspath(__file__))  # src/api/
+uploads_dir = os.path.abspath(os.path.join(base_dir, "..", "uploads"))
+processed_files_dir = os.path.abspath(os.path.join(base_dir, "..", "processed_files"))
 static_dir = os.path.abspath(os.path.join(base_dir, "..", "static"))
 
 # Crear el directorio si no existe
+os.makedirs(uploads_dir, exist_ok=True)
+os.makedirs(processed_files_dir, exist_ok=True)
 os.makedirs(static_dir, exist_ok=True)
 
 # Montar los archivos estáticos
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+app.mount("/processed_files", StaticFiles(directory=processed_files_dir), name="processed_files")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
 
 api_prefix = "/api/v1"
 
@@ -70,6 +76,7 @@ app.include_router(patient_routes.router, prefix=api_prefix)
 app.include_router(user_routes.router, prefix=api_prefix)
 app.include_router(graph_routes.router, prefix=api_prefix)
 app.include_router(detection_routes.router, prefix=api_prefix)
+app.include_router(segmentation_route.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():
@@ -103,7 +110,7 @@ async def read_root():
         ]
         return info
 
-# create_tables()
+create_tables()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)
