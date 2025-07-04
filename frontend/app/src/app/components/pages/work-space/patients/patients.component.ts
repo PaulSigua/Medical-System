@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Brain, ClipboardPlusIcon, NotebookPen, NotebookPenIcon, Search, Trash2Icon } from 'lucide-angular';
+import {
+  Brain,
+  ClipboardPlusIcon,
+  NotebookPen,
+  NotebookPenIcon,
+  Search,
+  Trash2Icon,
+} from 'lucide-angular';
 import { PatientService } from '../../../../services/patients/patient.service';
 import { Patients } from '../../../../models/models';
-import { debounceTime } from 'rxjs';
+import { debounceTime, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { AiService } from '../../../../services/ai/ai.service';
 
 @Component({
   selector: 'app-patients',
@@ -28,15 +36,18 @@ export class PatientsComponent implements OnInit {
   showAlert = false;
   alertType: 'success' | 'error' | 'warning' = 'success';
   alertMessage = '';
+  selectedPatientId: string | null = null;
 
   // cuando quieras disparar:
   // this.alertType    = 'success';
   // this.alertMessage = 'Paciente guardado correctamente.';
   // this.showAlert    = true;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private patientService: PatientService,
+    private iaServide: AiService,
     private router: Router
   ) {}
 
@@ -170,8 +181,7 @@ export class PatientsComponent implements OnInit {
       this.alertType = 'error';
       this.alertMessage = 'No se encontro el paciente';
       this.showAlert = true;
-    }
-    else {
+    } else {
       this.alertType = 'success';
       this.alertMessage = 'El paciente si existe';
       this.showAlert = true;
@@ -189,8 +199,73 @@ export class PatientsComponent implements OnInit {
     console.log('Eliminando paciente:', patient);
   }
 
-  generateDiagnosis() {
-    this.router.navigate([('/upload')])
-    console.log('go')
+  generateDiagnosis(patient_id: string) {
+    try {
+      this.isLoading = true;
+      this.selectedPatientId = patient_id;
+      this.router.navigate(['/upload'], {
+        queryParams: { patient_id: patient_id },
+      });
+      console.log('Paciente seleccionado:', this.selectedPatientId);
+      console.log('go');
+    } catch (error) {
+      console.log(
+        'Ocurrio un error al generar el diagnostico por el medico, ',
+        error
+      );
+      this.isLoading = false;
+    }
+    this.isLoading = false;
   }
+
+  async generateAIDiagnosis(patient_id: string): Promise<void> {
+    this.selectedPatientId = patient_id;
+    this.isLoading = true;
+
+    try {
+      // 1) Mostrar alerta inicial de carga
+      this.alertType = 'warning';
+      this.alertMessage = 'Generando diagnóstico con IA…';
+      this.showAlert = true;
+
+      // 2) Detección general
+      const detRes = await firstValueFrom(
+        this.iaServide.detectionAI(patient_id)
+      );
+      const score = parseFloat(detRes?.message ?? '0');
+      const detMsg = score >= 0.5 ? 'Cáncer Detectado' : 'No se detectó cáncer';
+
+      // 3) Predicción detallada
+      const pred = await firstValueFrom(this.iaServide.predictAI(patient_id));
+
+      // 4) Redirigir como queryParams
+      await this.router.navigate(['/ia'], {
+        queryParams: {
+          patient_id,
+          html_url1: pred.html_url1,
+          html_url2: pred.html_url2,
+          html_url3: pred.html_url3,
+          html_url4: pred.html_url4,
+          html_url5: pred.html_url5,
+          html_url6: pred.html_url6,
+          detection_message: detMsg,
+        },
+      });
+    } catch (err) {
+      console.error('Error diagnóstico IA:', err);
+      this.alertType = 'error';
+      this.alertMessage = 'Error al generar el diagnóstico con IA.';
+      this.showAlert = true;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  uploadComparisonSegmentation(){
+    this.router.navigate([('/work-space/upload/segmentation')])
+  }
+
+  deletePatient(id: string) {
+    
+  } 
 }

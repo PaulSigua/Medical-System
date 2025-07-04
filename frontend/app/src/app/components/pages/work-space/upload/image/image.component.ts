@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Upload } from 'lucide-angular';
+import { ToastrService } from 'ngx-toastr';
+import { UploadNiftiService } from '../../../../../services/upload/upload-nifti.service';
 
 @Component({
   selector: 'app-image',
@@ -7,52 +10,64 @@ import { Upload } from 'lucide-angular';
   templateUrl: './image.component.html',
   styleUrl: './image.component.css',
 })
-export class ImageComponent {
-
-  icons = {
-    Upload
-  }
-
+export class ImageComponent implements OnInit {
+  icons = { Upload };
+  errorMessage = '';
+  patient_id = '';
+  selectedFiles: File[] = [];
   fileSelected: boolean = false;
   archivosInfo: { nombre: string; tamano: string }[] = [];
-  errorMessage: string = '';
-  showUploadZone: boolean = true; 
+  showUploadZone: boolean = true;
+  isLoading: boolean = false;
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.fileSelected = !!input.files && input.files.length > 0;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastrService,
+    private uploadSer: UploadNiftiService
+  ) {}
 
-    if (input.files) {
-      const selectedFiles = Array.from(input.files);
-
-      // Filtra los archivos por extensión .nii.gz
-      const validFiles = selectedFiles.filter((file) =>
-        file.name.endsWith('.nii.gz')
-      );
-
-      // Si hay archivos no válidos, mostrar un mensaje de error
-      if (validFiles.length < selectedFiles.length) {
-        this.errorMessage =
-          'Solo se permiten archivos con la extensión .nii.gz';
-        this.showUploadZone = true; // Mantener la zona visible si hay archivo no válido
-      } else {
-        this.errorMessage = ''; // Limpiar mensaje de error si todos son válidos
-        this.showUploadZone = false; // Ocultar la zona de carga si el archivo es válido
-      }
-
-      // Actualiza la lista de archivos si todos son válidos
-      if (validFiles.length > 0) {
-        this.archivosInfo = validFiles.map((file) => ({
-          nombre: file.name,
-          tamano: this.formatearTamano(file.size),
-        }));
-      }
-    }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.patient_id = params['patient_id'] || '';
+    });
   }
 
-  private formatearTamano(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      this.toastr.error('No se seleccionaron archivos', 'Error');
+      return;
+    }
+    this.selectedFiles = Array.from(input.files).filter((f) =>
+      f.name.endsWith('.nii.gz')
+    );
+    if (this.selectedFiles.length === 0) {
+      this.toastr.warning('Selecciona archivos .nii.gz', 'Advertencia');
+      return;
+    }
+    this.uploadFiles();
+  }
+
+  private uploadFiles(): void {
+    this.isLoading = true;
+    const formData = new FormData();
+    this.selectedFiles.forEach((file) => formData.append('files', file));
+    formData.append('patient_id', this.patient_id);
+
+    this.uploadSer.uploadFiles(formData).subscribe({
+      next: () => {
+        this.toastr.success('Archivos subidos correctamente', 'Éxito');
+        // Redirigir a Visualization pasando patient_id
+        this.router.navigate(['/upload/visualization'], {
+          queryParams: { patient_id: this.patient_id },
+        });this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error subiendo archivos:', err);
+        this.toastr.error('Error subiendo los archivos', 'Error');
+        this.isLoading = false;
+      },
+    });
   }
 }

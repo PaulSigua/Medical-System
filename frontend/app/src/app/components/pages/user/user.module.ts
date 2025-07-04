@@ -9,7 +9,7 @@ import { Lock, LucideAngularModule, User } from 'lucide-angular';
 import { AccountModule } from '../../layouts/account/account.module';
 import { GeneralComponent } from './settings/general/general.component';
 import { ViewingComponent } from './settings/viewing/viewing.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertsModule } from '../../layouts/alerts/alerts.module';
 
 const routes: Routes = [
@@ -65,7 +65,8 @@ const routes: Routes = [
       User,
       Lock,
     }),
-    AlertsModule
+    AlertsModule,
+    ReactiveFormsModule
   ],
   exports: [
     RouterModule

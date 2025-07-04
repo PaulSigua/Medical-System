@@ -1,5 +1,5 @@
 .card-info {
-  width: 210px;         /* equivalente a w-50 aprox */
+  width: 205px;         /* equivalente a w-50 aprox */
   height: auto;        /* equivalente a h-70 aprox */
   border-right: 1px solid #D1D5DB; /* tailwind border-gray-300 */
   color: var(--colour-text);
@@ -18,7 +18,7 @@
 }
 
 .card-body {
-  display: flex;
+  display: grid;
   padding: 1rem; /* tailwind p-4 */
   height: 200px;
   width: auto;

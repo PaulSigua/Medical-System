@@ -1,0 +1,21 @@
+<div class="w-full h-full flex items-center justify-center relative">
+  <!-- Loader -->
+  <div
+    *ngIf="loading"
+    class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10"
+  >
+    <div class="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+  </div>
+
+  <!-- iFrame sin scroll -->
+  <iframe
+    *ngIf="url"
+    [src]="url"
+    class="flex w-full h-full justify-center items-center border-0 rounded text-center"
+  ></iframe>
+
+  <!-- Error -->
+  <p *ngIf="error" class="absolute bottom-4 text-red-500 bg-white px-4 py-2 rounded shadow">
+    {{ error }}
+  </p>
+</div>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { PublicGuard } from './guards/public/public.guard';
@@ -16,7 +16,7 @@ const routes: Routes = [
       import('./components/pages/work-space/work-space.module').then(
         (m) => m.WorkSpaceModule
       ),
-    canActivate: [AuthGuard],
+    canActivate: [() => inject(AuthGuard).canActivate()],
   },
   {
     path: 'user',
@@ -41,8 +41,16 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'ia',
+    loadChildren: () =>
+      import('./components/pages/work-space/ia/ia.module').then(
+        (m) => m.IaModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: '',
-    redirectTo: 'work-space',
+    redirectTo: 'auth',
     pathMatch: 'full',
   },
 ];

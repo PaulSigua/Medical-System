@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     if (token) return true;
 
     // Esto evita parpadeos extraños y asegura navegación
-    this.router.navigate(['/auth/login'], { replaceUrl: true });
+    // this.router.navigate(['/auth/login'], { replaceUrl: true });
     return false;
   }
 }

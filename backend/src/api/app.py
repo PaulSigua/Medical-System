@@ -4,8 +4,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
-from services.routes import auth_routes, patient_routes, user_routes
+from routes import auth_routes, patient_routes, user_routes, graph_routes
+from routes.upload_nifti import upload_file
+from routes.ai import detection_routes
+from fastapi.staticfiles import StaticFiles
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 app = FastAPI(
     title="FastAPI Server",
@@ -29,6 +35,7 @@ origins = [
     # "*"
 ]
 
+# 1) CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -37,12 +44,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 2) Session middleware
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SECRET_KEY,
+    session_cookie="session",
+    max_age=14 * 24 * 60 * 60,
+    same_site="lax",
+)
+
+
+# Ruta absoluta al directorio 'src/static'
+base_dir = os.path.dirname(os.path.abspath(__file__))  # src/api/
+uploads_dir = os.path.abspath(os.path.join(base_dir, "..", "uploads"))
+processed_files_dir = os.path.abspath(os.path.join(base_dir, "..", "processed_files"))
+static_dir = os.path.abspath(os.path.join(base_dir, "..", "static"))
+
+# Crear el directorio si no existe
+os.makedirs(uploads_dir, exist_ok=True)
+os.makedirs(processed_files_dir, exist_ok=True)
+os.makedirs(static_dir, exist_ok=True)
+
+# Montar los archivos estáticos
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+app.mount("/processed_files", StaticFiles(directory=processed_files_dir), name="processed_files")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 api_prefix = "/api/v1"
 
 app.include_router(auth_routes.router, prefix=api_prefix)
 app.include_router(patient_routes.router, prefix=api_prefix)
 app.include_router(user_routes.router, prefix=api_prefix)
+app.include_router(upload_file.router, prefix=api_prefix)
+app.include_router(graph_routes.router, prefix=api_prefix)
+app.include_router(detection_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():

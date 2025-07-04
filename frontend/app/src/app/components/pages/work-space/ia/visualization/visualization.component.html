@@ -1,0 +1,52 @@
+<div class="flex h-screen overflow-hidden bg-gray-100">
+  <app-sidenav-ws
+    class="z-20 w-64 border-r border-gray-200 bg-white"
+  ></app-sidenav-ws>
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <app-header-ws
+      class="z-10 border-b border-gray-200 bg-white"
+    ></app-header-ws>
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div
+        class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg h-full flex flex-col space-y-6"
+      >
+        <div
+          class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg relative"
+        >
+          <h2 class="text-xl font-semibold text-sky-600 mb-4">
+            Visualización de Segmentación Tumoral
+          </h2>
+
+          <!-- Contenedor que posiciona el spinner dentro del iframe -->
+          <div class="relative w-full border rounded overflow-hidden">
+            <!-- Spinner centrado -->
+            <div
+              *ngIf="isLoading"
+              class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10"
+            >
+              <div
+                class="animate-spin rounded-full h-12 w-12 border-4 border-sky-400 border-t-transparent"
+              ></div>
+            </div>
+
+            <!-- iframe -->
+            <iframe
+              *ngIf="iframeUrl"
+              [src]="iframeUrl"
+              class="w-full border-0 rounded"
+              allowfullscreen
+              frameborder="0"
+              style="height: auto; min-height: 800px"
+              (load)="onIframeLoad()"
+            ></iframe>
+          </div>
+
+          <!-- Mensaje si no hay nada -->
+          <div *ngIf="!iframeUrl && !isLoading" class="text-gray-500 mt-4">
+            No se ha cargado ninguna visualización.
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

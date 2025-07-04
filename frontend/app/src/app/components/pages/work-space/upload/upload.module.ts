@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WorkSpaceModule } from '../../../layouts/work-space/work-space.module';
 import { LucideAngularModule } from 'lucide-angular';
+import { GraphsModule } from "../../../layouts/graphs/graphs.module";
+import { SegmentationComponent } from './segmentation/segmentation.component';
 
 
 const routes: Routes = [
@@ -18,6 +20,10 @@ const routes: Routes = [
     component: VisualizationComponent
   },
   {
+    path: 'segmentation',
+    component: SegmentationComponent
+  },
+  {
     path: '',
     redirectTo: 'image',
     pathMatch: 'full'
@@ -28,14 +34,16 @@ const routes: Routes = [
   declarations: [
     ImageComponent,
     VisualizationComponent,
+    SegmentationComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     WorkSpaceModule,
-    LucideAngularModule
-  ],
+    LucideAngularModule,
+    GraphsModule
+],
   exports: [
       RouterModule
   ]

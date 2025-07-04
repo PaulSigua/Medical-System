@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Segmentación Tumoral 3D</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background-color: white;
+        border: none;
+      }
+      .content {
+        padding: 1rem;
+        border: none;
+      }
+      h2 {
+        color: #747d8b;
+        font-size: 1rem;
+        font-weight: auto;
+        margin-bottom: 1rem;
+      }
+
+      .js-plotly-plot {
+        width: 100% !important;
+        height: auto !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h2>Segmentación 3D realizada al paciente {{ patient_id }}</h2>
+      {{ plot_div | safe }}
+    </div>
+  </body>
+</html>

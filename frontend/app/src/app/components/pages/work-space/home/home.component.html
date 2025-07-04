@@ -1,39 +1,117 @@
-<div class="flex h-screen overflow-visible">
-  
+<div class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
   <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
 
   <!-- Main content -->
-  <div class="flex-1 flex flex-col overflow-visible">
-    
-    <app-header-ws class="relative z-0"></app-header-ws>
+  <div class="flex-1 flex flex-col">
+    <app-header-ws class="relative z-10"></app-header-ws>
 
-    <!-- Page Content -->
-    <main class="flex-1 overflow-y-auto p-6">
-      <section class="bg-white border border-sky-100 rounded-lg p-6 w-full h-auto flex flex-col">
-        <header class="mb-4">
-          <h1 class="text-xl font-semibold text-gray-800">Histograma de distribución de Datos</h1>
-          <p class="text-gray-600">Aquí puedes ver el histograma de la distribución de datos.</p>
-        </header>
-    
-        <div class="flex flex-col items-center justify-center">
-          <div class="flex flex-wrap gap-4 w-full justify-center">
-            <article class="w-full max-w-2xl">
-              <img
-                src="https://webusupload.apowersoft.info/gitmind/wp-content/uploads/2021/12/gitmind-sample.jpg"
-                alt="Histograma 1"
-                class="w-full h-auto rounded-md"
-              />
-            </article>
-            <article class="w-full max-w-2xl">
-              <img
-                src="https://webusupload.apowersoft.info/gitmind/wp-content/uploads/2021/12/gitmind-sample.jpg"
-                alt="Histograma 2"
-                class="w-full h-auto rounded-md"
-              />
-            </article>
-          </div>
+    <!-- Page content -->
+    <main class="flex-1 overflow-y-auto p-6 flex flex-col gap-8">
+      <!-- Tarjetas resumen -->
+      <div class="flex flex-wrap gap-6">
+        <div
+          class="flex-1 min-w-[250px] p-4 bg-white border border-sky-100 rounded-lg"
+        >
+          <h2 class="text-gray-700 text-sm">Predicciones Totales</h2>
+          <p class="text-sky-600 text-2xl font-semibold">1.248</p>
         </div>
-      </section>
-    </main>    
+        <div
+          class="flex-1 min-w-[250px] p-4 bg-white border border-sky-100 rounded-lg"
+        >
+          <h2 class="text-gray-700 text-sm">Pacientes</h2>
+          <p class="text-sky-600 text-2xl font-semibold">1.248</p>
+        </div>
+        <div
+          class="flex-1 min-w-[250px] p-4 bg-white border border-sky-100 rounded-lg"
+        >
+          <h2 class="text-gray-700 text-sm">Última predicción</h2>
+          <p class="text-sky-600 text-2xl font-semibold">1.248</p>
+        </div>
+      </div>
+
+      <!-- Histograma -->
+      <div class="flex-1 flex flex-col w-full">
+        <div
+          class="flex-1 w-full bg-white border border-sky-100 rounded-lg p-6 flex flex-col"
+        >
+          <header class="mb-4">
+            <h1 class="text-xl font-semibold text-gray-800">
+              Histograma de distribución de datos
+            </h1>
+            <p class="text-gray-600 text-sm">
+              Aquí puedes ver el histograma de la distribución de datos.
+            </p>
+          </header>
+          <!-- Histograma 1 -->
+          <article class="w-full min-h-[400px] relative mb-8">
+            <app-histogram
+              class="absolute inset-0 bg-sky-50 p-3"
+              [labels]="['Caso 1', 'Caso 2', 'Caso 3']"
+              [data]="[
+                {
+                  label: 'IA Tradicional',
+                  data: [70, 72, 68],
+                  backgroundColor: '#3B82F6'
+                },
+                {
+                  label: 'IA Avanzada',
+                  data: [85, 87, 86],
+                  backgroundColor: '#10B981'
+                }
+              ]"
+              [options]="{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  title: { display: true, text: 'Comparación de Precisión' }
+                },
+                scales: {
+                  x: { title: { display: true, text: 'Casos' } },
+                  y: {
+                    title: { display: true, text: 'Precisión (%)' },
+                    beginAtZero: true
+                  }
+                }
+              }"
+            ></app-histogram>
+          </article>
+
+          <!-- Histograma 2 -->
+          <article class="w-full min-h-[400px] relative">
+            <app-histogram
+              class="absolute inset-0 bg-sky-50 p-3"
+              [labels]="['Caso A', 'Caso B', 'Caso C']"
+              [data]="[
+                {
+                  label: 'IA Clásica',
+                  data: [65, 60, 62],
+                  backgroundColor: '#F59E0B'
+                },
+                {
+                  label: 'IA Moderna',
+                  data: [88, 90, 89],
+                  backgroundColor: '#8B5CF6'
+                }
+              ]"
+              [options]="{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  title: { display: true, text: 'Comparación de Eficiencia' }
+                },
+                scales: {
+                  x: { title: { display: true, text: 'Escenarios' } },
+                  y: {
+                    title: { display: true, text: 'Eficiencia (%)' },
+                    beginAtZero: true
+                  }
+                }
+              }"
+            ></app-histogram>
+          </article>
+        </div>
+      </div>
+    </main>
   </div>
 </div>

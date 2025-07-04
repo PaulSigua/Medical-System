@@ -5,3 +5,15 @@ sqlalchemy
 psycopg2-binary
 python-jose
 bcrypt
+numpy
+plotly
+h5py
+python-multipart
+aiofiles
+nibabel
+scikit-learn
+scikit-image
+itsdangerous
+tensorflow
+keras
+jinja2

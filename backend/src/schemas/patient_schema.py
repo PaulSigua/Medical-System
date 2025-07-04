@@ -21,3 +21,6 @@ class PatientUpdate(BaseModel):
     user_id: Optional[int] = None
     patient_id: Optional[str] = None
     numero_historia_clinica: Optional[str] = None
+    
+class PatientRequest(BaseModel):
+    patient_id: str

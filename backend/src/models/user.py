@@ -10,3 +10,5 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     agree_terms = Column(Boolean, default=True)
+    phone = Column(String, nullable=True)
+    specialty = Column(String, nullable=True)
