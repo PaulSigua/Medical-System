@@ -1,41 +1,51 @@
 <div class="flex h-screen overflow-hidden bg-gray-100">
-  <app-sidenav-ws class="z-20 w-64 border-r border-gray-200 bg-white"></app-sidenav-ws>
+  <app-sidenav-ws
+    class="z-20 w-64 border-r border-gray-200 bg-white"
+  ></app-sidenav-ws>
   <div class="flex flex-1 flex-col overflow-hidden">
-    <app-header-ws class="z-10 border-b border-gray-200 bg-white"></app-header-ws>
+    <app-header-ws
+      class="z-10 border-b border-gray-200 bg-white"
+    ></app-header-ws>
     <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-      <div class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg h-full flex flex-col space-y-6">
+      <div
+        class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg h-full flex flex-col space-y-6"
+      >
+        <div
+          class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg relative"
+        >
+          <h2 class="text-xl font-semibold text-sky-600 mb-4">
+            Visualización de Segmentación Tumoral
+          </h2>
 
-        <!-- Mensaje IA -->
-        <div *ngIf="detectionMessage" class="text-center">
-          <h2 class="text-2xl font-semibold text-sky-600">{{ detectionMessage }}</h2>
-        </div>
-
-        <!-- Selector -->
-        <div class="border border-gray-300 rounded-lg p-4 bg-white shadow">
-          <h3 class="text-lg font-medium text-gray-800 mb-2">Selecciona una gráfica</h3>
-          <select
-            [(ngModel)]="selectedGraphId"
-            class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-sky-400 transition"
-          >
-            <option *ngFor="let g of graphList" [value]="g.id">
-              {{ g.label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Contenedor de la gráfica -->
-        <div class="flex-1 border border-gray-300 rounded-lg shadow bg-white p-4 overflow-hidden">
-          <ng-container *ngFor="let g of graphList">
-            <div *ngIf="g.id === selectedGraphId" class="h-full flex flex-col">
-              <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ g.title }}</h3>
-              <iframe
-                [src]="g.url!"
-                class="flex-1 w-full border-0 rounded"
-              ></iframe>
+          <!-- Contenedor que posiciona el spinner dentro del iframe -->
+          <div class="relative w-full border rounded overflow-hidden">
+            <!-- Spinner centrado -->
+            <div
+              *ngIf="isLoading"
+              class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10"
+            >
+              <div
+                class="animate-spin rounded-full h-12 w-12 border-4 border-sky-400 border-t-transparent"
+              ></div>
             </div>
-          </ng-container>
-        </div>
 
+            <!-- iframe -->
+            <iframe
+              *ngIf="iframeUrl"
+              [src]="iframeUrl"
+              class="w-full border-0 rounded"
+              allowfullscreen
+              frameborder="0"
+              style="height: auto; min-height: 800px"
+              (load)="onIframeLoad()"
+            ></iframe>
+          </div>
+
+          <!-- Mensaje si no hay nada -->
+          <div *ngIf="!iframeUrl && !isLoading" class="text-gray-500 mt-4">
+            No se ha cargado ninguna visualización.
+          </div>
+        </div>
       </div>
     </main>
   </div>

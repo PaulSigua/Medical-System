@@ -12,7 +12,7 @@ import { PatientService } from '../../../../services/patients/patient.service';
 import { Patients } from '../../../../models/models';
 import { debounceTime, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
-import { IaService } from '../../../../services/ai/ai.service';
+import { AiService } from '../../../../services/ai/ai.service';
 
 @Component({
   selector: 'app-patients',
@@ -47,7 +47,7 @@ export class PatientsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private patientService: PatientService,
-    private iaServide: IaService,
+    private iaServide: AiService,
     private router: Router
   ) {}
 

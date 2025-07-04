@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from psycopg2.extras import RealDictCursor
@@ -17,10 +17,18 @@ from services.graphs.graph_generator import (
     generate_graph5,
     generate_graph6
 )
+from fastapi import APIRouter, UploadFile, Form
+from typing import Dict
+import shutil
+import os
+from services.ia.segmentation_service import perform_segmentation
+from services.ia.plot_generator import generate_segmentation_slice_html
+from fastapi.responses import HTMLResponse
+from utils.nifti_utils import load_modality_image
 
 router = APIRouter(
-    prefix="/ai-clasification",
-    tags=["ai-clasification"]
+    prefix="/ai",
+    tags=["ai"]
 )
 
 class DetectionRequest(BaseModel):
@@ -51,7 +59,7 @@ def save_classification(prediccion: float, patient_id: str):
         print(f"Error al guardar la predicci\u00f3n en la base de datos: {e}")
 
 
-@router.post("/detection-ai")
+@router.post("/detection")
 def detect_ia(request: DetectionRequest):
     patient_id = request.patient_id
 
@@ -85,7 +93,7 @@ def detect_ia(request: DetectionRequest):
 class PredictRequest(BaseModel):
     patient_id: str
 
-@router.post("/predict-ai")
+@router.post("/prediction")
 async def predict_ia(
     payload: PredictRequest
 ):
@@ -174,3 +182,40 @@ async def predict_ia(
         )
     finally:
         conn.close()
+
+@router.post("/segmentation")
+async def segment_patient(
+    patient_id: str = Form(...),
+    T1c: UploadFile = Form(...),
+    T2W: UploadFile = Form(...),
+    T2F: UploadFile = Form(...)
+):
+    upload_dir = f"src/uploads/{patient_id}"
+    os.makedirs(upload_dir, exist_ok=True)
+
+    modality_files = {"T1c": T1c, "T2W": T2W, "T2F": T2F}
+    paths = {}
+    for key, file in modality_files.items():
+        dest = os.path.join(upload_dir, file.filename)
+        with open(dest, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+        paths[key] = dest
+
+    # Ejecuta el modelo
+    segmentation = perform_segmentation(paths)
+    modality_img = load_modality_image(patient_id, ["T2F", "flair"])
+
+    # Generar HTML de segmentación
+    html_content = generate_segmentation_slice_html(modality_img, segmentation, patient_id)
+
+    # Guardar HTML
+    output_dir = os.path.join("src/static", patient_id, "html")
+    os.makedirs(output_dir, exist_ok=True)
+    output_filename = "segmentation_result.html"
+    output_path = os.path.join(output_dir, output_filename)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html_content)
+
+    # Devolver solo la ruta pública para Angular
+    public_url = f"/static/{patient_id}/html/{output_filename}"
+    return JSONResponse(content={"segmentation_url": public_url})

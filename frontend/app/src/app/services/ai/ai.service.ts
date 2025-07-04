@@ -7,7 +7,7 @@ import { finalize, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class IaService {
+export class AiService {
   private apiUrl = environment.API_URL;
 
   constructor(private loaderService: LoaderService, private http: HttpClient) {}
@@ -15,7 +15,7 @@ export class IaService {
   detectionAI(patientId: string): Observable<any> {
     const requestBody = { patient_id: patientId };
 
-    return this.http.post<any>(`${this.apiUrl}/ai/detection-ai`, requestBody);
+    return this.http.post<any>(`${this.apiUrl}/ai/detection`, requestBody);
   }
 
   /**
@@ -28,7 +28,7 @@ export class IaService {
     this.loaderService.show();
     return this.http
       .post<any>(
-        `${this.apiUrl}/ai/predict-ai`,
+        `${this.apiUrl}/ai/prediction`,
         { patient_id: patientId },
         { withCredentials: true }
       )
@@ -49,10 +49,26 @@ export class IaService {
     this.loaderService.show();
     return this.http
       .post<any>(
-        `${this.apiUrl}/ai/predict-ia`,
+        `${this.apiUrl}/ai/prediction`,
         { patient_id: patientId },
         { headers, withCredentials: true }
       )
       .pipe(finalize(() => this.loaderService.hide()));
+  }
+
+  segmentTumor(
+    patientId: string,
+    files: { T1c: File; T2W: File; T2F: File }
+  ): Observable<{ segmentation_url: string }> {
+    const formData = new FormData();
+    formData.append('patient_id', patientId);
+    formData.append('T1c', files.T1c);
+    formData.append('T2W', files.T2W);
+    formData.append('T2F', files.T2F);
+
+    return this.http.post<{ segmentation_url: string }>(
+      `${this.apiUrl}/ai/segmentation`,
+      formData
+    );
   }
 }

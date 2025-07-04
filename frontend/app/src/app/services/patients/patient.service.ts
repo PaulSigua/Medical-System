@@ -38,20 +38,6 @@ export class PatientService {
   }
 
   /**
-   * Sube archivos al servidor.
-   * @param {FormData} formData - Datos del formulario con archivos.
-   * @returns {Observable<any>} Respuesta del servidor.
-   */
-  uploadFiles(formData: FormData): Observable<any> {
-    this.loaderService.show();
-    return this.http
-      .post(`${this.apiUrl}/patients/upload/files`, formData, {
-        withCredentials: true,
-      })
-      .pipe(finalize(() => this.loaderService.hide()));
-  }
-
-  /**
    * Genera un gráfico de tipo 6 para un paciente.
    *
    * @param {string} patientId - ID del paciente.

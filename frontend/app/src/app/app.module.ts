@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/auth/auth.interceptor';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';  // <- aquí
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({

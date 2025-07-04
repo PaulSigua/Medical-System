@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Upload } from 'lucide-angular';
-import { PatientService } from '../../../../../services/patients/patient.service';
 import { ToastrService } from 'ngx-toastr';
+import { UploadNiftiService } from '../../../../../services/upload/upload-nifti.service';
 
 @Component({
   selector: 'app-image',
@@ -23,8 +23,8 @@ export class ImageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private patientSer: PatientService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private uploadSer: UploadNiftiService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class ImageComponent implements OnInit {
     this.selectedFiles.forEach((file) => formData.append('files', file));
     formData.append('patient_id', this.patient_id);
 
-    this.patientSer.uploadFiles(formData).subscribe({
+    this.uploadSer.uploadFiles(formData).subscribe({
       next: () => {
         this.toastr.success('Archivos subidos correctamente', 'Éxito');
         // Redirigir a Visualization pasando patient_id

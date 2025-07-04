@@ -319,7 +319,7 @@ def generate_graph3(test_img, test_prediction_argmax):
 
     fig = psub.make_subplots(
         rows=1, cols=2,
-        subplot_titles=("MRI Paciente", "Predicción"),
+        subplot_titles=("MR del Paciente", "Predicción realizada"),
         specs=[[{"type": "heatmap"}, {"type": "heatmap"}]]
     )
 

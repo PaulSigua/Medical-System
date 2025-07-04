@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
 from routes import auth_routes, patient_routes, user_routes, graph_routes
-from routes.ai import segmentation_route, detection_routes
+from routes.upload_nifti import upload_file
+from routes.ai import detection_routes
 from fastapi.staticfiles import StaticFiles
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -74,9 +75,9 @@ api_prefix = "/api/v1"
 app.include_router(auth_routes.router, prefix=api_prefix)
 app.include_router(patient_routes.router, prefix=api_prefix)
 app.include_router(user_routes.router, prefix=api_prefix)
+app.include_router(upload_file.router, prefix=api_prefix)
 app.include_router(graph_routes.router, prefix=api_prefix)
 app.include_router(detection_routes.router, prefix=api_prefix)
-app.include_router(segmentation_route.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():
@@ -110,7 +111,7 @@ async def read_root():
         ]
         return info
 
-create_tables()
+# create_tables()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)

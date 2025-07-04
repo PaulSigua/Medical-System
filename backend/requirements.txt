@@ -15,4 +15,5 @@ scikit-learn
 scikit-image
 itsdangerous
 tensorflow
-keras   
+keras
+jinja2
