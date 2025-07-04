@@ -305,7 +305,7 @@ static
 uploads
 .uploads
 
-.processed_file
-processed_file
+.processed_files
+processed_files
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,venv,python,angular,linux,macos,database
