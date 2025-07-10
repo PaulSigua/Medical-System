@@ -218,49 +218,6 @@ export class PatientsComponent implements OnInit {
     this.isLoading = false;
   }
 
-  async generateAIDiagnosis(patient_id: string): Promise<void> {
-    this.selectedPatientId = patient_id;
-    this.isLoading = true;
-
-    try {
-      // 1) Mostrar alerta inicial de carga
-      this.alertType = 'warning';
-      this.alertMessage = 'Generando diagnóstico con IA…';
-      this.showAlert = true;
-
-      // 2) Detección general
-      const detRes = await firstValueFrom(
-        this.iaServide.detectionAI(patient_id)
-      );
-      const score = parseFloat(detRes?.message ?? '0');
-      const detMsg = score >= 0.5 ? 'Cáncer Detectado' : 'No se detectó cáncer';
-
-      // 3) Predicción detallada
-      const pred = await firstValueFrom(this.iaServide.predictAI(patient_id));
-
-      // 4) Redirigir como queryParams
-      await this.router.navigate(['/ia'], {
-        queryParams: {
-          patient_id,
-          html_url1: pred.html_url1,
-          html_url2: pred.html_url2,
-          html_url3: pred.html_url3,
-          html_url4: pred.html_url4,
-          html_url5: pred.html_url5,
-          html_url6: pred.html_url6,
-          detection_message: detMsg,
-        },
-      });
-    } catch (err) {
-      console.error('Error diagnóstico IA:', err);
-      this.alertType = 'error';
-      this.alertMessage = 'Error al generar el diagnóstico con IA.';
-      this.showAlert = true;
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
   uploadComparisonSegmentation(){
     this.router.navigate([('/work-space/upload/segmentation')])
   }

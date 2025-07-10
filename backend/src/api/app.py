@@ -10,6 +10,20 @@ from routes import auth_routes, patient_routes, user_routes, graph_routes
 from routes.upload_nifti import upload_file
 from routes.ai import detection_routes
 from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
+
+import os
+for var in ["nnUNetv2_results", "nnUNetv2_raw", "nnUNetv2_preprocessed"]:
+    if not os.getenv(var):
+        raise RuntimeError(f"Variable {var} no cargada desde .env")
+
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+# Obtener la ruta del archivo .env
+env_path = os.path.join(os.path.dirname(__file__), '..', 'services', '.env')
+load_dotenv(dotenv_path=os.path.abspath(env_path))
+print("nnUNetv2_results =", os.getenv("nnUNetv2_results"))
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 

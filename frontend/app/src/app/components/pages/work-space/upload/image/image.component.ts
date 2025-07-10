@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Upload } from 'lucide-angular';
 import { ToastrService } from 'ngx-toastr';
-import { UploadNiftiService } from '../../../../../services/upload/upload-nifti.service';
+// import { UploadNiftiService } from '../../../../../services/upload/upload-nifti.service';
 
 @Component({
   selector: 'app-image',
@@ -24,7 +24,7 @@ export class ImageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
-    private uploadSer: UploadNiftiService
+    // private uploadSer: UploadNiftiService
   ) {}
 
   ngOnInit(): void {
@@ -46,28 +46,28 @@ export class ImageComponent implements OnInit {
       this.toastr.warning('Selecciona archivos .nii.gz', 'Advertencia');
       return;
     }
-    this.uploadFiles();
+    // this.uploadFiles();
   }
 
-  private uploadFiles(): void {
-    this.isLoading = true;
-    const formData = new FormData();
-    this.selectedFiles.forEach((file) => formData.append('files', file));
-    formData.append('patient_id', this.patient_id);
+  // private uploadFiles(): void {
+  //   this.isLoading = true;
+  //   const formData = new FormData();
+  //   this.selectedFiles.forEach((file) => formData.append('files', file));
+  //   formData.append('patient_id', this.patient_id);
 
-    this.uploadSer.uploadFiles(formData).subscribe({
-      next: () => {
-        this.toastr.success('Archivos subidos correctamente', 'Éxito');
-        // Redirigir a Visualization pasando patient_id
-        this.router.navigate(['/upload/visualization'], {
-          queryParams: { patient_id: this.patient_id },
-        });this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error subiendo archivos:', err);
-        this.toastr.error('Error subiendo los archivos', 'Error');
-        this.isLoading = false;
-      },
-    });
-  }
+  //   this.uploadSer.uploadFiles(formData).subscribe({
+  //     next: () => {
+  //       this.toastr.success('Archivos subidos correctamente', 'Éxito');
+  //       // Redirigir a Visualization pasando patient_id
+  //       this.router.navigate(['/upload/visualization'], {
+  //         queryParams: { patient_id: this.patient_id },
+  //       });this.isLoading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error subiendo archivos:', err);
+  //       this.toastr.error('Error subiendo los archivos', 'Error');
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
 }

@@ -3,7 +3,7 @@ import { GraphData } from '../../../../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../../../../environments/environment.development';
-import { SegmentationService } from '../../../../../services/graphs/segmentation.service';
+// import { SegmentationService } from '../../../../../services/graphs/segmentation.service';
 
 @Component({
   selector: 'app-visualization',
@@ -20,7 +20,7 @@ export class VisualizationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private segmentationService: SegmentationService
+    // private segmentationService: SegmentationService
   ) {}
 
   ngOnInit(): void {

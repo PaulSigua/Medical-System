@@ -33,10 +33,8 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
         )
         frames.append(frame)
 
-    # Crear figura con 2 columnas
     fig = make_subplots(rows=1, cols=2, subplot_titles=("MR del Paciente", "Predicción"))
 
-    # Agregar el primer frame manualmente (para vista inicial)
     fig.add_trace(go.Heatmap(
         z=modality[:, :, 0],
         zmin=0,
@@ -53,34 +51,9 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
         showscale=True
     ), row=1, col=2)
 
-    # Animación (frames actualizados manualmente)
-    fig.frames = [
-        go.Frame(
-            data=[
-                go.Heatmap(
-                    z=modality[:, :, z],
-                    zmin=0,
-                    zmax=1,
-                    colorscale='gray',
-                    showscale=False
-                ),
-                go.Heatmap(
-                    z=mask[:, :, z],
-                    zmin=0,
-                    zmax=3,
-                    colorscale='Viridis',
-                    opacity=1,
-                    showscale=False
-                )
-            ],
-            name=str(z)
-        )
-        for z in range(depth)
-    ]
+    fig.frames = frames
 
     fig.update_layout(
-        # title=f"Segmentación 3D - Paciente {patient_id}",
-        # height=900,
         margin=dict(l=0, r=0, t=40, b=0),
         paper_bgcolor='white',
         plot_bgcolor='white',
@@ -101,7 +74,10 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
         }]
     )
 
-    # Renderizar HTML embebido
+    # Mantener proporción real: ancho = alto en ambos subplots
+    fig.update_yaxes(scaleanchor="x", row=1, col=1)
+    fig.update_yaxes(scaleanchor="x", row=1, col=2)
+
     plot_div = fig.to_html(full_html=False, include_plotlyjs='cdn')
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template("plot_template.html")
