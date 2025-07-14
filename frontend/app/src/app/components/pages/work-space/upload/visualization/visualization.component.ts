@@ -38,25 +38,9 @@ export class VisualizationComponent {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.patient_id = params['patient_id'] || '';
-      if (this.patient_id) {
-        this.loadGraph(); // Cargar el gráfico por defecto
-      }
     });
   }
   
-  loadGraph() {
-    if (!this.patient_id || !this.selectedGraph) return;
-    this.patientService
-      .fetchGraph(this.patient_id, this.selectedGraph)
-      .subscribe({
-        next: (url) => {
-          this.graphUrl = url;
-        },
-        error: (err) => {
-          console.error('Error al cargar gráfica:', err);
-        },
-      });
-  }
   
   sendForm() {
     if (this.diagnosticSelected && this.observations) {

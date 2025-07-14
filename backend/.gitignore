@@ -303,9 +303,18 @@ $RECYCLE.BIN/
 static
 
 uploads
-.uploads
+.uploads/
 
-.processed_files
+.processed_files/
 processed_files
+
+pruebas_nifti
+.pruebas_nifti/
+
+.nnUNet/
+nnUNet
+
+medical-env
+.medical-env/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,venv,python,angular,linux,macos,database

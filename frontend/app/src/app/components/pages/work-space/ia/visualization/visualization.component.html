@@ -6,45 +6,89 @@
     <app-header-ws
       class="z-10 border-b border-gray-200 bg-white"
     ></app-header-ws>
-    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 relative">
+      <!-- Spinner sobre todo el main -->
       <div
-        class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg h-full flex flex-col space-y-6"
+        *ngIf="isLoading"
+        class="absolute inset-0 z-[9998] bg-white/30 backdrop-blur-[2px] flex flex-col items-center justify-center transition-opacity duration-300"
       >
         <div
-          class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg relative"
+          class="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p
+          class="mt-4 text-sky-500 font-medium text-base animate-pulse tracking-wide"
         >
-          <h2 class="text-xl font-semibold text-sky-600 mb-4">
-            Visualización de Segmentación Tumoral
-          </h2>
+          Recuperando datos...
+        </p>
+      </div>
 
-          <!-- Contenedor que posiciona el spinner dentro del iframe -->
-          <div class="relative w-full border rounded overflow-hidden">
-            <!-- Spinner centrado -->
-            <div
-              *ngIf="isLoading"
-              class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10"
+      <div
+        class="p-6 bg-white border border-sky-200 rounded-lg shadow-lg relative"
+      >
+        <!-- Métricas Dice -->
+        <div *ngIf="allMetrics" class="mt-1 mb-4">
+          <h3 class="text-sky-600 font-semibold mb-2">
+            Exactitud por clase (Score Dice)
+          </h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li *ngIf="allMetrics['whole_tumor (WT)']?.Accuracy !== undefined">
+              Whole Tumor (WT):
+              {{ allMetrics["whole_tumor (WT)"].Accuracy | number : "1.3-3" }}
+            </li>
+            <li *ngIf="allMetrics['tumor_core (TC)']?.Accuracy !== undefined">
+              Tumor Core (TC):
+              {{ allMetrics["tumor_core (TC)"].Accuracy | number : "1.3-3" }}
+            </li>
+            <li
+              *ngIf="allMetrics['enhancing_tumor (ET)']?.Accuracy !== undefined"
             >
-              <div
-                class="animate-spin rounded-full h-12 w-12 border-4 border-sky-400 border-t-transparent"
-              ></div>
-            </div>
-
-            <!-- iframe -->
-            <iframe
-              *ngIf="iframeUrl"
-              [src]="iframeUrl"
-              class="w-full border-0 rounded"
-              allowfullscreen
-              frameborder="0"
-              style="height: auto; min-height: 800px"
-              (load)="onIframeLoad()"
-            ></iframe>
-          </div>
-
+              Enhancing Tumor (ET):
+              {{
+                allMetrics["enhancing_tumor (ET)"].Accuracy | number : "1.3-3"
+              }}
+            </li>
+          </ul>
           <!-- Mensaje si no hay nada -->
           <div *ngIf="!iframeUrl && !isLoading" class="text-gray-500 mt-4">
             No se ha cargado ninguna visualización.
           </div>
+        </div>
+        <h2 class="text-xl font-semibold text-sky-600 mb-4">
+          Visualización de Segmentación Tumoral Generada por Inteligencia
+          Artificial
+        </h2>
+
+        <!-- iframe -->
+        <div
+          class="relative flex justify-center border rounded overflow-hidden px-2"
+        >
+          <iframe
+            *ngIf="iframeUrl"
+            [src]="iframeUrl"
+            class="w-full max-w-4xl border-0 rounded"
+            allowfullscreen
+            frameborder="0"
+            style="min-height: 620px; height: fit-content"
+            (load)="onIframeLoad()"
+          ></iframe>
+        </div>
+
+        <!-- Imagen resumen tipo matplotlib -->
+        <div *ngIf="summaryImageUrl" class="mt-8 flex w-full justify-center">
+          <img
+            [src]="summaryImageUrl"
+            alt="Resumen de Segmentación"
+            class="rounded shadow max-w-8xl w-full border"
+          />
+        </div>
+
+        <!-- Gráfico de distribución de clases -->
+        <div *ngIf="classDistImageUrl" class="mt-6 flex justify-center">
+          <img
+            [src]="classDistImageUrl"
+            alt="Distribución de Clases"
+            class="rounded shadow max-w-xl w-full"
+          />
         </div>
       </div>
     </main>

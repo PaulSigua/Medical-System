@@ -7,6 +7,7 @@ from models.user import User
 from schemas.patient_schema import PatientCreate, PatientOut
 from typing import List
 from utils.security import get_current_user
+from services.patients.patient_service import delete_patient_by_id
 
 router = APIRouter(
     prefix="/patients",
@@ -37,22 +38,9 @@ def register(
         raise HTTPException(status_code=409, detail="El paciente ya existe")
 
     new_patient = Patient(
-        user_id=current_user.id,  # <-- usa el ID correcto
+        user_id=current_user.id,
         patient_id=patient_data.patient_id,
         numero_historia_clinica=patient_data.numero_historia_clinica,
-        # survey_completed=False,
-        # t1ce_path="",
-        # t2_path="",
-        # flair_path="",
-        # predicted_segmentation="",
-        # graph1_path="",
-        # graph2_path="",
-        # graph3_path="",
-        # graph4_path="",
-        # graph5_path="",
-        # graph6_path="",
-        # graph_segmentation_path="",
-        # t1_path=""
     )
 
     db.add(new_patient)
@@ -65,7 +53,7 @@ def register(
 def get_users(db: Session = Depends(get_db)):
     return db.query(Patient).all()
 
-# <- indica que devolverás una lista de schemas
+# indica que devolverá una lista de schemas
 @router.get("/me", response_model=list[PatientOut])
 def get_my_patients(
     db: Session = Depends(get_db),
@@ -84,3 +72,10 @@ def get_patient_id(
     patient = db.query(Patient).filter(
         Patient.patient_id == patient_id).first()
     return patient
+
+@router.delete("/delete/{patient_id}")
+def delete_patient(patient_id: str):
+    success = delete_patient_by_id(patient_id)
+    if not success: 
+        raise HTTPException(status_code=500, detail="Error al eliminar el paciente")
+    return {"message": f"Paciente {patient_id} eliminado correctamente."}
