@@ -54,7 +54,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise credentials_exception
 
-    # print("TOKEN:", token)
+    print("TOKEN:", token)
     # print("PAYLOAD:", payload)
 
     user = db.query(User).filter(User.username == username).first()

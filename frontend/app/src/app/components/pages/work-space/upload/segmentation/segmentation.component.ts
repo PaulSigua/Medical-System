@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AiService } from '../../../../../services/ai/ai.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { UploadService } from '../../../../../services/upload_files/upload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-segmentation',
@@ -12,14 +14,23 @@ export class SegmentationComponent {
   patientId = '';
   files: { [key: string]: File } = {};
   fileList: File[] = [];
-  segmentationUrl: SafeResourceUrl | null = null;
   error: string | null = null;
   loading = false;
   dragging = false;
 
-  constructor(private aiService: AiService, private sanitizer: DomSanitizer) {}
+  // Detección de modalidades similar al backend
+  modalityKeywords: Record<string, string[]> = {
+    FLAIR: ['flair', 't2f'],
+    T1: ['t1', 't1n'],
+    T1c: ['t1c', 't1ce'],
+    T2: ['t2', 't2w'],
+  };
 
-  allowedModalities = ['T1c', 'T2W', 'T2F'];
+  constructor(
+    private uploadService: UploadService,
+    private router: Router,
+    private aiService: AiService
+  ) {}
 
   onFileChange(event: any) {
     this.processFiles(event.target.files);
@@ -42,60 +53,84 @@ export class SegmentationComponent {
     this.dragging = false;
   }
 
-  processFiles(fileList: FileList) {
-    this.error = null;
-    for (const file of Array.from(fileList)) {
-      const name = file.name.toLowerCase();
-      if (!name.endsWith('.nii.gz')) {
-        this.error = 'Solo se permiten archivos con extensión .nii.gz';
-        return;
-      }
+  detectModality(filename: string): string | null {
+    const normalized = filename.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const priority = ['T1c', 'T1', 'FLAIR', 'T2']; // Para evitar que t1c caiga como t1
 
-      for (const modality of this.allowedModalities) {
-        if (name.includes(modality.toLowerCase())) {
-          this.files[modality] = file;
-          break;
-        }
+    for (const mod of priority) {
+      if (this.modalityKeywords[mod].some((k) => normalized.includes(k))) {
+        return mod;
       }
     }
 
-    // Mostrar lista
+    return null;
+  }
+
+  processFiles(fileList: FileList) {
+    this.error = null;
+    this.files = {};
+
+    for (const file of Array.from(fileList)) {
+      const name = file.name.toLowerCase();
+      if (!name.endsWith('.nii') && !name.endsWith('.nii.gz')) {
+        this.error = 'Solo se permiten archivos .nii o .nii.gz';
+        return;
+      }
+
+      const modality = this.detectModality(name);
+      if (!modality) {
+        this.error = `No se pudo detectar la modalidad de: ${file.name}`;
+        return;
+      }
+
+      this.files[modality] = file; // Sobrescribe si hay repetidos
+    }
+
     this.fileList = Object.values(this.files);
   }
 
   canSubmit(): boolean {
     return (
       this.patientId.trim() !== '' &&
-      this.allowedModalities.every((mod) => !!this.files[mod])
+      ['T1', 'T1c', 'T2', 'FLAIR'].every((mod) => !!this.files[mod])
     );
   }
 
   onSubmit() {
     if (!this.canSubmit()) {
       this.error =
-        'Completa todos los campos y sube todas las modalidades requeridas.';
+        'Debes subir las 4 modalidades y completar el ID del paciente.';
       return;
     }
 
     this.loading = true;
     this.error = null;
 
-    this.aiService
-      .segmentTumor(this.patientId, {
-        T1c: this.files['T1c'],
-        T2W: this.files['T2W'],
-        T2F: this.files['T2F'],
-      })
-      .subscribe({
-        next: (res: any) => {
-          this.loading = false;
-          // Redirigir a la visualización de resultados
-          window.location.href = `/ia/graphs?patient_id=${this.patientId}`;
-        },
-        error: () => {
-          this.error = 'Error al procesar la segmentación.';
-          this.loading = false;
-        },
-      });
+    const filesToSend = ['FLAIR', 'T1', 'T1c', 'T2'].map(
+      (mod) => this.files[mod]
+    );
+
+    this.uploadService.uploadNiftiFiles(this.patientId, filesToSend).subscribe({
+      next: (res) => {
+        const folder = res.upload_folder_id;
+
+        // Ahora segmentar
+        this.aiService.segmentPatient(folder).subscribe({
+          next: (result) => {
+            this.loading = false;
+            // Redirige a la visualización una vez generado el HTML
+            window.location.href = `/ia/graphs?folder_id=${folder}`;
+          },
+          error: (err) => {
+            this.loading = false;
+            this.error = 'Error al ejecutar la segmentación.';
+          },
+        });
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err.error?.detail || 'Error al subir los archivos.';
+      },
+    });
   }
 }

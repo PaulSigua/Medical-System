@@ -11,25 +11,10 @@ export class AiService {
 
   constructor(private http: HttpClient) {}
 
-  detectionAI(patientId: string): Observable<any> {
-    const requestBody = { patient_id: patientId };
-
-    return this.http.post<any>(`${this.apiUrl}/ai/detection`, requestBody);
-  }
-
-  segmentTumor(
-    patientId: string,
-    files: { T1c: File; T2W: File; T2F: File }
-  ): Observable<{ segmentation_url: string }> {
+  segmentPatient(uploadFolderId: string, framework = 'nnunet'): Observable<any> {
     const formData = new FormData();
-    formData.append('patient_id', patientId);
-    formData.append('T1c', files.T1c);
-    formData.append('T2W', files.T2W);
-    formData.append('T2F', files.T2F);
-
-    return this.http.post<{ segmentation_url: string }>(
-      `${this.apiUrl}/ai/segmentation`,
-      formData
-    );
+    formData.append('upload_folder_id', uploadFolderId);
+    formData.append('framework', framework);
+    return this.http.post(`${this.apiUrl}/ai/segmentation`, formData);
   }
 }

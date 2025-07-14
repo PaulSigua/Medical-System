@@ -1,12 +1,14 @@
 import sys
 import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from database.db import create_tables
-from routes import auth_routes, patient_routes, user_routes, graph_routes
+from routes.patients import patient_routes
+from routes import auth_routes, user_routes
 from routes.upload_nifti import upload_file
 from routes.ai import detection_routes
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +25,7 @@ load_dotenv()
 # Obtener la ruta del archivo .env
 env_path = os.path.join(os.path.dirname(__file__), '..', 'services', '.env')
 load_dotenv(dotenv_path=os.path.abspath(env_path))
-print("nnUNetv2_results =", os.getenv("nnUNetv2_results"))
+# print("nnUNetv2_results =", os.getenv("nnUNetv2_results"))
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -90,7 +92,7 @@ app.include_router(auth_routes.router, prefix=api_prefix)
 app.include_router(patient_routes.router, prefix=api_prefix)
 app.include_router(user_routes.router, prefix=api_prefix)
 app.include_router(upload_file.router, prefix=api_prefix)
-app.include_router(graph_routes.router, prefix=api_prefix)
+# app.include_router(graph_routes.router, prefix=api_prefix)
 app.include_router(detection_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
