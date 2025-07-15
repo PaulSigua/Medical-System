@@ -111,9 +111,9 @@ def generate_summary_png(image: np.ndarray, mask: np.ndarray, output_path: str, 
     slice_index = image.shape[2] // 2  # Cortar al medio
 
     labels = {
-        1: ("edema", "Reds"),
-        2: ("non-enhancing tumor", "Blues"),
-        3: ("enhancing tumour", "Greens")
+        1: ("non-enhancing tumor", "Reds"),
+        2: ("enhancing tumor", "Blues"),
+        3: ("eedema", "Greens")
     }
 
     plt.figure(figsize=(16, 4))
