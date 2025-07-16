@@ -10,7 +10,7 @@ import {
 } from 'lucide-angular';
 import { PatientService } from '../../../../services/patients/patient.service';
 import { Patients } from '../../../../models/models';
-import { debounceTime, firstValueFrom } from 'rxjs';
+import { catchError, debounceTime, finalize, firstValueFrom, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { AiService } from '../../../../services/ai/ai.service';
 
@@ -84,7 +84,7 @@ export class PatientsComponent implements OnInit {
       });
   }
 
-  // 🔄 Función genérica para sanitizar input numérico
+  // Función genérica para sanitizar input numérico
   sanitizeNumericInput(
     control: AbstractControl | null,
     maxLength: number,
@@ -203,7 +203,7 @@ export class PatientsComponent implements OnInit {
     try {
       this.isLoading = true;
       this.selectedPatientId = patient_id;
-      this.router.navigate(['/upload'], {
+      this.router.navigate(['/ai/upload-manual'], {
         queryParams: { patient_id: patient_id },
       });
       console.log('Paciente seleccionado:', this.selectedPatientId);
@@ -218,11 +218,31 @@ export class PatientsComponent implements OnInit {
     this.isLoading = false;
   }
 
-  uploadComparisonSegmentation(){
-    this.router.navigate([('/work-space/upload/segmentation')])
+  uploadComparisonSegmentation(patient_id: string) {
+    this.router.navigate(['/work-space/upload/segmentation'], {
+      queryParams: { patient_id: patient_id },
+    });
   }
 
   deletePatient(id: string) {
-    
-  } 
+    console.log(`eliminando paciente ${id}`)
+    this.patientService.deletePatient(id).pipe(
+      catchError(error => {
+        console.error('Ocurrió un error al eliminar el paciente: ', error);
+        return of(null);
+      }),
+      finalize(() => {
+        this.ngOnInit();
+      })
+    ).subscribe(response => {
+      try {
+        // Intenta analizar la respuesta como JSON
+        const data = JSON.parse(response);
+        console.log('Paciente eliminado: ', data);
+      } catch (e) {
+        // Si no se puede analizar como JSON, muestra el mensaje como texto plano
+        console.log('Mensaje de respuesta:', response);
+      }
+    });
+  }
 }

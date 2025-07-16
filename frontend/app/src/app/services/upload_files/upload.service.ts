@@ -17,4 +17,15 @@ export class UploadService {
     files.forEach((file) => formData.append('files', file));
     return this.http.post(`${this.apiUrl}/upload/nifti_files`, formData);
   }
+
+  uploadManualSegmentation(patientId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('patient_id', patientId);
+    formData.append('file', file);
+
+    return this.http.post(
+      `${this.apiUrl}/diagnostic/upload_manual_segmentation`,
+      formData
+    );
+  }
 }

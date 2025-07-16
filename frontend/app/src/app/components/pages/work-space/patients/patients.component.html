@@ -177,10 +177,10 @@
             <div>{{ patient.numero_historia_clinica }}</div>
             <div>
               <button
-                (click)="uploadComparisonSegmentation()"
+                (click)="uploadComparisonSegmentation(patient.patient_id!)"
                 class="text-sky-600 hover:underline"
               >
-                Comparar
+                Iniciar
               </button>
             </div>
             <div>
@@ -188,7 +188,7 @@
                 (click)="generateDiagnosis(patient.patient_id!)"
                 class="text-sky-600 hover:underline"
               >
-                Generar
+                Crear
               </button>
             </div>
             <div>

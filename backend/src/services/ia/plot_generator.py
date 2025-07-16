@@ -166,3 +166,56 @@ def plot_class_volume_by_slice(mask, save_path):
     plt.legend()
     plt.tight_layout()
     plt.savefig(save_path)
+
+def generate_comparison_html(flair: np.ndarray, auto_seg: np.ndarray, manual_seg: np.ndarray, patient_id: str) -> str:
+    flair, auto_seg = pad_to_same_shape(flair, auto_seg)
+    flair, manual_seg = pad_to_same_shape(flair, manual_seg)
+
+    depth = min(flair.shape[2], auto_seg.shape[2], manual_seg.shape[2])
+    frames = []
+
+    for z in range(depth):
+        frames.append(go.Frame(
+            data=[
+                go.Heatmap(z=flair[:, :, z], zmin=0, zmax=1, colorscale='gray', showscale=False),
+                go.Heatmap(z=auto_seg[:, :, z], zmin=0, zmax=3, colorscale='Viridis', opacity=0.6, showscale=False),
+                go.Heatmap(z=manual_seg[:, :, z], zmin=0, zmax=3, colorscale='Plasma', opacity=0.6, showscale=False),
+            ],
+            name=str(z)
+        ))
+
+    fig = make_subplots(rows=1, cols=3, subplot_titles=("FLAIR", "Modelo", "Médico"))
+
+    fig.add_trace(go.Heatmap(z=flair[:, :, 0], zmin=0, zmax=1, colorscale='gray', showscale=False), row=1, col=1)
+    fig.add_trace(go.Heatmap(z=auto_seg[:, :, 0], zmin=0, zmax=3, colorscale='Viridis', showscale=False), row=1, col=2)
+    fig.add_trace(go.Heatmap(z=manual_seg[:, :, 0], zmin=0, zmax=3, colorscale='Plasma', showscale=False), row=1, col=3)
+
+    fig.frames = frames
+    fig.update_layout(
+        margin=dict(l=0, r=0, t=40, b=0),
+        updatemenus=[{
+            "type": "buttons",
+            "buttons": [{
+                "label": "Play",
+                "method": "animate",
+                "args": [None, {"frame": {"duration": 100, "redraw": True}, "fromcurrent": True}]
+            }]
+        }],
+        sliders=[{
+            "steps": [
+                {"label": str(z), "method": "animate", "args": [[str(z)], {"mode": "immediate"}]}
+                for z in range(depth)
+            ],
+            "currentvalue": {"prefix": "Slice: "}
+        }]
+    )
+
+    fig.update_yaxes(scaleanchor="x", row=1, col=1)
+    fig.update_yaxes(scaleanchor="x", row=1, col=2)
+    fig.update_yaxes(scaleanchor="x", row=1, col=3)
+
+    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+    template = env.get_template("plot_template.html")
+    html_content = template.render(patient_id=patient_id, plot_div=fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+    return html_content

@@ -23,13 +23,54 @@ def detect_modality(file_name: str) -> str | None:
     return None
 
 def save_uploaded_nifti_files(patient_id: str, user_id: int, upload_files: list) -> str:
-    timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
-    folder_name = f"{timestamp}_{patient_id}"
-    upload_dir = os.path.join("src/uploads", folder_name)
-    os.makedirs(upload_dir, exist_ok=True)
+    # Verificar si ya hay una segmentación previa\
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    # Detectar modalidades
+        cursor.execute("""
+            SELECT report_path, manual_segmentation_path
+            FROM diagnostics
+            WHERE patient_id = %s
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (patient_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if result:
+            report_path, manual_path = result
+            if report_path:
+                raise ValueError("Ya existe una segmentación automática generada para este paciente. No se puede sobrescribir.")
+            if manual_path:
+                raise ValueError("Ya se ha subido una segmentación manual para este paciente. No se puede sobrescribir.")
+    except Exception as db_check_err:
+        raise ValueError(f"Error al verificar segmentaciones previas: {db_check_err}")
+    
+    base_upload_dir = "src/uploads"
+
+    # Buscar si ya existe una carpeta para ese paciente
+    existing_folder = None
+    for name in os.listdir(base_upload_dir):
+        if name.endswith(f"_{patient_id}"):
+            existing_folder = os.path.join(base_upload_dir, name)
+            break
+
+    if existing_folder:
+        print(f"📂 Sobrescribiendo carpeta existente: {existing_folder}")
+        shutil.rmtree(existing_folder)
+        os.makedirs(existing_folder)
+        folder_name = os.path.basename(existing_folder)
+    else:
+        timestamp = datetime.now().strftime("%Y-%m-%d")
+        folder_name = f"{timestamp}_{patient_id}"
+        existing_folder = os.path.join(base_upload_dir, folder_name)
+        os.makedirs(existing_folder)
+
+    upload_dir = existing_folder
     modality_paths = {}
+
     for upload_file in upload_files:
         modality = detect_modality(upload_file.filename)
         if not modality:
@@ -40,42 +81,33 @@ def save_uploaded_nifti_files(patient_id: str, user_id: int, upload_files: list)
             shutil.copyfileobj(upload_file.file, f)
         modality_paths[modality] = temp_path
 
-    # Validar presencia de las 4 modalidades
     expected = ["FLAIR", "T1", "T1c", "T2"]
     if not all(mod in modality_paths for mod in expected):
         raise ValueError(f"Faltan modalidades obligatorias. Detectadas: {list(modality_paths.keys())}")
 
-    # Crear archivos procesados para nnUNet
     processed_dir = os.path.join(upload_dir, "nnunet_input")
     save_modalities_in_order(modality_paths, processed_dir, case_id="case_0000")
 
-    # Actualizar BD con rutas a archivos originales
+    # Actualizar BD
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
         cursor.execute("""
-            UPDATE patients
-            SET flair_path = %s,
-                t1_path = %s,
-                t1ce_path = %s,
-                t2_path = %s
-            WHERE patient_id = %s AND user_id = %s
-        """, (
-            modality_paths["FLAIR"],
-            modality_paths["T1"],
-            modality_paths["T1c"],
-            modality_paths["T2"],
-            patient_id,
-            user_id
-        ))
-
+            UPDATE diagnostics
+            SET upload_folder_id = %s
+            WHERE id = (
+                SELECT id FROM diagnostics
+                WHERE patient_id = %s
+                ORDER BY created_at DESC
+                LIMIT 1
+            )
+        """, (folder_name, patient_id))
         conn.commit()
         cursor.close()
         conn.close()
-        print("Rutas actualizadas en base de datos.")
+        print(f"📝 upload_folder_id actualizado: {folder_name}")
     except Exception as e:
-        print(f"Error al actualizar la base de datos: {e}")
+        print(f"⚠ Error al actualizar upload_folder_id: {e}")
 
     return processed_dir
 

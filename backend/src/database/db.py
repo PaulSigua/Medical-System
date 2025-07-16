@@ -34,6 +34,14 @@ def get_db_connection():
         port=DB_PORT
     )
 
+# Sesión SQLAlchemy para usar en FastAPI
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 # Función para inicializar las tablas
 def create_tables():
     conn = get_db_connection()
@@ -216,6 +224,11 @@ def create_tables():
         $$;
 
     """)
+    
+    cursor.execute("""
+                   ALTER TABLE diagnostics ADD COLUMN diagnostic_text TEXT;
+    """)
+    
     conn.commit()
 
     cursor.close()

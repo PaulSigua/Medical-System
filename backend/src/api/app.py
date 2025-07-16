@@ -6,9 +6,9 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from database.db import create_tables
+# from database.db import create_tables
 from routes.patients import patient_routes
-from routes import auth_routes, user_routes
+from routes import auth_routes, user_routes, diagnostic_routes
 from routes.upload_nifti import upload_file
 from routes.ai import detection_routes
 from fastapi.staticfiles import StaticFiles
@@ -94,6 +94,7 @@ app.include_router(user_routes.router, prefix=api_prefix)
 app.include_router(upload_file.router, prefix=api_prefix)
 # app.include_router(graph_routes.router, prefix=api_prefix)
 app.include_router(detection_routes.router, prefix=api_prefix)
+app.include_router(diagnostic_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():

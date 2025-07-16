@@ -1,0 +1,60 @@
+<div class="flex h-screen overflow-visible">
+  <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col overflow-visible">
+    <app-header-ws class="relative z-0"></app-header-ws>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto p-6">
+      <div class="shadow-lg rounded-lg p-6 border border-sky-200 bg-white">
+        <h1 class="text-center text-sky-500 text-xl font-semibold mb-2">
+          Subir Segmentación Manual
+        </h1>
+        <p class="text-center text-sm text-gray-500 mb-4">
+          Carga un archivo <code>.nii.gz</code> generado por un médico para
+          comparar con la segmentación automática.
+        </p>
+
+        <div
+          class="border border-dashed border-sky-200 rounded-lg p-8 bg-sky-50 flex flex-col items-center justify-center space-y-4"
+        >
+          <div class="bg-sky-100 p-4 rounded-full">
+            <svg
+              class="w-10 h-10 text-sky-400"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 4v16h16V4H4z"></path>
+              <path d="M8 16l4-4 4 4"></path>
+              <path d="M12 12V4"></path>
+            </svg>
+          </div>
+          <p class="font-semibold text-gray-700">
+            Selecciona una segmentación manual (.nii.gz)
+          </p>
+
+          <label
+            class="cursor-pointer inline-flex items-center px-4 py-2 bg-sky-500 text-white text-sm font-medium rounded hover:bg-sky-600 transition"
+          >
+            <input
+              type="file"
+              class="hidden"
+              accept=".nii,.nii.gz"
+              (change)="onManualFileChange($event)"
+            />
+            Seleccionar archivo
+          </label>
+
+          <p *ngIf="manualFileName" class="text-gray-600 text-sm mt-2">
+            Archivo seleccionado: <strong>{{ manualFileName }}</strong>
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -41,10 +41,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'ia',
+    path: 'ai',
     loadChildren: () =>
-      import('./components/pages/work-space/ia/ia.module').then(
-        (m) => m.IaModule
+      import('./components/pages/work-space/ai/ai.module').then(
+        (m) => m.AiModule
       ),
     canActivate: [AuthGuard],
   },
