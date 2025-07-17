@@ -44,4 +44,31 @@ export class AiService {
       params: { patient_id: patientId },
     });
   }
+
+  evaluateIA(data: {
+    patient_id: string;
+    usefulness: boolean;
+    satisfaction: 'Excelente' | 'Satisfactorio' | 'Neutro' | 'No satisfactorio';
+    comments: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/ai_evaluation/`, data);
+  }
+
+  getSatisfactionSummary(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ai_evaluation/summary`);
+  }
+
+  saveManualEvaluation(data: {
+    patient_id: string;
+    is_accurate: string;
+    observations: string;
+  }) {
+    return this.http.post(`${this.apiUrl}/manual_evaluation/`, data);
+  }
+
+  getManualAccuracy(patientId: string) {
+    return this.http.get<{ accuracy_level: 'Sí' | 'Neutro' | 'No' | null }>(
+      `${this.apiUrl}/manual_evaluation/match/${patientId}`
+    );
+  }
 }

@@ -10,9 +10,10 @@ from starlette.middleware.sessions import SessionMiddleware
 from routes.patients import patient_routes
 from routes import auth_routes, user_routes, diagnostic_routes
 from routes.upload_nifti import upload_file
-from routes.ai import detection_routes
+from routes.ai import detection_routes, ai_evaluation, manual_evaluation
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
+from database.db import create_tables
 
 import os
 for var in ["nnUNetv2_results", "nnUNetv2_raw", "nnUNetv2_preprocessed"]:
@@ -95,6 +96,8 @@ app.include_router(upload_file.router, prefix=api_prefix)
 # app.include_router(graph_routes.router, prefix=api_prefix)
 app.include_router(detection_routes.router, prefix=api_prefix)
 app.include_router(diagnostic_routes.router, prefix=api_prefix)
+app.include_router(ai_evaluation.router, prefix=api_prefix)
+app.include_router(manual_evaluation.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():
@@ -128,7 +131,7 @@ async def read_root():
         ]
         return info
 
-# create_tables()
+create_tables()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=9999)

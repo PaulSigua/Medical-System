@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UploadManualComponent } from './upload-manual/upload-manual.component';
 import { ManualDiagnosisComponent } from './manual-diagnosis/manual-diagnosis.component';
+import { EvaluationComponent } from './evaluation/evaluation.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
     component: ManualDiagnosisComponent,
   },
   {
+    path: 'evaluation',
+    component: EvaluationComponent,
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'graphs',
@@ -32,6 +37,7 @@ const routes: Routes = [
     VisualizationComponent,
     UploadManualComponent,
     ManualDiagnosisComponent,
+    EvaluationComponent,
   ],
   imports: [
     CommonModule,

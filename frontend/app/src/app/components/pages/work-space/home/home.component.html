@@ -44,66 +44,26 @@
             </p>
           </header>
           <!-- Histograma 1 -->
-          <article class="w-full min-h-[400px] relative mb-8">
-            <app-histogram
-              class="absolute inset-0 bg-sky-50 p-3"
-              [labels]="['Caso 1', 'Caso 2', 'Caso 3']"
-              [data]="[
-                {
-                  label: 'IA Tradicional',
-                  data: [70, 72, 68],
-                  backgroundColor: '#3B82F6'
-                },
-                {
-                  label: 'IA Avanzada',
-                  data: [85, 87, 86],
-                  backgroundColor: '#10B981'
-                }
-              ]"
-              [options]="{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  title: { display: true, text: 'Comparación de Precisión' }
-                },
-                scales: {
-                  x: { title: { display: true, text: 'Casos' } },
-                  y: {
-                    title: { display: true, text: 'Precisión (%)' },
-                    beginAtZero: true
-                  }
-                }
-              }"
-            ></app-histogram>
-          </article>
-
-          <!-- Histograma 2 -->
           <article class="w-full min-h-[400px] relative">
             <app-histogram
               class="absolute inset-0 bg-sky-50 p-3"
-              [labels]="['Caso A', 'Caso B', 'Caso C']"
-              [data]="[
-                {
-                  label: 'IA Clásica',
-                  data: [65, 60, 62],
-                  backgroundColor: '#F59E0B'
-                },
-                {
-                  label: 'IA Moderna',
-                  data: [88, 90, 89],
-                  backgroundColor: '#8B5CF6'
-                }
-              ]"
+              [labels]="satisfactionLabels"
+              [data]="satisfactionData"
               [options]="{
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                  title: { display: true, text: 'Comparación de Eficiencia' }
+                  title: {
+                    display: true,
+                    text: 'Evaluaciones del uso de IA por los médicos'
+                  }
                 },
                 scales: {
-                  x: { title: { display: true, text: 'Escenarios' } },
+                  x: {
+                    title: { display: true, text: 'Nivel de satisfacción' }
+                  },
                   y: {
-                    title: { display: true, text: 'Eficiencia (%)' },
+                    title: { display: true, text: 'Cantidad de evaluaciones' },
                     beginAtZero: true
                   }
                 }

@@ -192,6 +192,18 @@ export class PatientsComponent implements OnInit {
     this.patientService.getMyPatients().subscribe((patients: Patients[]) => {
       this.patients = patients;
       this.filteredPatients = patients;
+
+      for (let patient of this.patients) {
+        this.iaServide
+          .getManualAccuracy(patient.patient_id!)
+          .subscribe((res) => {
+            const level = res.accuracy_level;
+            if (level === 'Sí') patient.coincidenciaIA = 'alta';
+            else if (level === 'Neutro') patient.coincidenciaIA = 'media';
+            else if (level === 'No') patient.coincidenciaIA = 'baja';
+            else patient.coincidenciaIA = undefined;
+          });
+      }
     });
   }
 
@@ -225,24 +237,33 @@ export class PatientsComponent implements OnInit {
   }
 
   deletePatient(id: string) {
-    console.log(`eliminando paciente ${id}`)
-    this.patientService.deletePatient(id).pipe(
-      catchError(error => {
-        console.error('Ocurrió un error al eliminar el paciente: ', error);
-        return of(null);
-      }),
-      finalize(() => {
-        this.ngOnInit();
-      })
-    ).subscribe(response => {
-      try {
-        // Intenta analizar la respuesta como JSON
-        const data = JSON.parse(response);
-        console.log('Paciente eliminado: ', data);
-      } catch (e) {
-        // Si no se puede analizar como JSON, muestra el mensaje como texto plano
-        console.log('Mensaje de respuesta:', response);
-      }
+    console.log(`eliminando paciente ${id}`);
+    this.patientService
+      .deletePatient(id)
+      .pipe(
+        catchError((error) => {
+          console.error('Ocurrió un error al eliminar el paciente: ', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.ngOnInit();
+        })
+      )
+      .subscribe((response) => {
+        try {
+          // Intenta analizar la respuesta como JSON
+          const data = JSON.parse(response);
+          console.log('Paciente eliminado: ', data);
+        } catch (e) {
+          // Si no se puede analizar como JSON, muestra el mensaje como texto plano
+          console.log('Mensaje de respuesta:', response);
+        }
+      });
+  }
+
+  evaluationAi(patient_id: string) {
+    this.router.navigate(['/ai/evaluation'], {
+      queryParams: { patient_id: patient_id },
     });
   }
 }

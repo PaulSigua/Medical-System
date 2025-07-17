@@ -44,22 +44,21 @@ export class ManualDiagnosisComponent implements OnInit {
       return;
     }
 
-    const payload = {
+    const evaluationPayload = {
       patient_id: this.patientId,
-      description: this.observations,
-      diagnostic: this.diagnosticOk === 'true' ? 'Adecuada' : 'Incorrecta',
+      is_accurate: this.diagnosticOk as 'Sí' | 'Neutro' | 'No',
+      observations: this.observations,
     };
 
-    this.aiService.saveDiagnostic(payload).subscribe({
+    // Primero guarda la evaluación manual
+    this.aiService.saveManualEvaluation(evaluationPayload).subscribe({
       next: () => {
-        alert('Diagnóstico guardado correctamente.');
-        this.diagnosticOk = '';
-        this.observations = '';
-        this.router.navigate([('/work-space/patients')])
+        alert('Evaluación registrada correctamente.');
+        this.router.navigate(['/work-space/patients']);
       },
       error: (err) => {
-        console.error('Error al guardar diagnóstico:', err);
-        alert('Ocurrió un error al guardar el diagnóstico.');
+        console.error('Error al registrar evaluación:', err);
+        alert('Ocurrió un error al registrar la evaluación.');
       },
     });
   }
