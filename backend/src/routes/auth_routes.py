@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.db import SessionLocal
 from models.user import User
-from schemas.user_schema import UserCreate, UserLogin
-from utils.security import hash_password, verify_password, create_access_token
+from schemas.user_schema import UserCreate, UserLogin, ResetRequest, ResetPassword
+from utils.security import hash_password, verify_password, create_access_token, create_reset_token, verify_reset_token
 from fastapi import Query
 
 router = APIRouter(
@@ -64,3 +64,32 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     # Validar y retornar token
     token = create_access_token(data={"sub": db_user.username, "user_id": db_user.id})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.post("/reset-password")
+def reset_password(data: ResetPassword, db: Session = Depends(get_db)):
+    username = verify_reset_token(data.token)
+    if not username:
+        raise HTTPException(status_code=400, detail="Token inválido o expirado")
+
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    user.password = hash_password(data.new_password)
+    db.commit()
+
+    return {"message": "Contraseña actualizada correctamente"}
+
+
+@router.post("/request-password")
+def request_password_reset(data: ResetRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == data.username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Generar token
+    token = create_reset_token(user.username)
+    # print(f"reseft token {token}")
+
+    # Enviar por email (opcional) o retornar directamente (para pruebas)
+    return {"reset_token": token}

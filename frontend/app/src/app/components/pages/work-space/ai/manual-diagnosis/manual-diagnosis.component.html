@@ -41,6 +41,21 @@
 
         <div *ngIf="comparisonUrl && !loading" class="flex gap-6">
           <!-- Visualización (izquierda) -->
+           <div>
+  <label>Modalidad:</label>
+  <select [(ngModel)]="modality" (change)="loadComparison()">
+    <option value="flair">FLAIR</option>
+    <option value="t1c">T1c</option>
+  </select>
+
+  <label>Orientación:</label>
+  <select [(ngModel)]="orientation" (change)="loadComparison()">
+    <option value="axial">Axial</option>
+    <option value="coronal">Coronal</option>
+    <option value="sagittal">Sagital</option>
+  </select>
+</div>
+
           <div class="w-3/4">
             <iframe
               [src]="comparisonUrl"

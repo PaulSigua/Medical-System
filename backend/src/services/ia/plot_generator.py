@@ -2,6 +2,8 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from jinja2 import Environment, FileSystemLoader
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 TEMPLATE_DIR = "src/templates"
@@ -167,32 +169,60 @@ def plot_class_volume_by_slice(mask, save_path):
     plt.tight_layout()
     plt.savefig(save_path)
 
-def generate_comparison_html(flair: np.ndarray, auto_seg: np.ndarray, manual_seg: np.ndarray, patient_id: str) -> str:
-    flair, auto_seg = pad_to_same_shape(flair, auto_seg)
-    flair, manual_seg = pad_to_same_shape(flair, manual_seg)
+def generate_comparison_html(
+    flair: np.ndarray,
+    t1c: np.ndarray,
+    auto_seg: np.ndarray,
+    manual_seg: np.ndarray,
+    patient_id: str,
+    modality: str = "flair",
+    orientation: str = "axial"
+) -> str:
+    modality_img = flair if modality == "flair" else t1c
 
-    depth = min(flair.shape[2], auto_seg.shape[2], manual_seg.shape[2])
+    # Orientación BraTS (axial = [x,y,z], coronal = [x,z,y], sagital = [y,z,x])
+    if orientation == "coronal":
+        modality_img = modality_img.transpose(0, 2, 1)
+        auto_seg = auto_seg.transpose(0, 2, 1)
+        manual_seg = manual_seg.transpose(0, 2, 1)
+    elif orientation == "sagittal":
+        modality_img = modality_img.transpose(1, 2, 0)
+        auto_seg = auto_seg.transpose(1, 2, 0)
+        manual_seg = manual_seg.transpose(1, 2, 0)
+    # Axial (default) = [x,y,z], no transposición
+
+    modality_img, auto_seg = pad_to_same_shape(modality_img, auto_seg)
+    modality_img, manual_seg = pad_to_same_shape(modality_img, manual_seg)
+
+    COLORSCALE_SEG = [
+        [0.0, "rgba(0,0,0,0)"],        # fondo
+        [0.33, "rgba(255,0,0,0.6)"],   # edema
+        [0.66, "rgba(0,255,0,0.6)"],   # non-enhancing
+        [1.0, "rgba(0,0,255,0.6)"]     # enhancing
+    ]
+
+    depth = modality_img.shape[2]
     frames = []
-
     for z in range(depth):
-        frames.append(go.Frame(
-            data=[
-                go.Heatmap(z=flair[:, :, z], zmin=0, zmax=1, colorscale='gray', showscale=False),
-                go.Heatmap(z=auto_seg[:, :, z], zmin=0, zmax=3, colorscale='Viridis', opacity=0.6, showscale=False),
-                go.Heatmap(z=manual_seg[:, :, z], zmin=0, zmax=3, colorscale='Plasma', opacity=0.6, showscale=False),
-            ],
-            name=str(z)
-        ))
+        frames.append(go.Frame(data=[
+            go.Heatmap(z=modality_img[:, :, z], zmin=0, zmax=1, colorscale='gray', showscale=False),
+            go.Heatmap(z=auto_seg[:, :, z], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False),
+            go.Heatmap(z=manual_seg[:, :, z], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False)
+        ], name=str(z)))
 
-    fig = make_subplots(rows=1, cols=3, subplot_titles=("FLAIR", "Modelo", "Médico"))
+    fig = make_subplots(rows=1, cols=3, subplot_titles=[
+        f"{modality.upper()} ({orientation})", "Modelo", "Médico"
+    ])
 
-    fig.add_trace(go.Heatmap(z=flair[:, :, 0], zmin=0, zmax=1, colorscale='gray', showscale=False), row=1, col=1)
-    fig.add_trace(go.Heatmap(z=auto_seg[:, :, 0], zmin=0, zmax=3, colorscale='Viridis', showscale=False), row=1, col=2)
-    fig.add_trace(go.Heatmap(z=manual_seg[:, :, 0], zmin=0, zmax=3, colorscale='Plasma', showscale=False), row=1, col=3)
+    fig.add_trace(go.Heatmap(z=modality_img[:, :, 0], zmin=0, zmax=1, colorscale='gray', showscale=False), 1, 1)
+    fig.add_trace(go.Heatmap(z=auto_seg[:, :, 0], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 2)
+    fig.add_trace(go.Heatmap(z=manual_seg[:, :, 0], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 3)
 
     fig.frames = frames
     fig.update_layout(
         margin=dict(l=0, r=0, t=40, b=0),
+        width=1000,
+        height=400,
         updatemenus=[{
             "type": "buttons",
             "buttons": [{
@@ -202,20 +232,18 @@ def generate_comparison_html(flair: np.ndarray, auto_seg: np.ndarray, manual_seg
             }]
         }],
         sliders=[{
-            "steps": [
-                {"label": str(z), "method": "animate", "args": [[str(z)], {"mode": "immediate"}]}
-                for z in range(depth)
-            ],
+            "steps": [{"label": str(z), "method": "animate", "args": [[str(z)], {"mode": "immediate"}]} for z in range(depth)],
             "currentvalue": {"prefix": "Slice: "}
         }]
     )
 
-    fig.update_yaxes(scaleanchor="x", row=1, col=1)
-    fig.update_yaxes(scaleanchor="x", row=1, col=2)
-    fig.update_yaxes(scaleanchor="x", row=1, col=3)
+    # Escala cuadrada estilo BraTS
+    for i in range(1, 4):
+        fig.update_yaxes(scaleanchor=f"x{i}", row=1, col=i)
 
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template("plot_template.html")
-    html_content = template.render(patient_id=patient_id, plot_div=fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-    return html_content
+    return template.render(
+        patient_id=patient_id,
+        plot_div=fig.to_html(full_html=False, include_plotlyjs='cdn')
+    )

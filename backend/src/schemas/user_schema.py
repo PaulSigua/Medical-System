@@ -33,3 +33,10 @@ class UserUpdate(BaseModel):
     
 class UserPasswordUpdate(BaseModel):
     password: str
+    
+class ResetRequest(BaseModel):
+    username: str
+    
+class ResetPassword(BaseModel):
+    token: str
+    new_password: str

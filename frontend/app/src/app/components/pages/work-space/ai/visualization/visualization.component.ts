@@ -33,36 +33,37 @@ export class VisualizationComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      const folderId = params['folder_id'];
+      const rawFolderId = params['folder_id'] || '';
+      const folderId = rawFolderId.split('/')[0];
       if (!folderId) {
         this.error = 'No se proporcionó el folder_id.';
         this.isLoading = false;
         return;
       }
 
-      // Ejecutar segmentación solo si se necesita la respuesta con métricas
       this.isLoading = true;
-      this.aiService.segmentPatient(folderId).subscribe({
-      next: (res) => {
-        const backendBase = environment.BACKEND_URL;
 
-        this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `${backendBase}${res.segmentation_url}`
-        );
-        this.summaryImageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `${backendBase}${res.summary_image_url}`
-        );
-        this.classDistImageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `${backendBase}${res.class_distribution_url}`
-        );
+      this.aiService.loadSegmentationResults(folderId).subscribe({
+        next: (res) => {
+          const backendBase = environment.BACKEND_URL;
 
-        this.diceScores = res.metrics?.dice_score || null;
-        this.allMetrics = res.metrics?.all_metrics || null;
-        this.explanation = res.explanation || null;
-      },
+          this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `${backendBase}${res.segmentation_url}`
+          );
+          this.summaryImageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `${backendBase}${res.summary_image_url}`
+          );
+          this.classDistImageUrl =
+            this.sanitizer.bypassSecurityTrustResourceUrl(
+              `${backendBase}${res.class_distribution_url}`
+            );
+
+          this.diceScores = res.metrics?.dice_score || null;
+          this.allMetrics = res.metrics?.all_metrics || null;
+          this.explanation = res.explanation || null;
+        },
         error: (err) => {
-          this.error =
-            err.error?.detail || 'Error al cargar la segmentación.';
+          this.error = err.error?.detail || 'Error al cargar resultados.';
           this.isLoading = false;
         },
         complete: () => {
@@ -97,6 +98,7 @@ export class VisualizationComponent implements OnInit {
       alert('Por favor, complete todos los campos del formulario.');
       return;
     }
+
     const payload: DiagnosticForm = {
       patient_id: patientId,
       description: this.observations,

@@ -1,7 +1,7 @@
 <div class="flex items-center justify-center min-h-screen">
   <div class="grid items-center justify-center">
     <h1 class="text-center text-2xl font-bold text-sky-500 mb-4">
-      {{info.name}}
+      {{ info.name }}
     </h1>
     <div class="bg-white p-8 rounded-2xl shadow-lg w-4xl max-w-md">
       <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">
@@ -20,69 +20,114 @@
             type="email"
             formControlName="username"
             placeholder="Correo"
-            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"  
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
           />
-          <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
-            <small class="text-red-400" *ngIf="loginForm.get('username')?.errors?.['required']">
+          <div
+            *ngIf="
+              loginForm.get('username')?.touched &&
+              loginForm.get('username')?.invalid
+            "
+          >
+            <small
+              class="text-red-400"
+              *ngIf="loginForm.get('username')?.errors?.['required']"
+            >
               El correo es obligatorio
             </small>
-            <small class="text-red-400" *ngIf="loginForm.get('username')?.errors?.['email']">
+            <small
+              class="text-red-400"
+              *ngIf="loginForm.get('username')?.errors?.['email']"
+            >
               Ingresa un correo válido
             </small>
           </div>
         </div>
 
         <div class="relative justify-center items-center">
-            <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              formControlName="password"
-              placeholder="Contraseña"
-              class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400 pr-10"
-            />
-            <button
-              type="button"
-              (click)="togglePassword()"
-              class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
-              tabindex="-1"
+          <label class="block text-sm font-medium text-gray-700"
+            >Contraseña</label
+          >
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Contraseña"
+            class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400 pr-10"
+          />
+          <button
+            type="button"
+            (click)="togglePassword()"
+            class="absolute inset-y-0 right-0 flex items-center pt-6 pr-3 text-gray-500 cursor-pointer"
+            tabindex="-1"
+          >
+            <svg
+              *ngIf="!showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                   viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-              </svg>
-              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                   viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3l18 18"/>
-              </svg>
-            </button>
-            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
-              <small class="text-red-400" *ngIf="loginForm.get('password')?.errors?.['required']">
-                La contraseña es obligatoria
-              </small>
-            </div>
-
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            <svg
+              *ngIf="showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.057 10.057 0 012.51-4.232m3.637-2.196A9.967 9.967 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.032 5.003M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3l18 18"
+              />
+            </svg>
+          </button>
+          <div
+            *ngIf="
+              loginForm.get('password')?.touched &&
+              loginForm.get('password')?.invalid
+            "
+          >
+            <small
+              class="text-red-400"
+              *ngIf="loginForm.get('password')?.errors?.['required']"
+            >
+              La contraseña es obligatoria
+            </small>
           </div>
+        </div>
 
-          <div class="flex items-center">
-            <input
-              type="checkbox"
-              
-              id="terms"
-              class="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
-            />
-            <label for="terms" class="ml-2 text-sm text-gray-600">
-              ¿Recordar la 
-              <label class="text-sky-500"
-                >sesión</label
-              >?
-            </label>
-          </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            id="terms"
+            class="h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500 cursor-pointer"
+          />
+          <label for="terms" class="ml-2 text-sm text-gray-600">
+            ¿Recordar la
+            <label class="text-sky-500">sesión</label>?
+          </label>
+        </div>
 
         <button
           type="submit"
@@ -90,9 +135,21 @@
         >
           Iniciar Sesión
         </button>
+
+        <div class="text-center mt-2">
+          <a
+            routerLink="/auth/request-reset"
+            class="text-sm text-sky-500 hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
       </form>
 
-      <div *ngIf="errorMessage" class="flex text-center justify-center pt-2 text-red-500">
+      <div
+        *ngIf="errorMessage"
+        class="flex text-center justify-center pt-2 text-red-500"
+      >
         {{ errorMessage }}
       </div>
 

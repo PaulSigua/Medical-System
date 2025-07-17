@@ -20,6 +20,9 @@ export class ManualDiagnosisComponent implements OnInit {
   diagnosticOk: string = '';
   observations: string = '';
 
+  modality: string = 'flair';
+  orientation: string = 'axial';
+
   constructor(
     private route: ActivatedRoute,
     private aiService: AiService,
@@ -65,17 +68,23 @@ export class ManualDiagnosisComponent implements OnInit {
 
   loadComparison() {
     this.loading = true;
-    this.aiService.generateComparisonByPatient(this.patientId).subscribe({
-      next: (res) => {
-        this.comparisonUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-          `${environment.BACKEND_URL}${res.comparison_url}`
-        );
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Error al cargar comparación.';
-        this.loading = false;
-      },
-    });
+    this.aiService
+      .generateComparisonByPatient(
+        this.patientId,
+        this.modality,
+        this.orientation
+      )
+      .subscribe({
+        next: (res) => {
+          this.comparisonUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `${environment.BACKEND_URL}${res.comparison_url}`
+          );
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Error al cargar comparación.';
+          this.loading = false;
+        },
+      });
   }
 }

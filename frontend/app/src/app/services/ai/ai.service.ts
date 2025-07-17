@@ -35,13 +35,37 @@ export class AiService {
     }>(`${this.apiUrl}/ai/segmentation`, formData);
   }
 
+  loadSegmentationResults(folderId: string): Observable<{
+    segmentation_url: string;
+    summary_image_url: string;
+    class_distribution_url: string;
+    metrics: any;
+    explanation: string;
+  }> {
+    return this.http.get<{
+      segmentation_url: string;
+      summary_image_url: string;
+      class_distribution_url: string;
+      metrics: any;
+      explanation: string;
+    }>(`${this.apiUrl}/ai/load_results/${folderId}`);
+  }
+
   saveDiagnostic(form: DiagnosticForm) {
     return this.http.post(`${this.apiUrl}/diagnostic/save`, form);
   }
 
-  generateComparisonByPatient(patientId: string) {
+  generateComparisonByPatient(
+    patientId: string,
+    modality: string,
+    orientation: string
+  ) {
     return this.http.get<any>(`${this.apiUrl}/ai/comparison_by_patient_id`, {
-      params: { patient_id: patientId },
+      params: {
+        patient_id: patientId,
+        modality,
+        orientation,
+      },
     });
   }
 

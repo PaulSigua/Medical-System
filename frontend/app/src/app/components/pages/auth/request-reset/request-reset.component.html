@@ -1,0 +1,47 @@
+<div class="flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">
+      Recuperar contraseña
+    </h2>
+    <p class="text-center text-gray-500 mb-6">
+      Ingresa tu correo para solicitar un enlace de restablecimiento
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="requestReset()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+        <input
+          type="email"
+          formControlName="username"
+          placeholder="Correo"
+          class="mt-1 block w-full px-3 py-2 border-1 rounded-lg focus:outline-1 focus:outline-sky-100 border-sky-100 placeholder:text-gray-400"
+        />
+        <div *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+          <small class="text-red-400" *ngIf="form.get('username')?.errors?.['required']">
+            El correo es obligatorio
+          </small>
+          <small class="text-red-400" *ngIf="form.get('username')?.errors?.['email']">
+            Ingresa un correo válido
+          </small>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="w-full py-2 rounded-lg bg-sky-400 text-white font-medium hover:bg-sky-500 transition duration-200"
+      >
+        {{ loading ? 'Enviando...' : 'Enviar enlace' }}
+      </button>
+
+      <div *ngIf="error" class="text-red-500 text-center mt-2">
+        {{ error }}
+      </div>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-gray-600">
+      ¿Ya tienes una cuenta?
+      <a routerLink="/auth/login" class="text-sky-500 hover:underline">Inicia sesión</a>
+    </p>
+  </div>
+</div>
