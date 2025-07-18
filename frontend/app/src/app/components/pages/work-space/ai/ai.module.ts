@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { UploadManualComponent } from './upload-manual/upload-manual.component';
 import { ManualDiagnosisComponent } from './manual-diagnosis/manual-diagnosis.component';
 import { EvaluationComponent } from './evaluation/evaluation.component';
+import { LucideAngularModule } from 'lucide-angular';
 
 const routes: Routes = [
   {
@@ -44,6 +45,7 @@ const routes: Routes = [
     WorkSpaceModule,
     RouterModule.forChild(routes),
     FormsModule,
+    LucideAngularModule
   ],
 })
 export class AiModule {}

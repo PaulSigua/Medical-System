@@ -58,7 +58,7 @@ def save_uploaded_nifti_files(patient_id: str, user_id: int, upload_files: list)
             break
 
     if existing_folder:
-        print(f"📂 Sobrescribiendo carpeta existente: {existing_folder}")
+        # print(f"Sobrescribiendo carpeta existente: {existing_folder}")
         shutil.rmtree(existing_folder)
         os.makedirs(existing_folder)
         folder_name = os.path.basename(existing_folder)
@@ -89,25 +89,25 @@ def save_uploaded_nifti_files(patient_id: str, user_id: int, upload_files: list)
     save_modalities_in_order(modality_paths, processed_dir, case_id="case_0000")
 
     # Actualizar BD
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            UPDATE diagnostics
-            SET upload_folder_id = %s
-            WHERE id = (
-                SELECT id FROM diagnostics
-                WHERE patient_id = %s
-                ORDER BY created_at DESC
-                LIMIT 1
-            )
-        """, (folder_name, patient_id))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        print(f"📝 upload_folder_id actualizado: {folder_name}")
-    except Exception as e:
-        print(f"⚠ Error al actualizar upload_folder_id: {e}")
+    # try:
+    #     conn = get_db_connection()
+    #     cursor = conn.cursor()
+    #     cursor.execute("""
+    #         UPDATE diagnostics
+    #         SET upload_folder_id = %s
+    #         WHERE id = (
+    #             SELECT id FROM diagnostics
+    #             WHERE patient_id = %s
+    #             ORDER BY created_at DESC
+    #             LIMIT 1
+    #         )
+    #     """, (folder_name, patient_id))
+    #     conn.commit()
+    #     cursor.close()
+    #     conn.close()
+    #     print(f"upload_folder_id actualizado: {folder_name}")
+    # except Exception as e:
+    #     print(f"Error al actualizar upload_folder_id: {e}")
 
     return processed_dir
 

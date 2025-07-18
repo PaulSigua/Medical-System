@@ -3,6 +3,7 @@ import { AiService } from '../../../../../services/ai/ai.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UploadService } from '../../../../../services/upload_files/upload.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Upload } from 'lucide-angular';
 
 @Component({
   selector: 'app-segmentation',
@@ -17,6 +18,10 @@ export class SegmentationComponent implements OnInit {
   error: string | null = null;
   loading = false;
   dragging = false;
+
+  icons = {
+    Upload
+  }
 
   // Detección de modalidades similar al backend
   modalityKeywords: Record<string, string[]> = {

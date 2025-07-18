@@ -23,7 +23,7 @@
           <select
             [(ngModel)]="usefulness"
             name="usefulness"
-            class="w-full border rounded p-2"
+            class="w-full border rounded p-2 border-gray-300"
           >
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
@@ -35,7 +35,7 @@
           <select
             [(ngModel)]="satisfaction"
             name="satisfaction"
-            class="w-full border rounded p-2"
+            class="w-full border rounded p-2 border-gray-300"
             required
           >
             <option value="Excelente">Excelente</option>
@@ -51,7 +51,7 @@
             [(ngModel)]="comments"
             name="comments"
             rows="4"
-            class="w-full border rounded p-2"
+            class="w-full border border-gray-300 rounded p-2 focus:outline-1 focus:outline-sky-100"
           ></textarea>
         </div>
 

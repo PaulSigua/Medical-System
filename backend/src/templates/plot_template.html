@@ -10,27 +10,44 @@
         background-color: white;
         border: none;
       }
+
       .content {
         padding: 1rem;
-        border: none;
+        display: flex;
+        justify-content: center;
       }
+
+      .inner-container {
+        max-width: 800px;
+        width: 100%;
+        border: 1px solid #cbd5e0;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
       h2 {
-        color: #747d8b;
-        font-size: 1rem;
-        font-weight: auto;
+        color: #4a5568;
+        font-size: 1.1rem;
+        text-align: center;
         margin-bottom: 1rem;
       }
 
       .js-plotly-plot {
-        width: 100% !important;
+        margin: 0 auto !important;
         height: auto !important;
       }
     </style>
   </head>
   <body>
     <div class="content">
-      <h2>Segmentación 3D realizada al paciente {{ patient_id }}</h2>
-      {{ plot_div | safe }}
+      <div class="inner-container">
+        <h2>
+          Segmentación 3D realizada al paciente {{ patient_id.split('_')[1] }}
+        </h2>
+        {{ plot_div | safe }}
+      </div>
     </div>
   </body>
 </html>

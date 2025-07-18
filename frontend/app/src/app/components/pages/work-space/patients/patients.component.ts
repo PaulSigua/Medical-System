@@ -44,6 +44,9 @@ export class PatientsComponent implements OnInit {
   // this.showAlert    = true;
   isLoading: boolean = false;
 
+  confirmDeleteOpen = false;
+  patientToDelete: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private patientService: PatientService,
@@ -207,10 +210,6 @@ export class PatientsComponent implements OnInit {
     });
   }
 
-  eliminarDiagnostico(patient: Patients) {
-    console.log('Eliminando paciente:', patient);
-  }
-
   generateDiagnosis(patient_id: string) {
     try {
       this.isLoading = true;
@@ -236,26 +235,32 @@ export class PatientsComponent implements OnInit {
     });
   }
 
-  deletePatient(id: string) {
-    console.log(`eliminando paciente ${id}`);
+  promptDeletePatient(patientId: string) {
+    this.patientToDelete = patientId;
+    this.confirmDeleteOpen = true;
+  }
+
+  confirmDeletePatient() {
+    if (!this.patientToDelete) return;
+
     this.patientService
-      .deletePatient(id)
+      .deletePatient(this.patientToDelete)
       .pipe(
         catchError((error) => {
           console.error('Ocurrió un error al eliminar el paciente: ', error);
           return of(null);
         }),
         finalize(() => {
+          this.patientToDelete = null;
+          this.confirmDeleteOpen = false;
           this.ngOnInit();
         })
       )
       .subscribe((response) => {
         try {
-          // Intenta analizar la respuesta como JSON
           const data = JSON.parse(response);
           console.log('Paciente eliminado: ', data);
         } catch (e) {
-          // Si no se puede analizar como JSON, muestra el mensaje como texto plano
           console.log('Mensaje de respuesta:', response);
         }
       });

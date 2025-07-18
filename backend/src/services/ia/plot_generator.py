@@ -29,6 +29,10 @@ def pad_to_same_shape(modality: np.ndarray, mask: np.ndarray):
 
     return modality_padded, mask_padded
 
+# Reorienta una imagen axial como en BraTS (vista desde los pies del paciente)
+def orient_brats(slice_2d: np.ndarray) -> np.ndarray:
+    return np.fliplr(np.rot90(slice_2d, k=1))
+
 def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, patient_id: str) -> str:
     modality, mask = pad_to_same_shape(modality, mask)
     depth = min(modality.shape[2], mask.shape[2])
@@ -38,14 +42,14 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
         frame = go.Frame(
             data=[
                 go.Heatmap(
-                    z=modality[:, :, z],
+                    z=orient_brats(modality[:, :, z]),
                     zmin=0,
                     zmax=1,
                     colorscale='gray',
                     showscale=False
                 ),
                 go.Heatmap(
-                    z=mask[:, :, z],
+                    z=orient_brats(mask[:, :, z]),
                     zmin=0,
                     zmax=3,
                     colorscale='Viridis',
@@ -60,7 +64,7 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
     fig = make_subplots(rows=1, cols=2, subplot_titles=("MR del Paciente", "Predicción"))
 
     fig.add_trace(go.Heatmap(
-        z=modality[:, :, 0],
+        z=orient_brats(modality[:, :, 0]),
         zmin=0,
         zmax=1,
         colorscale='gray',
@@ -68,7 +72,7 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
     ), row=1, col=1)
 
     fig.add_trace(go.Heatmap(
-        z=mask[:, :, 0],
+        z=orient_brats(mask[:, :, 0]),
         zmin=0,
         zmax=3,
         colorscale='Viridis',
@@ -120,18 +124,21 @@ def generate_summary_png(image: np.ndarray, mask: np.ndarray, output_path: str, 
 
     plt.figure(figsize=(16, 4))
 
+    # Reorientar imagen original
+    img_slice = orient_brats(image[:, :, slice_index])
+
     # Imagen original
     plt.subplot(1, len(labels) + 1, 1)
-    plt.imshow(image[:, :, slice_index], cmap="gray")
+    plt.imshow(img_slice, cmap="gray")
     plt.title(f"Modalidad ({modality_name})")
     plt.axis("off")
 
     # Máscaras superpuestas
     for i, (label_val, (label_name, cmap)) in enumerate(labels.items(), start=2):
-        binary_mask = (mask[:, :, slice_index] == label_val)
+        mask_slice = orient_brats((mask[:, :, slice_index] == label_val).astype(int))
         plt.subplot(1, len(labels) + 1, i)
-        plt.imshow(image[:, :, slice_index], cmap="gray")
-        plt.imshow(binary_mask, cmap=cmap, alpha=0.6)
+        plt.imshow(img_slice, cmap="gray")
+        plt.imshow(mask_slice, cmap=cmap, alpha=0.6)
         plt.title(label_name)
         plt.axis("off")
 
@@ -180,7 +187,7 @@ def generate_comparison_html(
 ) -> str:
     modality_img = flair if modality == "flair" else t1c
 
-    # Orientación BraTS (axial = [x,y,z], coronal = [x,z,y], sagital = [y,z,x])
+    # Reorientación espacial
     if orientation == "coronal":
         modality_img = modality_img.transpose(0, 2, 1)
         auto_seg = auto_seg.transpose(0, 2, 1)
@@ -189,34 +196,36 @@ def generate_comparison_html(
         modality_img = modality_img.transpose(1, 2, 0)
         auto_seg = auto_seg.transpose(1, 2, 0)
         manual_seg = manual_seg.transpose(1, 2, 0)
-    # Axial (default) = [x,y,z], no transposición
 
+    # Asegurar mismo tamaño
     modality_img, auto_seg = pad_to_same_shape(modality_img, auto_seg)
     modality_img, manual_seg = pad_to_same_shape(modality_img, manual_seg)
 
+    # Colores unificados
     COLORSCALE_SEG = [
-        [0.0, "rgba(0,0,0,0)"],        # fondo
-        [0.33, "rgba(255,0,0,0.6)"],   # edema
-        [0.66, "rgba(0,255,0,0.6)"],   # non-enhancing
-        [1.0, "rgba(0,0,255,0.6)"]     # enhancing
+        [0.0, "rgba(0,0,0,0)"],         # fondo
+        [0.33, "rgba(255,255,0,0.6)"],  # edema - amarillo
+        [0.66, "rgba(0,255,0,0.6)"],    # non-enhancing - verde
+        [1.0, "rgba(0,0,255,0.6)"]      # enhancing - azul
     ]
 
     depth = modality_img.shape[2]
     frames = []
+
     for z in range(depth):
         frames.append(go.Frame(data=[
-            go.Heatmap(z=modality_img[:, :, z], zmin=0, zmax=1, colorscale='gray', showscale=False),
-            go.Heatmap(z=auto_seg[:, :, z], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False),
-            go.Heatmap(z=manual_seg[:, :, z], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False)
+            go.Heatmap(z=orient_brats(modality_img[:, :, z]), zmin=0, zmax=1, colorscale='gray', showscale=False),
+            go.Heatmap(z=orient_brats(auto_seg[:, :, z]), zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False),
+            go.Heatmap(z=orient_brats(manual_seg[:, :, z]), zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False)
         ], name=str(z)))
 
     fig = make_subplots(rows=1, cols=3, subplot_titles=[
         f"{modality.upper()} ({orientation})", "Modelo", "Médico"
     ])
 
-    fig.add_trace(go.Heatmap(z=modality_img[:, :, 0], zmin=0, zmax=1, colorscale='gray', showscale=False), 1, 1)
-    fig.add_trace(go.Heatmap(z=auto_seg[:, :, 0], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 2)
-    fig.add_trace(go.Heatmap(z=manual_seg[:, :, 0], zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 3)
+    fig.add_trace(go.Heatmap(z=orient_brats(modality_img[:, :, 0]), zmin=0, zmax=1, colorscale='gray', showscale=False), 1, 1)
+    fig.add_trace(go.Heatmap(z=orient_brats(auto_seg[:, :, 0]), zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 2)
+    fig.add_trace(go.Heatmap(z=orient_brats(manual_seg[:, :, 0]), zmin=0, zmax=3, colorscale=COLORSCALE_SEG, showscale=False), 1, 3)
 
     fig.frames = frames
     fig.update_layout(
@@ -237,7 +246,6 @@ def generate_comparison_html(
         }]
     )
 
-    # Escala cuadrada estilo BraTS
     for i in range(1, 4):
         fig.update_yaxes(scaleanchor=f"x{i}", row=1, col=i)
 
@@ -247,3 +255,84 @@ def generate_comparison_html(
         patient_id=patient_id,
         plot_div=fig.to_html(full_html=False, include_plotlyjs='cdn')
     )
+
+def generate_gradcam_overlay_html(
+    cam_volume: np.ndarray,
+    modality_volume: np.ndarray,
+    patient_id: str,
+    orientation: str = "axial"
+) -> str:
+    from jinja2 import Environment, FileSystemLoader
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    # Reorientar según el plano
+    if orientation == "coronal":
+        cam_volume = cam_volume.transpose(0, 2, 1)
+        modality_volume = modality_volume.transpose(0, 2, 1)
+    elif orientation == "sagittal":
+        cam_volume = cam_volume.transpose(1, 2, 0)
+        modality_volume = modality_volume.transpose(1, 2, 0)
+
+    # Normalización
+    cam_norm = cam_volume / (np.max(cam_volume) + 1e-8)
+    modality_norm = (modality_volume - modality_volume.min()) / (modality_volume.max() - modality_volume.min() + 1e-8)
+
+    depth = cam_volume.shape[2]
+    frames = []
+
+    for z in range(depth):
+        frames.append(go.Frame(data=[
+            go.Heatmap(
+                z=orient_brats(modality_norm[:, :, z]),
+                colorscale="gray",
+                showscale=False
+            ),
+            go.Heatmap(
+                z=np.fliplr(orient_brats(cam_norm[:, :, z])),  # ✅ solo invertir Grad-CAM
+                colorscale="jet",
+                opacity=0.6,
+                showscale=False
+            ),
+        ], name=str(z)))
+
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Heatmap(
+        z=orient_brats(modality_norm[:, :, 0]),
+        colorscale="gray",
+        showscale=False
+    ), row=1, col=1)
+
+    fig.add_trace(go.Heatmap(
+        z=np.fliplr(orient_brats(cam_norm[:, :, 0])),  # ✅ solo invertir Grad-CAM
+        colorscale="jet",
+        opacity=0.6,
+        showscale=True
+    ), row=1, col=1)
+
+    fig.frames = frames
+    fig.update_layout(
+        margin=dict(l=0, r=0, t=30, b=0),
+        width=600,
+        height=500,
+        updatemenus=[{
+            "type": "buttons",
+            "buttons": [{
+                "label": "Play",
+                "method": "animate",
+                "args": [None, {"frame": {"duration": 100, "redraw": True}, "fromcurrent": True}]
+            }]
+        }],
+        sliders=[{
+            "steps": [{"label": str(z), "method": "animate", "args": [[str(z)], {"mode": "immediate"}]} for z in range(depth)],
+            "currentvalue": {"prefix": "Slice: "}
+        }]
+    )
+
+    fig.update_yaxes(scaleanchor="x", row=1, col=1)
+
+    # Renderizar en plantilla
+    env = Environment(loader=FileSystemLoader("src/templates"))
+    template = env.get_template("plot_template.html")
+    return template.render(patient_id=patient_id, plot_div=fig.to_html(full_html=False, include_plotlyjs='cdn'))

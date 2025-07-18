@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadService } from '../../../../../services/upload_files/upload.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Upload } from 'lucide-angular';
 
 @Component({
   selector: 'app-upload-manual',
@@ -12,7 +13,11 @@ export class UploadManualComponent implements OnInit {
   manualFile: File | null = null;
   manualFileName = '';
   patientId = '';
-  loading = false;
+  isLoading = false;
+  error: string | null = null;
+  icons = {
+    Upload
+  }
 
   constructor(
     private uploadService: UploadService,
@@ -44,7 +49,7 @@ export class UploadManualComponent implements OnInit {
   uploadManualSegmentation() {
     if (!this.manualFile || !this.patientId) return;
 
-    this.loading = true;
+    this.isLoading = true;
     this.uploadService
       .uploadManualSegmentation(this.patientId, this.manualFile)
       .subscribe({
@@ -54,9 +59,12 @@ export class UploadManualComponent implements OnInit {
           });
         },
         error: (err) => {
-          console.error('Error al subir segmentación manual:', err);
-          alert('Error al subir segmentación.');
-          this.loading = false;
+          this.isLoading = false;
+          if (err.status === 500) {
+            this.error = 'No se ha realizado el diagnóstico previo del paciente (segmentación automática).';
+          } else {
+            this.error = 'Error al subir segmentación.';
+          }
         },
       });
   }

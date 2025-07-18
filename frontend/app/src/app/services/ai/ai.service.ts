@@ -39,6 +39,7 @@ export class AiService {
     segmentation_url: string;
     summary_image_url: string;
     class_distribution_url: string;
+    gradcam_url: string | null;
     metrics: any;
     explanation: string;
   }> {
@@ -46,6 +47,7 @@ export class AiService {
       segmentation_url: string;
       summary_image_url: string;
       class_distribution_url: string;
+      gradcam_url: string;
       metrics: any;
       explanation: string;
     }>(`${this.apiUrl}/ai/load_results/${folderId}`);

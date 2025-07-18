@@ -15,6 +15,7 @@ export class VisualizationComponent implements OnInit {
   iframeUrl: SafeResourceUrl | null = null;
   summaryImageUrl: SafeResourceUrl | null = null;
   classDistImageUrl: SafeResourceUrl | null = null;
+  gradCamUrl: SafeResourceUrl | null = null;
   isLoading = true;
   error: string | null = null;
   diceScores: any = null;
@@ -57,6 +58,10 @@ export class VisualizationComponent implements OnInit {
             this.sanitizer.bypassSecurityTrustResourceUrl(
               `${backendBase}${res.class_distribution_url}`
             );
+
+          this.gradCamUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            `${backendBase}${res.gradcam_url}`
+          );
 
           this.diceScores = res.metrics?.dice_score || null;
           this.allMetrics = res.metrics?.all_metrics || null;

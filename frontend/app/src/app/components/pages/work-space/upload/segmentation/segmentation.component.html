@@ -40,19 +40,10 @@
           [class.bg-sky-100]="dragging"
         >
           <div class="bg-sky-100 p-4 rounded-full">
-            <svg
-              class="w-10 h-10 text-sky-400"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M4 4v16h16V4H4z"></path>
-              <path d="M8 16l4-4 4 4"></path>
-              <path d="M12 12V4"></path>
-            </svg>
+              <lucide-icon
+                [name]="icons.Upload"
+                class="text-sky-500"
+              ></lucide-icon>
           </div>
           <p class="font-semibold text-gray-700">
             Arrastra y suelta archivos .nii.gz aquí
