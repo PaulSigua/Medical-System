@@ -25,9 +25,8 @@ async def segment_patient(
     framework: str = Form("nnunet")
 ):
     try:
-        # 🔧 Corregir si ya viene con "/nnunet_input"
+        # Limpiar el folder_id
         clean_folder_name = upload_folder_id.replace("/nnunet_input", "").replace("\\nnunet_input", "")
-        
         input_dir = os.path.join("src", "uploads", clean_folder_name, "nnunet_input")
         if not os.path.exists(input_dir):
             raise HTTPException(status_code=400, detail=f"Directorio {input_dir} no existe")
@@ -35,33 +34,13 @@ async def segment_patient(
         html_output_dir = os.path.join("src/static", clean_folder_name, "html")
         os.makedirs(html_output_dir, exist_ok=True)
 
-        # 1. Ejecutar segmentación
+        # 1. Segmentación
         segmentation, metrics = perform_segmentation_from_folder(input_dir)
 
-        # 2. Explicación GPT
-        explanation = None
+        # 2. Grad-CAM
+        cam_stats = None
         try:
-            prompt = build_explanation_prompt(patient_id="desconocido", metrics=metrics)
-            explanation = explain_prediction_with_gpt(prompt)
-        except Exception as e:
-            print("⚠ No se pudo generar explicación:", str(e))
-
-        # 3. Visualización HTML (con FLAIR)
-        flair_path = os.path.join(input_dir, "case_0000_0000.nii.gz")
-        flair_img = load_nifti(flair_path)
-        html_content = generate_segmentation_slice_html(flair_img, segmentation, clean_folder_name)
-        with open(os.path.join(html_output_dir, "segmentation_result.html"), "w", encoding="utf-8") as f:
-            f.write(html_content)
-
-        # 4. Imagen resumen
-        generate_summary_png(flair_img, segmentation, os.path.join(html_output_dir, "segmentation_summary.png"))
-
-        # 5. Distribución de clases
-        plot_class_distribution(segmentation, os.path.join(html_output_dir, "class_distribution.png"))
-
-        # 6. GRAD-CAM AUTOMÁTICO
-        try:
-            _, cam, t1c = generate_gradcam_nifti(
+            _, cam, t1c, cam_stats = generate_gradcam_nifti(
                 patient_id="desconocido",
                 upload_folder=clean_folder_name
             )
@@ -71,17 +50,43 @@ async def segment_patient(
         except Exception as e:
             print("⚠ Grad-CAM no generado:", str(e))
 
-        # 7. Summary.json
+        # 3. Explicación GPT (con Grad-CAM si se pudo)
+        explanation = None
+        try:
+            prompt = build_explanation_prompt(
+                patient_id="desconocido",
+                metrics=metrics,
+                gradcam_stats=cam_stats  # ✅ nuevo argumento
+            )
+            explanation = explain_prediction_with_gpt(prompt)
+        except Exception as e:
+            print("⚠ No se pudo generar explicación:", str(e))
+
+        # 4. HTML Plot principal
+        flair_path = os.path.join(input_dir, "case_0000_0000.nii.gz")
+        flair_img = load_nifti(flair_path)
+        html_content = generate_segmentation_slice_html(flair_img, segmentation, clean_folder_name)
+        with open(os.path.join(html_output_dir, "segmentation_result.html"), "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+        # 5. Imagen resumen
+        generate_summary_png(flair_img, segmentation, os.path.join(html_output_dir, "segmentation_summary.png"))
+
+        # 6. Distribución de clases
+        plot_class_distribution(segmentation, os.path.join(html_output_dir, "class_distribution.png"))
+
+        # 7. Guardar summary.json
         summary_path = os.path.join(html_output_dir, "summary.json")
         with open(summary_path, "w", encoding="utf-8") as f:
             json.dump({**metrics, "explanation": explanation}, f, indent=2)
 
-        return JSONResponse({"resuslts" : "ok"})
+        return JSONResponse({"results": "ok"})
 
     except Exception as e:
         print("EXCEPCIÓN EN SEGMENTACIÓN")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error en segmentación: {str(e)}")
+
 
 @router.get("/load_results/{folder_id}")
 def load_segmentation_results(folder_id: str):

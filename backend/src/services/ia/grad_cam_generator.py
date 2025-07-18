@@ -100,4 +100,19 @@ def generate_gradcam_nifti(patient_id: str, upload_folder: str, class_index: int
     output_path = os.path.join("src", "processed_files", f"{patient_id}_gradcam_class{class_index}.nii.gz")
     nib.save(cam_nifti, output_path)
 
-    return output_path, cam_resized, nib.load(t1c_path).get_fdata()
+    # === 9. Métricas adicionales para explicación ===
+    threshold = 0.7
+    cam_mask = cam_resized > threshold
+    tumor_mask = (cam_resized > 0.1)  # opcional si tienes segmentación
+
+    intersection = np.logical_and(cam_mask, tumor_mask).sum()
+    union = np.logical_or(cam_mask, tumor_mask).sum()
+    iou = float(intersection / union) if union > 0 else 0.0
+
+    max_index = np.unravel_index(np.argmax(cam_resized), cam_resized.shape)
+    stats = {
+        "gradcam_max_location": tuple(int(x) for x in max_index),
+        "gradcam_iou_estimate": iou
+    }
+
+    return output_path, cam_resized, nib.load(t1c_path).get_fdata(), stats

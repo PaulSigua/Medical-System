@@ -23,7 +23,7 @@ def get_satisfaction_summary(db: Session):
     )
 
     summary = {label: count for label, count in results}
-    print(summary)
+    # print(summary)
     all_labels = ['Excelente', 'Satisfactorio', 'Neutro', 'No satisfactorio']
     # Asegura que estén todos los labels
     return {label: summary.get(label, 0) for label in all_labels}
