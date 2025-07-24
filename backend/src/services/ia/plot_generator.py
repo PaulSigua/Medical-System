@@ -2,11 +2,19 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from jinja2 import Environment, FileSystemLoader
-import matplotlib
+import matplotlib, cv2
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 TEMPLATE_DIR = "src/templates"
+
+# Reorienta una imagen axial como en BraTS (vista desde los pies del paciente)
+def orient_brats(slice_2d: np.ndarray) -> np.ndarray:
+    return np.flipud(np.rot90(slice_2d, k=1))
+
+# Para visualización en Matplotlib
+def orient_brats_matplotlib(slice_2d: np.ndarray) -> np.ndarray:
+    return np.rot90(slice_2d, k=1)
 
 def pad_to_same_shape(modality: np.ndarray, mask: np.ndarray):
     h1, w1, _ = modality.shape
@@ -28,10 +36,6 @@ def pad_to_same_shape(modality: np.ndarray, mask: np.ndarray):
     mask_padded = pad(mask, target_h, target_w)
 
     return modality_padded, mask_padded
-
-# Reorienta una imagen axial como en BraTS (vista desde los pies del paciente)
-def orient_brats(slice_2d: np.ndarray) -> np.ndarray:
-    return np.fliplr(np.rot90(slice_2d, k=1))
 
 def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, patient_id: str) -> str:
     modality, mask = pad_to_same_shape(modality, mask)
@@ -113,37 +117,61 @@ def generate_segmentation_slice_html(modality: np.ndarray, mask: np.ndarray, pat
 
     return html_content
 
-def generate_summary_png(image: np.ndarray, mask: np.ndarray, output_path: str, modality_name="FLAIR"):
-    slice_index = image.shape[2] // 2  # Cortar al medio
+def generate_modalities_segmentation_png(
+    modalities: dict,
+    mask: np.ndarray,
+    output_path: str
+):
+    """
+    modalities: dict con claves ['T1', 'T1c', 'T2', 'Flair'] y valores np.ndarray
+    mask: máscara de segmentación (3D)
+    output_path: ruta del archivo PNG a guardar
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
 
-    labels = {
-        1: ("edema", "Reds"),
-        2: ("non-enhancing tumor", "Blues"),
-        3: ("enhancing tumour", "Greens")
+    # === Slice central ===
+    slice_index = mask.shape[2] // 2
+
+    # === Colores RGBA por clase ===
+    label_colors = {
+        1: (0, 0, 1, 0.6),    # non-enhancing (azul)
+        2: (0, 1, 0, 0.6),    # edema (verde)
+        3: (1, 1, 0, 0.6),   # enhancing (amarillo)
     }
 
-    plt.figure(figsize=(16, 4))
+    fig, axes = plt.subplots(len(modalities), 2, figsize=(8, 10))
+    fig.suptitle("Segmentación por modalidad y método de red neuronal", fontsize=14)
 
-    # Reorientar imagen original
-    img_slice = orient_brats(image[:, :, slice_index])
+    for i, (modality_name, volume) in enumerate(modalities.items()):
+        # Extraer el slice
+        raw_img_slice = volume[:, :, slice_index]
+        raw_mask_slice = mask[:, :, slice_index]
 
-    # Imagen original
-    plt.subplot(1, len(labels) + 1, 1)
-    plt.imshow(img_slice, cmap="gray")
-    plt.title(f"Modalidad ({modality_name})")
-    plt.axis("off")
+        # Reorientar ambos al estilo BraTS (vista desde los pies)
+        img_slice = orient_brats_matplotlib(raw_img_slice)
+        mask_slice = orient_brats_matplotlib(raw_mask_slice)
 
-    # Máscaras superpuestas
-    for i, (label_val, (label_name, cmap)) in enumerate(labels.items(), start=2):
-        mask_slice = orient_brats((mask[:, :, slice_index] == label_val).astype(int))
-        plt.subplot(1, len(labels) + 1, i)
-        plt.imshow(img_slice, cmap="gray")
-        plt.imshow(mask_slice, cmap=cmap, alpha=0.6)
-        plt.title(label_name)
-        plt.axis("off")
+        # === Columna izquierda: imagen original ===
+        ax_left = axes[i, 0]
+        ax_left.imshow(img_slice, cmap="gray")
+        ax_left.set_title(modality_name)
+        ax_left.axis("off")
 
-    plt.tight_layout()
-    plt.savefig(output_path, bbox_inches='tight')
+        # === Columna derecha: imagen + overlay de segmentación ===
+        ax_right = axes[i, 1]
+        ax_right.imshow(img_slice, cmap="gray")
+
+        overlay = np.zeros((*mask_slice.shape, 4))
+        for label_val, color in label_colors.items():
+            overlay[mask_slice == label_val] = color
+
+        ax_right.imshow(overlay)
+        ax_right.set_title("Segmentación")
+        ax_right.axis("off")
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(output_path, bbox_inches="tight")
     plt.close()
 
 def plot_class_distribution(mask, save_path):
@@ -151,7 +179,7 @@ def plot_class_distribution(mask, save_path):
     counts = [(mask == i).sum() for i in labels]
     
     plt.figure(figsize=(6, 4))
-    plt.bar(labels.values(), counts, color=['red', 'blue', 'green'])
+    plt.bar(labels.values(), counts, color=['green', 'blue', 'yellow'])
     plt.title("Distribución de Voxeles Segmentados por Clase")
     plt.ylabel("Número de voxeles")
     plt.tight_layout()

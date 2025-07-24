@@ -4,7 +4,7 @@ import os, traceback, json
 from services.ia.nnunet_segmentation import perform_segmentation_from_folder
 from services.ia.plot_generator import (
     generate_segmentation_slice_html,
-    generate_summary_png,
+    generate_modalities_segmentation_png,
     plot_class_distribution,
     generate_comparison_html,
     generate_gradcam_overlay_html
@@ -70,7 +70,26 @@ async def segment_patient(
             f.write(html_content)
 
         # 5. Imagen resumen
-        generate_summary_png(flair_img, segmentation, os.path.join(html_output_dir, "segmentation_summary.png"))
+        # 4. HTML Plot principal
+        flair_path = os.path.join(input_dir, "case_0000_0002.nii.gz")
+        flair_img = load_nifti(flair_path)
+        html_content = generate_segmentation_slice_html(flair_img, segmentation, clean_folder_name)
+        with open(os.path.join(html_output_dir, "segmentation_result.html"), "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+        # 5. Imagen resumen (por modalidad con segmentación)
+        modalities = {
+            "T1": load_nifti(os.path.join(input_dir, "case_0000_0000.nii.gz")),
+            "T1c": load_nifti(os.path.join(input_dir, "case_0000_0001.nii.gz")),
+            "T2": load_nifti(os.path.join(input_dir, "case_0000_0003.nii.gz")),
+            "Flair": flair_img
+        }
+        generate_modalities_segmentation_png(
+            modalities=modalities,
+            mask=segmentation,
+            output_path=os.path.join(html_output_dir, "segmentation_summary.png")
+        )
+
 
         # 6. Distribución de clases
         plot_class_distribution(segmentation, os.path.join(html_output_dir, "class_distribution.png"))
