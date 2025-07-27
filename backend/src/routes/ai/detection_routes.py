@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Form, HTTPException, Query
 from fastapi.responses import JSONResponse
 import os, traceback, json
-from services.ia.nnunet_segmentation import perform_segmentation_from_folder
-from services.ia.plot_generator import (
+from services.ai.nnunet_segmentation import perform_segmentation_from_folder
+from services.ai.plot_generator import (
     generate_segmentation_slice_html,
     generate_modalities_segmentation_png,
     plot_class_distribution,
@@ -11,8 +11,8 @@ from services.ia.plot_generator import (
 )
 
 from utils.nifti_utils import load_nifti
-from services.ia.openai import build_explanation_prompt, explain_prediction_with_gpt
-from services.ia.grad_cam_generator import generate_gradcam_nifti
+from services.ai.openai import build_explanation_prompt, explain_prediction_with_gpt
+from services.ai.grad_cam_generator import generate_gradcam_nifti
 
 router = APIRouter(
     prefix="/ai",

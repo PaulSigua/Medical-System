@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from models.user import User
 from utils.security import get_current_user
 from database.db import get_db
-from services.ia.ai_evaluation_service import save_evaluation, get_satisfaction_summary
+from services.ai.ai_evaluation_service import save_evaluation, get_satisfaction_summary
 from schemas.ai_evaluation import EvaluationInput
 
 router = APIRouter(prefix="/ai_evaluation", tags=["ai evaluation"])

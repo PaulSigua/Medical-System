@@ -1,5 +1,5 @@
-from services.ia.tensorflow_segmentation import perform_segmentation as tf_segmentation
-from services.ia.nnunet_segmentation import perform_segmentation as nnunet_segmentation
+from services.ai.tensorflow_segmentation import perform_segmentation as tf_segmentation
+from services.ai.nnunet_segmentation import perform_segmentation as nnunet_segmentation
 
 def perform_segmentation_dispatcher(modality_paths: dict, framework: str):
     if framework == "tensorflow":

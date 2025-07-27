@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import json
 from nibabel.processing import resample_from_to
-from services.ia.metrics import load_nnunet_metrics
+from services.ai.metrics import load_nnunet_metrics
 
 def extract_dice_scores_from_summary(summary_path: str) -> dict:
     with open(summary_path, "r") as f:

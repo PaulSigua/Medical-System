@@ -122,56 +122,60 @@ def generate_modalities_segmentation_png(
     mask: np.ndarray,
     output_path: str
 ):
-    """
-    modalities: dict con claves ['T1', 'T1c', 'T2', 'Flair'] y valores np.ndarray
-    mask: máscara de segmentación (3D)
-    output_path: ruta del archivo PNG a guardar
-    """
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # === Slice central ===
     slice_index = mask.shape[2] // 2
 
-    # === Colores RGBA por clase ===
     label_colors = {
-        1: (0, 0, 1, 0.6),    # non-enhancing (azul)
-        2: (0, 1, 0, 0.6),    # edema (verde)
-        3: (1, 1, 0, 0.6),   # enhancing (amarillo)
+        1: (0.0, 0.0, 1.0, 0.6),    # non-enhancing: azul
+        2: (0.0, 1.0, 0.0, 0.6),    # edema: verde
+        3: (1.0, 1.0, 0.0, 0.6),    # enhancing: amarillo
     }
 
-    fig, axes = plt.subplots(len(modalities), 2, figsize=(8, 10))
-    fig.suptitle("Segmentación por modalidad y método de red neuronal", fontsize=14)
+    num_modalities = len(modalities)
+    fig, axes = plt.subplots(num_modalities, 3, figsize=(9, 3 * num_modalities))
+
+    if num_modalities == 1:
+        axes = [axes]  # garantizar iterabilidad
 
     for i, (modality_name, volume) in enumerate(modalities.items()):
-        # Extraer el slice
         raw_img_slice = volume[:, :, slice_index]
         raw_mask_slice = mask[:, :, slice_index]
 
-        # Reorientar ambos al estilo BraTS (vista desde los pies)
         img_slice = orient_brats_matplotlib(raw_img_slice)
         mask_slice = orient_brats_matplotlib(raw_mask_slice)
 
-        # === Columna izquierda: imagen original ===
-        ax_left = axes[i, 0]
-        ax_left.imshow(img_slice, cmap="gray")
-        ax_left.set_title(modality_name)
-        ax_left.axis("off")
+        # === Columna 1: Modalidad (Input)
+        ax_input = axes[i][0]
+        ax_input.imshow(img_slice, cmap="gray")
+        ax_input.set_title(f"{modality_name}", fontsize=10)
+        ax_input.axis("off")
 
-        # === Columna derecha: imagen + overlay de segmentación ===
-        ax_right = axes[i, 1]
-        ax_right.imshow(img_slice, cmap="gray")
+        # === Columna 2: Método (texto)
+        ax_method = axes[i][1]
+        ax_method.text(
+            0.5, 0.5, "nnU-Net",
+            fontsize=10, ha='center', va='center'
+        )
+        ax_method.set_xticks([])
+        ax_method.set_yticks([])
+        ax_method.axis("off")
+
+        # === Columna 3: Imagen con segmentación
+        ax_seg = axes[i][2]
+        ax_seg.imshow(img_slice, cmap="gray")
 
         overlay = np.zeros((*mask_slice.shape, 4))
         for label_val, color in label_colors.items():
             overlay[mask_slice == label_val] = color
+        ax_seg.imshow(overlay)
 
-        ax_right.imshow(overlay)
-        ax_right.set_title("Segmentación")
-        ax_right.axis("off")
+        ax_seg.set_title("Segmentado", fontsize=10)
+        ax_seg.axis("off")
 
-    plt.tight_layout(rect=[0, 0, 1, 0.96])
-    plt.savefig(output_path, bbox_inches="tight")
+    plt.tight_layout()
+    plt.savefig(output_path, bbox_inches="tight", dpi=300)
     plt.close()
 
 def plot_class_distribution(mask, save_path):
