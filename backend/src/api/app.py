@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 # from database.db import create_tables
 from routes.patients import patient_routes
-from routes import auth_routes, user_routes, diagnostic_routes
+from routes import auth_routes, user_routes, diagnostic_routes, report_routes
 from routes.upload_nifti import upload_file
 from routes.ai import detection_routes, ai_evaluation, manual_evaluation
 from fastapi.staticfiles import StaticFiles
@@ -98,6 +98,7 @@ app.include_router(detection_routes.router, prefix=api_prefix)
 app.include_router(diagnostic_routes.router, prefix=api_prefix)
 app.include_router(ai_evaluation.router, prefix=api_prefix)
 app.include_router(manual_evaluation.router, prefix=api_prefix)
+app.include_router(report_routes.router, prefix=api_prefix)
 
 @app.get("/", description="Root endpoint")
 async def read_root():

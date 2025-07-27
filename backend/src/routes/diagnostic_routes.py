@@ -7,6 +7,8 @@ from utils.security import get_current_user
 from models.user import User
 from models.diagnostics import Diagnostic
 from datetime import datetime
+from fastapi.responses import FileResponse
+from services.diagnostics.report_generator import generate_pdf_report, find_folder_by_patient_id
 import traceback, os, shutil
 
 router = APIRouter(
@@ -65,3 +67,15 @@ async def upload_manual_segmentation(
         print("Error al guardar segmentación manual")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+    
+@router.get("/generate_report/{patient_id}")
+def generate_report(patient_id: str):
+    try:
+        pdf_path = generate_pdf_report(patient_id)
+        return FileResponse(
+            path=pdf_path,
+            filename=f"{patient_id}_diagnosis_report.pdf",
+            media_type='application/pdf'
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

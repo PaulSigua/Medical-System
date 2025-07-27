@@ -1,15 +1,42 @@
 <div class="flex h-screen overflow-visible">
-  
   <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
 
   <!-- Main content -->
   <div class="flex-1 flex flex-col overflow-visible">
-    
     <app-header-ws class="relative z-0"></app-header-ws>
 
     <!-- Page Content -->
     <main class="flex-1 overflow-y-auto p-6">
-      
+      <div class="p-6 bg-white border border-sky-100 rounded-lg">
+        <h1 class="text-2xl font-bold mb-4 text-sky-500">
+          Ver Reporte PDF por ID de Paciente
+        </h1>
+
+        <div class="mb-4 flex items-center gap-2">
+          <input
+            [(ngModel)]="patientId"
+            placeholder="Ingresa el ID del paciente"
+            class="w-fit border outline-0 rounded p-2 placeholder:text-gray-400 bg-white"
+            style="border-color: var(--colour-border)"
+          />
+          <button
+            (click)="loadPdf()"
+            class="bg-sky-500 text-white px-4 py-2 rounded hover:cursor-pointer hover:bg-sky-600"
+          >
+            Cargar reporte
+          </button>
+        </div>
+
+        <div *ngIf="loading" class="text-gray-600">Cargando reporte...</div>
+        <div *ngIf="error" class="text-red-500">{{ error }}</div>
+
+        <iframe
+          *ngIf="pdfUrl"
+          [src]="pdfUrl"
+          class="w-full"
+          style="min-height: 900px; border: none"
+        ></iframe>
+      </div>
     </main>
   </div>
 </div>

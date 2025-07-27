@@ -18,3 +18,5 @@ tensorflow
 keras
 jinja2
 opencv-python
+pdfkit
+wkhtmltopdf

@@ -64,25 +64,25 @@ async def segment_patient(
 
         # 4. HTML Plot principal
         flair_path = os.path.join(input_dir, "case_0000_0000.nii.gz")
-        flair_img = load_nifti(flair_path)
-        html_content = generate_segmentation_slice_html(flair_img, segmentation, clean_folder_name)
+        t1c_img = load_nifti(flair_path)
+        html_content = generate_segmentation_slice_html(t1c_img, segmentation, clean_folder_name)
         with open(os.path.join(html_output_dir, "segmentation_result.html"), "w", encoding="utf-8") as f:
             f.write(html_content)
 
         # 5. Imagen resumen
         # 4. HTML Plot principal
         flair_path = os.path.join(input_dir, "case_0000_0002.nii.gz")
-        flair_img = load_nifti(flair_path)
-        html_content = generate_segmentation_slice_html(flair_img, segmentation, clean_folder_name)
+        t1c_img = load_nifti(flair_path)
+        html_content = generate_segmentation_slice_html(t1c_img, segmentation, clean_folder_name)
         with open(os.path.join(html_output_dir, "segmentation_result.html"), "w", encoding="utf-8") as f:
             f.write(html_content)
 
         # 5. Imagen resumen (por modalidad con segmentación)
         modalities = {
-            "T1": load_nifti(os.path.join(input_dir, "case_0000_0000.nii.gz")),
-            "T1c": load_nifti(os.path.join(input_dir, "case_0000_0001.nii.gz")),
+            "T1": load_nifti(os.path.join(input_dir, "case_0000_0001.nii.gz")),
+            "T1c": t1c_img,
             "T2": load_nifti(os.path.join(input_dir, "case_0000_0003.nii.gz")),
-            "Flair": flair_img
+            "Flair": load_nifti(os.path.join(input_dir, "case_0000_0000.nii.gz")),
         }
         generate_modalities_segmentation_png(
             modalities=modalities,

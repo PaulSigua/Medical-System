@@ -30,10 +30,15 @@ export class Patients {
     coincidenciaIA?: 'baja' | 'media' | 'alta';
 }
 
-// Añade este tipo para tipar las gráficas
 export interface GraphData {
   id: string;
   title: string;
   label: string;
   url: SafeResourceUrl | null;
+}
+
+export interface ReportStatistics {
+  total_predictions: number;
+  total_patients: number;
+  last_prediction: string | null;
 }
