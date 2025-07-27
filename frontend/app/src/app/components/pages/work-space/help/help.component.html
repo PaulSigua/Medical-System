@@ -9,12 +9,12 @@
 
     <!-- Page Content -->
     <main class="flex-1 overflow-y-auto p-6">
-      <div class="grid bg-white p-4 space-y-8 text-gray-800 border border-sky-100 rounded-lg">
-        <h1 class="text-3xl font-bold text-sky-600">
+      <div class="max-w-4xl mx-auto bg-white p-6 space-y-8 text-gray-800 border border-sky-100 rounded-lg shadow">
+        <h1 class="text-3xl font-bold text-sky-600 text-center">
           Manual de Usuario - Cranius AI
         </h1>
 
-        <!-- Sección 1: Descripción general -->
+        <!-- Secciones -->
         <section>
           <h2 class="text-2xl font-semibold mb-2">🧠 ¿Qué es Cranius AI?</h2>
           <p>
@@ -27,81 +27,52 @@
           </p>
         </section>
 
-        <!-- Sección 2: Flujos principales -->
         <section>
           <h2 class="text-2xl font-semibold mb-2">🚀 Flujo de trabajo</h2>
           <ul class="list-disc list-inside space-y-2">
-            <li>
-              <strong>Inicio:</strong> Visualiza un resumen general del uso del
-              sistema, número de pacientes, predicciones y última actividad.
-            </li>
-            <li>
-              <strong>Pacientes:</strong> Consulta y gestiona los pacientes
-              registrados. Desde aquí puedes cargar sus imágenes médicas.
-            </li>
-            <li>
-              <strong>Resultados:</strong> Ingresa un ID de paciente para
-              generar y visualizar un reporte clínico completo en PDF.
-            </li>
-            <li>
-              <strong>Configuración:</strong> Gestiona tu perfil e información
-              personal.
-            </li>
+            <li><strong>Inicio:</strong> Resumen del uso del sistema.</li>
+            <li><strong>Pacientes:</strong> Gestión de registros e imágenes.</li>
+            <li><strong>Resultados:</strong> Visualización de reportes PDF.</li>
+            <li><strong>Configuración:</strong> Perfil personal.</li>
           </ul>
         </section>
 
-        <!-- Sección 3: Segmentación automática -->
         <section>
-          <h2 class="text-2xl font-semibold mb-2">
-            🩺 Segmentación Automática
-          </h2>
+          <h2 class="text-2xl font-semibold mb-2">🩺 Segmentación Automática</h2>
           <p>
             Al cargar las modalidades médicas requeridas (T1, T1c, T2, FLAIR),
-            Cranius AI realiza una segmentación automática del tumor usando el
-            modelo nnU-Net. Se generan máscaras, visualizaciones interactivas y
-            explicaciones.
+            Cranius AI realiza una segmentación automática del tumor usando nnU-Net.
           </p>
         </section>
 
-        <!-- Sección 4: Comparación con segmentación manual -->
         <section>
           <h2 class="text-2xl font-semibold mb-2">⚖️ Comparación Manual</h2>
           <p>
-            Puedes subir una segmentación manual del tumor para comparar
-            visualmente con la predicción de IA. Se muestran diferencias por
-            clase y orientación (axial, coronal, sagital).
+            Puedes subir una segmentación manual para compararla con la predicción de IA,
+            observando diferencias por clase y orientación (axial, coronal, sagital).
           </p>
         </section>
 
-        <!-- Sección 5: Generación de Reportes -->
         <section>
           <h2 class="text-2xl font-semibold mb-2">📄 Generación de Reportes</h2>
           <p>
-            En la pestaña <strong>Resultados</strong>, puedes ingresar el
-            <code>ID del paciente</code> y visualizar su reporte en PDF, que
-            incluye imágenes de segmentación, comparaciones y visualización
-            Grad-CAM.
+            En la sección <strong>Resultados</strong> puedes ingresar el <code>ID</code>
+            de un paciente para visualizar y descargar su reporte clínico en PDF.
           </p>
         </section>
 
-        <!-- Sección 6: Encuestas y evaluación -->
         <section>
-          <h2 class="text-2xl font-semibold mb-2">
-            📝 Evaluaciones del uso de IA
-          </h2>
+          <h2 class="text-2xl font-semibold mb-2">📝 Evaluaciones del uso de IA</h2>
           <p>
-            Después de cada diagnóstico, puedes registrar tu percepción sobre la
-            utilidad del modelo de IA. Estos datos se muestran como histogramas
-            para análisis estadístico.
+            Después de cada diagnóstico puedes registrar tu percepción sobre la IA.
+            Estas evaluaciones se reflejan en gráficos estadísticos.
           </p>
         </section>
 
-        <!-- Sección 7: Soporte -->
         <section>
           <h2 class="text-2xl font-semibold mb-2">📬 Soporte</h2>
           <p>
-            Si tienes preguntas técnicas o deseas reportar errores, comunícate
-            con el equipo de soporte a través de tu institución médica.
+            Para reportar errores o recibir ayuda, contacta al equipo técnico de tu institución médica.
           </p>
         </section>
       </div>

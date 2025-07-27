@@ -1,3 +1,4 @@
+from database.db import get_db_connection
 import os
 import json
 import pdfkit
@@ -13,17 +14,41 @@ def find_folder_by_patient_id(patient_id: str) -> str:
     raise FileNotFoundError(
         f"No se encontró carpeta para el paciente {patient_id}")
 
+def get_diagnostics_for_patient(patient_id: str):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT u.name, u.last_name, d.description, d.created_at, d.diagnostic_text
+        FROM diagnostics d
+        JOIN users u ON d.user_id = u.id
+        WHERE d.patient_id = %s
+        ORDER BY d.created_at DESC;
+    """
+    cursor.execute(query, (patient_id,))
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "name": f"{row[0]} {row[1]}",
+            "description": row[2],
+            "created_at": row[3].strftime("%d/%m/%Y %H:%M"),
+            "diagnostic_text": row[4]
+        }
+        for row in rows
+    ]
 
 def generate_pdf_report(patient_id: str) -> str:
     folder_name = find_folder_by_patient_id(patient_id)
     html_dir = os.path.join(STATIC_DIR, folder_name, "html")
-    output_path = os.path.join(
-        STATIC_DIR, folder_name, f"{patient_id}_diagnosis_report.pdf")
+    output_path = os.path.join(STATIC_DIR, folder_name, f"{patient_id}_diagnosis_report.pdf")
 
     # Cargar imágenes
     img_seg_path = os.path.join(html_dir, "segmentation_summary.png")
     img_dist_path = os.path.join(html_dir, "class_distribution.png")
-
     if not os.path.exists(img_seg_path) or not os.path.exists(img_dist_path):
         raise FileNotFoundError("Imágenes necesarias no encontradas.")
 
@@ -35,14 +60,27 @@ def generate_pdf_report(patient_id: str) -> str:
     with open(summary_path, "r", encoding="utf-8") as f:
         summary_data = json.load(f)
 
-    explanation = summary_data.get(
-        "explanation", "No se encontró explicación generada.")
-    wt = summary_data.get("all_metrics", {}).get(
-        "whole_tumor (WT)", {}).get("Accuracy", "N/A")
-    tc = summary_data.get("all_metrics", {}).get(
-        "tumor_core (TC)", {}).get("Accuracy", "N/A")
-    et = summary_data.get("all_metrics", {}).get(
-        "enhancing_tumor (ET)", {}).get("Accuracy", "N/A")
+    explanation = summary_data.get("explanation", "No se encontró explicación generada.")
+    wt = summary_data.get("all_metrics", {}).get("whole_tumor (WT)", {}).get("Accuracy", "N/A")
+    tc = summary_data.get("all_metrics", {}).get("tumor_core (TC)", {}).get("Accuracy", "N/A")
+    et = summary_data.get("all_metrics", {}).get("enhancing_tumor (ET)", {}).get("Accuracy", "N/A")
+
+    # Obtener diagnósticos del paciente
+    diagnostics = get_diagnostics_for_patient(patient_id)
+    diagnostics_html = ""
+    if diagnostics:
+        diagnostics_html = "<div class='section'><h3>Diagnósticos registrados</h3>"
+        for d in diagnostics:
+            diagnostics_html += f"""
+                <div style="margin-bottom:15px; padding:10px; border-left: 4px solid #2b6cb0; background:#f5f5f5">
+                    <strong>Médico:</strong> {d["name"]}<br>
+                    <strong>Fecha:</strong> {d["created_at"]}<br>
+                    <strong>Diagnóstico:</strong> {d["diagnostic_text"]}<br>
+                    <strong>Descripción:</strong><br>
+                    <em>{d["description"]}</em>
+                </div>
+            """
+        diagnostics_html += "</div>"
 
     # HTML base
     template_html = f"""
@@ -86,7 +124,7 @@ def generate_pdf_report(patient_id: str) -> str:
         </div>
 
         <div class="section metrics">
-            <h3>Accuracy por clase:</h3>
+            <h3>Score Dice por clase:</h3>
             <ul>
                 <li><strong>Whole Tumor (WT):</strong> {wt}</li>
                 <li><strong>Tumor Core (TC):</strong> {tc}</li>
@@ -98,7 +136,7 @@ def generate_pdf_report(patient_id: str) -> str:
             <h3>Explicación generada:</h3>
             <p>{explanation}</p>
         </div>
-        
+
         <div class="section">
             <h3>Resumen gráfico de la segmentación</h3>
             <img src="file://{img_seg_path}" alt="Segmentación resumen">
@@ -108,6 +146,8 @@ def generate_pdf_report(patient_id: str) -> str:
             <h3>Distribución de clases segmentadas</h3>
             <img src="file://{img_dist_path}" alt="Distribución de clases">
         </div>
+
+        {diagnostics_html}
     </body>
     </html>
     """
