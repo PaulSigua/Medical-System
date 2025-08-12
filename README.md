@@ -3,36 +3,36 @@
 ![UPS Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png/640px-Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png)
 
 ## Universidad Politécnica Salesiana  
-## Carrera de Ciencias de la Computación  
+## Computer Science Career
 ---
-### **Sistema para el apoyo en el diagnóstico de cancer cerebral**  
+### **System for Supporting Brain Cancer Diagnosis**  
 </div>
 
 ---
 
-# 🧠 Medical System (Cranius AI) - Plataforma de Segmentación y Diagnóstico Asistido por IA
+# 🧠 Medical System (Cranius AI) - AI-Assisted Segmentation and Diagnosis Platform
 
-Sistema de predicción, segmentación y explicación para el diagnóstico de cáncer cerebral, desarrollado como parte del trabajo de titulación de la **Universidad Politécnica Salesiana del Ecuador**.
+Prediction, segmentation, and explainability system for brain cancer diagnosis, developed as part of the graduation project at the **Universidad Politécnica Salesiana of Ecuador**.
 
-## 📌 Descripción
+## 📌 Description
 
-Este sistema permite a médicos y profesionales de la salud cargar imágenes médicas (modalidades T1, T1c, T2 y FLAIR), realizar segmentaciones automáticas con modelos de inteligencia artificial (como `nnU-Net`), visualizar comparaciones con segmentaciones manuales, generar explicaciones visuales (Grad-CAM) y producir reportes clínicos en PDF.
+This system allows doctors and healthcare professionals to upload medical images (T1, T1c, T2, and FLAIR modalities), perform automatic segmentations with artificial intelligence models (such as `nnU-Net`), visualize comparisons with manual segmentations, generate visual explanations (Grad-CAM), and produce clinical reports in PDF format.
 
 ---
 
-## ⚙️ Tecnologías utilizadas
+## ⚙️ Technologies Used
 
 - **Backend**: FastAPI + SQLAlchemy + PostgreSQL
 - **Frontend**: Angular + TailwindCSS
 - **Deep Learning**: nnU-Net (v1), PyTorch
-- **Visualización**: Plotly, Matplotlib
-- **Almacenamiento de imágenes**: NIfTI (.nii.gz)
-- **Reportes**: HTML embebido + `pdfkit` + `wkhtmltopdf`
-- **Scraping adicional (opcional)**: Selenium, BeautifulSoup
+- **Visualization**: Plotly, Matplotlib
+- **Image Storage**: NIfTI (.nii.gz)
+- **Reports**: Embedded HTML + `pdfkit` + `wkhtmltopdf`
+- **Additional scraping (optional)**: Selenium, BeautifulSoup
 
 ---
 
-## 📂 Estructura del proyecto
+## 📂 Project Structure
 
 ```bash
 Medical-System/
@@ -58,37 +58,37 @@ Medical-System/
 
 ---
 
-## 🚀 Funcionalidades principales
+## 🚀 Main Features
 
-- [x] Carga de modalidades médicas (T1, T1c, T2, FLAIR)
-- [x] Segmentación automática con `nnU-Net`
-- [x] Visualización interactiva y Grad-CAM
-- [x] Comparación con segmentación manual
-- [x] Reportes clínicos en PDF
-- [x] Registro y autenticación de usuarios
-- [x] Registro de evaluaciones manuales
-- [x] Encuestas para evaluar utilidad de la IA
+- [x] Upload of medical modalities (T1, T1c, T2, FLAIR)
+- [x] Automatic segmentation with `nnU-Net`
+- [x] Interactive visualization and Grad-CAM
+- [x] Comparison with manual segmentation
+- [x] Clinical PDF reports
+- [x] User registration and authentication
+- [x] Manual evaluation logging
+- [x] Surveys to assess AI usefulness
 
 ---
 
-## 🧪 Entrenamiento del modelo
+## 🧪 Model Training
 
-El modelo fue entrenado sobre el dataset **BraTS 2023 (ASNR-MICCAI)** utilizando `nnU-Net v1`.
+The model was trained on the **BraTS 2023 (ASNR-MICCAI)** dataset using `nnU-Net v1`.
 
-Para entrenar con dos modalidades (por ejemplo, T1 y T1c), se utilizó la siguiente configuración:
+To train with two modalities (for example, T1 and T1c), the following configuration was used:
 
 ```bash
 nnUNet_plan_and_preprocess -t 501 --verify_dataset_integrity
 nnUNet_train 2d nnUNetTrainerV2 501 0 --npz
 ```
 
-> Los datos se encuentran organizados en `nnUNet_raw/Task501_BrainTumour/` según el formato oficial.
+> The data is organized in `nnUNet_raw/Task501_BrainTumour/` following the official format.
 
 ---
 
-## 📄 Generación de Reportes
+## 📄 Report Generation
 
-Cada paciente cuenta con una carpeta única (`YYYY-MM-DD_patient_id`) donde se almacenan:
+Each patient has a unique folder (`YYYY-MM-DD_patient_id`) where the following files are stored:
 
 - `segmentation_summary.png`
 - `class_distribution.png`
@@ -97,40 +97,40 @@ Cada paciente cuenta con una carpeta única (`YYYY-MM-DD_patient_id`) donde se a
 
 ---
 
-## 🩺 Aplicaciones clínicas
+## 🩺 Clinical Applications
 
-- Soporte al diagnóstico de tumores cerebrales
-- Evaluación visual automática vs. manual
-- Trazabilidad completa por paciente
-- Registro estadístico de uso y retroalimentación médica
-
----
-
-## 🔒 Autenticación y permisos
-
-El sistema permite roles de usuario autenticado (médico) para acceso completo a los módulos de pacientes, reportes, carga de imágenes y evaluación de IA.
+- Support for brain tumor diagnosis
+- Automatic vs. manual visual evaluation
+- Full traceability per patient
+- Statistical record of usage and medical feedback
 
 ---
 
-## 📚 Referencias
+## 🔒 Authentication and Permissions
 
-- [nnU-Net: Framework oficial](https://github.com/MIC-DKFZ/nnUNet)
+The system allows authenticated user roles (doctor) for full access to patient modules, reports, image uploads, and AI evaluation.
+
+---
+
+## 📚 References
+
+- [nnU-Net: Official Framework](https://github.com/MIC-DKFZ/nnUNet)
 - [BraTS 2023 Dataset](https://www.synapse.org/#!Synapse:syn51068140)
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [3D Slicer](https://www.slicer.org/)
 
 ---
 
-## 👨‍⚕️ Autores
+## 👨‍⚕️ Authors
 
-**Paúl Sigua, Jeison Pañora y David Alvarado**, estudiantes de la carrera de Ingeniería en Ciencias de la Computación  
+**Paúl Sigua, Jeison Pañora, and David Alvarado**, students of the Computer Science Engineering program  
 Universidad Politécnica Salesiana – Ecuador  
-Tesis dirigida por: Ing. Remigio Hurtado, PhD
+Thesis supervised by: Ing. Remigio Hurtado, PhD
 
 ---
 
-## 📃 Licencia
+## 📃 License
 
-Este proyecto se presenta con fines académicos como parte de un trabajo de titulación. Todos los derechos sobre los modelos médicos y datos utilizados corresponden a sus autores originales.
+This project is presented for academic purposes as part of a graduation project. All rights to the medical models and data used belong to their original authors.
 
-*Ningún archivo manejado corresponde a pacientes reales. Las pruebas con pacientes reales se realizaron en un entorno controlado fuera de este repositorio.*
+*No files handled correspond to real patients. Tests with real patients were conducted in a controlled environment outside this repository.*
