@@ -2,10 +2,10 @@
 
 ![UPS Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png/640px-Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png)
 
-#### Universidad Politécnica Salesiana  
-#### Carrera de Ciencias de la Computación  
+## Universidad Politécnica Salesiana  
+## Carrera de Ciencias de la Computación  
 ---
-##### **Sistema para el apoyo en el diagnóstico para la detección de cancer cerebral**  
+### **Sistema para el apoyo en el diagnóstico para la detección de cancer cerebral**  
 </div>
 
 ---
