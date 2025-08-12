@@ -34,6 +34,14 @@ def get_db_connection():
         port=DB_PORT
     )
 
+# Sesión SQLAlchemy para usar en FastAPI
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 # Función para inicializar las tablas
 def create_tables():
     conn = get_db_connection()
@@ -119,6 +127,25 @@ def create_tables():
         FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE,
         CONSTRAINT unique_patient_id UNIQUE (patient_id)
     );
+    
+    CREATE TABLE IF NOT EXISTS ia_evaluations (
+        id SERIAL PRIMARY KEY,
+        patient_id VARCHAR NOT NULL,
+        user_id INTEGER REFERENCES users(id),
+        usefulness BOOLEAN DEFAULT TRUE,
+        satisfaction VARCHAR NOT NULL,
+        comments TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    
+    CREATE TABLE IF NOT EXISTS manual_evaluations (
+        id SERIAL PRIMARY KEY,
+        patient_id VARCHAR NOT NULL REFERENCES patients(patient_id) ON DELETE CASCADE,
+        is_accurate VARCHAR NOT NULL CHECK (is_accurate IN ('Sí', 'Neutro', 'No')),
+        observations TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
     """)
 
     conn.commit()
@@ -216,6 +243,19 @@ def create_tables():
         $$;
 
     """)
+    
+    cursor.execute("""
+        ALTER TABLE diagnostics ADD COLUMN IF NOT EXISTS diagnostic_text TEXT;
+    """)
+
+    cursor.execute("""
+        ALTER TABLE diagnostics ADD COLUMN IF NOT EXISTS manual_segmentation_path TEXT;
+    """)
+
+    cursor.execute("""
+        ALTER TABLE diagnostics ADD COLUMN IF NOT EXISTS model_segmentation_path TEXT;
+    """)
+
     conn.commit()
 
     cursor.close()

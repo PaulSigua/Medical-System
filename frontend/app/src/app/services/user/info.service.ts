@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UpdateUser, Users } from '../../models/models';
+import { ReportStatistics } from '../../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,14 @@ export class InfoService {
 
   updateCurrentUser(id: number, data: UpdateUser): Observable<UpdateUser> {
     return this.http.put<UpdateUser>(`${this.apiUrl}/users/${id}`, data)
+  }
+
+  getStatistics(): Observable<ReportStatistics> {
+    return this.http.get<ReportStatistics>(`${this.apiUrl}/reports/statistics`);
+  }
+
+  generateReport(patientId: string): Observable<Blob> {
+    const url = `${this.apiUrl}/diagnostic/generate_report/${patientId}`;
+    return this.http.get(url, { responseType: 'blob' });
   }
 }

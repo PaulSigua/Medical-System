@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from database.db import Base
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -12,3 +13,4 @@ class User(Base):
     agree_terms = Column(Boolean, default=True)
     phone = Column(String, nullable=True)
     specialty = Column(String, nullable=True)
+    ia_evaluations = relationship("IAEvaluation", back_populates="user")

@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import json
 from nibabel.processing import resample_from_to
-from services.ia.metrics import load_nnunet_metrics
+from services.ai.metrics import load_nnunet_metrics
 
 def extract_dice_scores_from_summary(summary_path: str) -> dict:
     with open(summary_path, "r") as f:
@@ -109,25 +109,25 @@ def perform_segmentation_from_folder(
         nib.save(nib.Nifti1Image(pred_data, flair_img.affine), pred_path)
 
     print(f"Predicción guardada en: {pred_path}")
-    print("Etiquetas únicas en predicción:", np.unique(pred_data))
+    # print("Etiquetas únicas en predicción:", np.unique(pred_data))
 
     gt_reference_path = "/media/mateo/8AF48D20F48D0F9D/Users/mateo/Desktop/U/Octavo_Ciclo/Tesis/nnUNet_trained_models/nnUNet/3d_fullres/Task501_BrainTumour/nnUNetTrainerV2__nnUNetPlansv2.1/gt_niftis/BRATS_006.nii.gz"
     if not os.path.exists(gt_reference_path):
-        print("⚠ Ground truth real no encontrado.")
+        # print("⚠ Ground truth real no encontrado.")
         return np.round(pred_data).astype(np.uint8), None
 
     gt_img = nib.load(gt_reference_path)
     gt_data = gt_img.get_fdata()
 
-    print("Etiquetas únicas en GT:", np.unique(gt_data))
+    # print("Etiquetas únicas en GT:", np.unique(gt_data))
 
     if gt_img.shape != pred_data.shape:
-        print(f"Reescalando GT de {gt_img.shape} → {pred_data.shape}")
+        # print(f"Reescalando GT de {gt_img.shape} → {pred_data.shape}")
         gt_img = resample_from_to(gt_img, pred_img)
         gt_data = gt_img.get_fdata()
 
     if np.count_nonzero(gt_data) == 0:
-        print("GT sin etiquetas. Saltando evaluación.")
+        # print("GT sin etiquetas. Saltando evaluación.")
         return np.round(pred_data).astype(np.uint8), {
             "error": "El ground truth no contiene etiquetas distintas de cero"
         }

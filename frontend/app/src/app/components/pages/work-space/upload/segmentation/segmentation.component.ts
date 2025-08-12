@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AiService } from '../../../../../services/ai/ai.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UploadService } from '../../../../../services/upload_files/upload.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Upload } from 'lucide-angular';
 
 @Component({
   selector: 'app-segmentation',
@@ -10,13 +11,17 @@ import { Router } from '@angular/router';
   templateUrl: './segmentation.component.html',
   styleUrl: './segmentation.component.css',
 })
-export class SegmentationComponent {
+export class SegmentationComponent implements OnInit {
   patientId = '';
   files: { [key: string]: File } = {};
   fileList: File[] = [];
   error: string | null = null;
   loading = false;
   dragging = false;
+
+  icons = {
+    Upload
+  }
 
   // Detección de modalidades similar al backend
   modalityKeywords: Record<string, string[]> = {
@@ -28,9 +33,18 @@ export class SegmentationComponent {
 
   constructor(
     private uploadService: UploadService,
-    private router: Router,
-    private aiService: AiService
+    private aiService: AiService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      const id = params['patient_id'];
+      if (id) {
+        this.patientId = id;
+      }
+    });
+  }
 
   onFileChange(event: any) {
     this.processFiles(event.target.files);
@@ -87,6 +101,11 @@ export class SegmentationComponent {
     }
 
     this.fileList = Object.values(this.files);
+
+    // Ejecutar automáticamente si todo está listo
+    if (this.canSubmit()) {
+      this.onSubmit();
+    }
   }
 
   canSubmit(): boolean {
@@ -119,7 +138,7 @@ export class SegmentationComponent {
           next: (result) => {
             this.loading = false;
             // Redirige a la visualización una vez generado el HTML
-            window.location.href = `/ia/graphs?folder_id=${folder}`;
+            window.location.href = `/ai/graphs?folder_id=${folder}`;
           },
           error: (err) => {
             this.loading = false;

@@ -10,7 +10,7 @@ import {
 } from 'lucide-angular';
 import { PatientService } from '../../../../services/patients/patient.service';
 import { Patients } from '../../../../models/models';
-import { debounceTime, firstValueFrom } from 'rxjs';
+import { catchError, debounceTime, finalize, firstValueFrom, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { AiService } from '../../../../services/ai/ai.service';
 
@@ -43,6 +43,9 @@ export class PatientsComponent implements OnInit {
   // this.alertMessage = 'Paciente guardado correctamente.';
   // this.showAlert    = true;
   isLoading: boolean = false;
+
+  confirmDeleteOpen = false;
+  patientToDelete: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -84,7 +87,7 @@ export class PatientsComponent implements OnInit {
       });
   }
 
-  // 🔄 Función genérica para sanitizar input numérico
+  // Función genérica para sanitizar input numérico
   sanitizeNumericInput(
     control: AbstractControl | null,
     maxLength: number,
@@ -192,18 +195,26 @@ export class PatientsComponent implements OnInit {
     this.patientService.getMyPatients().subscribe((patients: Patients[]) => {
       this.patients = patients;
       this.filteredPatients = patients;
-    });
-  }
 
-  eliminarDiagnostico(patient: Patients) {
-    console.log('Eliminando paciente:', patient);
+      for (let patient of this.patients) {
+        this.iaServide
+          .getManualAccuracy(patient.patient_id!)
+          .subscribe((res) => {
+            const level = res.accuracy_level;
+            if (level === 'Sí') patient.coincidenciaIA = 'alta';
+            else if (level === 'Neutro') patient.coincidenciaIA = 'media';
+            else if (level === 'No') patient.coincidenciaIA = 'baja';
+            else patient.coincidenciaIA = undefined;
+          });
+      }
+    });
   }
 
   generateDiagnosis(patient_id: string) {
     try {
       this.isLoading = true;
       this.selectedPatientId = patient_id;
-      this.router.navigate(['/upload'], {
+      this.router.navigate(['/ai/upload-manual'], {
         queryParams: { patient_id: patient_id },
       });
       console.log('Paciente seleccionado:', this.selectedPatientId);
@@ -218,11 +229,46 @@ export class PatientsComponent implements OnInit {
     this.isLoading = false;
   }
 
-  uploadComparisonSegmentation(){
-    this.router.navigate([('/work-space/upload/segmentation')])
+  uploadComparisonSegmentation(patient_id: string) {
+    this.router.navigate(['/work-space/upload/segmentation'], {
+      queryParams: { patient_id: patient_id },
+    });
   }
 
-  deletePatient(id: string) {
-    
-  } 
+  promptDeletePatient(patientId: string) {
+    this.patientToDelete = patientId;
+    this.confirmDeleteOpen = true;
+  }
+
+  confirmDeletePatient() {
+    if (!this.patientToDelete) return;
+
+    this.patientService
+      .deletePatient(this.patientToDelete)
+      .pipe(
+        catchError((error) => {
+          console.error('Ocurrió un error al eliminar el paciente: ', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.patientToDelete = null;
+          this.confirmDeleteOpen = false;
+          this.ngOnInit();
+        })
+      )
+      .subscribe((response) => {
+        try {
+          const data = JSON.parse(response);
+          console.log('Paciente eliminado: ', data);
+        } catch (e) {
+          console.log('Mensaje de respuesta:', response);
+        }
+      });
+  }
+
+  evaluationAi(patient_id: string) {
+    this.router.navigate(['/ai/evaluation'], {
+      queryParams: { patient_id: patient_id },
+    });
+  }
 }

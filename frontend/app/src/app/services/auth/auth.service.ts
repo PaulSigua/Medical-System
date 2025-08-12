@@ -8,16 +8,12 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
   private apiUrl = environment.API_URL;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-/**
+  /**
    * Inicia sesión con credenciales.
    * @param credentials - Nombre de usuario y contraseña.
    * @returns Observable con el token o error.
@@ -88,5 +84,18 @@ export class AuthService {
       return !!localStorage.getItem('access_token');
     }
     return false;
+  }
+
+  requestPasswordReset(username: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/request-password`, {
+      username,
+    });
+  }
+
+  resetPassword(data: {
+    token: string;
+    new_password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
   }
 }

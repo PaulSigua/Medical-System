@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { AlertsModule } from '../../layouts/alerts/alerts.module';
 import { ChartsModule } from '../../charts/charts.module';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   {
@@ -67,7 +68,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     LucideAngularModule,
     AlertsModule,
-    ChartsModule
+    ChartsModule,
+    HttpClientModule
   ],
   exports: [RouterModule],
 })

@@ -1,0 +1,73 @@
+<div class="flex h-screen overflow-visible relative">
+  <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col overflow-visible">
+    <app-header-ws class="relative z-0"></app-header-ws>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto p-6 relative">
+      <!-- SPINNER FULLSCREEN -->
+      <div
+        *ngIf="isLoading"
+        class="absolute inset-0 z-[9998] bg-white/40 backdrop-blur-md flex flex-col items-center justify-center transition-opacity duration-300"
+      >
+        <div
+          class="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p
+          class="mt-4 text-sky-600 font-semibold text-lg animate-pulse tracking-wide"
+        >
+          Subiendo segmentación...
+        </p>
+      </div>
+
+      <!-- CONTENIDO -->
+      <div class="shadow-lg rounded-lg p-6 border border-sky-200 bg-white relative z-10">
+        <h1 class="text-center text-sky-500 text-xl font-semibold mb-2">
+          Subir Segmentación Manual
+        </h1>
+        <p class="text-center text-sm text-gray-500 mb-4">
+          Carga un archivo <code>.nii.gz</code> generado por un médico para comparar con la segmentación automática.
+        </p>
+
+        <div
+          class="border border-dashed border-sky-200 rounded-lg p-8 bg-sky-50 flex flex-col items-center justify-center space-y-4"
+        >
+          <div class="bg-sky-100 p-4 rounded-full">
+            <div class="bg-sky-100 p-4 rounded-full">
+                <lucide-icon
+                  [name]="icons.Upload"
+                  class="text-sky-500"
+                ></lucide-icon>
+            </div>
+          </div>
+
+          <p class="font-semibold text-gray-700">
+            Selecciona una segmentación manual (.nii.gz)
+          </p>
+
+          <label
+            class="cursor-pointer inline-flex items-center px-4 py-2 bg-sky-500 text-white text-sm font-medium rounded hover:bg-sky-600 transition"
+          >
+            <input
+              type="file"
+              class="hidden"
+              accept=".nii,.nii.gz"
+              (change)="onManualFileChange($event)"
+            />
+            Seleccionar archivo
+          </label>
+
+          <p *ngIf="manualFileName" class="text-gray-600 text-sm mt-2">
+            Archivo seleccionado: <strong>{{ manualFileName }}</strong>
+          </p>
+
+          <div *ngIf="error" class="text-red-500 text-center mt-2">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

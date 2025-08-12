@@ -9,7 +9,73 @@
 
     <!-- Page Content -->
     <main class="flex-1 overflow-y-auto p-6">
-      <p>Help Page</p>
+      <div class="max-w-4xl mx-auto bg-white p-6 space-y-8 text-gray-800 border border-sky-100 rounded-lg shadow">
+        <h1 class="text-3xl font-bold text-sky-600 text-center">
+          Manual de Usuario - Cranius AI
+        </h1>
+
+        <!-- Secciones -->
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🧠 ¿Qué es Cranius AI?</h2>
+          <p>
+            Cranius AI es una plataforma inteligente de apoyo al diagnóstico
+            médico, diseñada para analizar imágenes médicas (MRI) y generar
+            predicciones sobre la presencia de tumores cerebrales. Utiliza
+            modelos de inteligencia artificial como <strong>nnU-Net</strong> y
+            <strong>Grad-CAM</strong> para segmentar regiones tumorales y
+            ofrecer explicaciones visuales de las predicciones.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🚀 Flujo de trabajo</h2>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Inicio:</strong> Resumen del uso del sistema.</li>
+            <li><strong>Pacientes:</strong> Gestión de registros e imágenes.</li>
+            <li><strong>Resultados:</strong> Visualización de reportes PDF.</li>
+            <li><strong>Configuración:</strong> Perfil personal.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">🩺 Segmentación Automática</h2>
+          <p>
+            Al cargar las modalidades médicas requeridas (T1, T1c, T2, FLAIR),
+            Cranius AI realiza una segmentación automática del tumor usando nnU-Net.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">⚖️ Comparación Manual</h2>
+          <p>
+            Puedes subir una segmentación manual para compararla con la predicción de IA,
+            observando diferencias por clase y orientación (axial, coronal, sagital).
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">📄 Generación de Reportes</h2>
+          <p>
+            En la sección <strong>Resultados</strong> puedes ingresar el <code>ID</code>
+            de un paciente para visualizar y descargar su reporte clínico en PDF.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">📝 Evaluaciones del uso de IA</h2>
+          <p>
+            Después de cada diagnóstico puedes registrar tu percepción sobre la IA.
+            Estas evaluaciones se reflejan en gráficos estadísticos.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-semibold mb-2">📬 Soporte</h2>
+          <p>
+            Para reportar errores o recibir ayuda, contacta al equipo técnico de tu institución médica.
+          </p>
+        </section>
+      </div>
     </main>
   </div>
 </div>

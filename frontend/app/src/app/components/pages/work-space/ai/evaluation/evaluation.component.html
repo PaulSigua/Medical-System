@@ -1,0 +1,71 @@
+<div class="flex h-screen overflow-visible">
+  <!-- Sidebar con sombra derecha -->
+  <app-sidenav-ws class="relative z-20"></app-sidenav-ws>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col overflow-visible">
+    <!-- Header “detrás” de la sombra -->
+    <app-header-ws class="relative z-0"></app-header-ws>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-y-auto p-6">
+      <form
+        (ngSubmit)="submitEvaluation()"
+        *ngIf="patientId && !submitted"
+        class="p-4 bg-white rounded-lg shadow-lg"
+      >
+        <h3 class="text-lg font-semibold text-sky-600 mb-4">
+          Evaluación del uso de IA
+        </h3>
+
+        <div class="mb-4">
+          <label class="block mb-1">¿La herramienta fue útil?</label>
+          <select
+            [(ngModel)]="usefulness"
+            name="usefulness"
+            class="w-full border rounded p-2 border-gray-300"
+          >
+            <option [ngValue]="true">Sí</option>
+            <option [ngValue]="false">No</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-1">Nivel de satisfacción:</label>
+          <select
+            [(ngModel)]="satisfaction"
+            name="satisfaction"
+            class="w-full border rounded p-2 border-gray-300"
+            required
+          >
+            <option value="Excelente">Excelente</option>
+            <option value="Satisfactorio">Satisfactorio</option>
+            <option value="Neutro">Neutro</option>
+            <option value="No satisfactorio">No satisfactorio</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-1">Comentarios:</label>
+          <textarea
+            [(ngModel)]="comments"
+            name="comments"
+            rows="4"
+            class="w-full border border-gray-300 rounded p-2 focus:outline-1 focus:outline-sky-100"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600"
+        >
+          Enviar evaluación
+        </button>
+      </form>
+
+      <div *ngIf="submitted" class="text-green-600 font-semibold p-4">
+        ✅ ¡Evaluación registrada correctamente!
+      </div>
+    </main>
+  </div>
+</div>
