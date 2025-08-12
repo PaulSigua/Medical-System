@@ -121,9 +121,9 @@ El sistema permite roles de usuario autenticado (médico) para acceso completo a
 
 ---
 
-## 👨‍⚕️ Autor
+## 👨‍⚕️ Autores
 
-**Paul Mateo**, estudiante de Ingeniería en Ciencias de la Computación  
+**Paúl Sigua, Jeison Pañora y David Alvarado**, estudiantes de la carrera de Ingeniería en Ciencias de la Computación  
 Universidad Politécnica Salesiana – Ecuador  
 Tesis dirigida por: Ing. Remigio Hurtado, PhD
 
