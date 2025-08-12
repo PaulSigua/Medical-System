@@ -5,7 +5,7 @@
 ## Universidad Politécnica Salesiana  
 ## Carrera de Ciencias de la Computación  
 ---
-### **Sistema para el apoyo en el diagnóstico para la detección de cancer cerebral**  
+### **Sistema para el apoyo en el diagnóstico de cancer cerebral**  
 </div>
 
 ---
