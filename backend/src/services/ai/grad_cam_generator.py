@@ -4,14 +4,10 @@ import numpy as np
 import nibabel as nib
 from nnunet.training.network_training.nnUNetTrainerV2 import nnUNetTrainerV2
 from torch.nn.functional import pad, softmax
-from scipy.ndimage import zoom
+from scipy.ndimage import zoom, gaussian_filter
 
 def generate_gradcam_nifti(patient_id: str, upload_folder: str, class_index: int = 1) -> str:
-    # # === 1. Configuración ===
-    # os.environ["nnUNet_raw_data_base"] = "/ruta/a/nnUNet_raw_data_base/nnUNet_raw_data"
-    # os.environ["nnUNet_preprocessed"] = "/ruta/a/nnUNet_preprocessed"
-    # os.environ["RESULTS_FOLDER"] = "/ruta/a/nnUNet_trained_models"
-
+    # === 1. Configuración ===
     task = "Task501_BrainTumour"
     plans = "nnUNetPlansv2.1"
     trainer_name = "nnUNetTrainerV2"
@@ -27,10 +23,6 @@ def generate_gradcam_nifti(patient_id: str, upload_folder: str, class_index: int
         dataset_directory=dataset_dir
     )
 
-    # Parches para PyTorch >= 2.6
-    import torch
-    import numpy as np
-
     torch.serialization.add_safe_globals([
         np.core.multiarray.scalar,
         np.dtype,
@@ -41,8 +33,6 @@ def generate_gradcam_nifti(patient_id: str, upload_folder: str, class_index: int
     ])
 
     trainer.initialize(training=False)
-
-    # Cargar modelo manualmente sin usar `load_checkpoint(...)`
     state_dict = torch.load(os.path.join(model_dir, "model_best.model"), map_location="cuda", weights_only=False)
     trainer.network.load_state_dict(state_dict['state_dict'])
     model = trainer.network.eval().cuda()
@@ -70,46 +60,54 @@ def generate_gradcam_nifti(patient_id: str, upload_folder: str, class_index: int
         return pad(tensor, (0, tx - x, 0, ty - y, 0, tz - z), mode='constant')[:, :, :tz, :ty, :tx]
 
     input_tensor = pad_or_crop(input_tensor, trainer.patch_size)
+    input_tensor.requires_grad = True
+
     with torch.enable_grad():
         output_logits = model(input_tensor)
+
     if isinstance(output_logits, tuple):
         output_logits = output_logits[0]
+
     output_softmax = softmax(output_logits, dim=1)
-    pred_classes = torch.argmax(output_softmax, dim=1)
-    mask_class = (pred_classes == class_index).float()
-    class_score = (output_softmax[0, class_index] * mask_class[0]).sum()
+
+    # Clase objetivo: score completo sin enmascarar
+    class_score = output_softmax[0, class_index].sum()
     model.zero_grad()
     class_score.backward()
 
-    # === 6. Grad-CAM ===
+    # === 6. Grad-CAM (mejorado para visualización) ===
     act = activations['value'][0].cpu().numpy()  # (F, Z, Y, X)
     grad = gradients['value'][0].cpu().numpy()
-    weights = np.mean(grad, axis=(1, 2, 3))
-    cam = np.sum(weights[:, None, None, None] * act, axis=0)
+
+    weights = np.mean(grad, axis=(1, 2, 3))  # GAP
+    weights = np.maximum(weights, 0)  # ReLU sobre pesos
+
+    cam = np.sum(weights[:, None, None, None] * act, axis=0)  # (Z, Y, X)
     cam = np.maximum(cam, 0)
+    cam = gaussian_filter(cam, sigma=1)  # Suavizado opcional
     cam /= np.max(cam) + 1e-8
 
-    # === 7. Resize ===
+    # === 7. Resize a forma original ===
     target_shape = volume_np.shape[1:]  # (Z, Y, X)
     cam_resized = zoom(cam, np.array(target_shape) / np.array(cam.shape), order=1)
 
     # === 8. Guardar NIfTI ===
-    t1c_path = os.path.join(input_dir, "case_0000_0002.nii.gz")  # Correcto
+    t1c_path = os.path.join(input_dir, "case_0000_0002.nii.gz")
     affine = nib.load(t1c_path).affine
     cam_nifti = nib.Nifti1Image(cam_resized, affine)
     output_path = os.path.join("src", "processed_files", f"{patient_id}_gradcam_class{class_index}.nii.gz")
     nib.save(cam_nifti, output_path)
 
-    # === 9. Métricas adicionales para explicación ===
+    # === 9. Métricas de validación ===
     threshold = 0.7
     cam_mask = cam_resized > threshold
-    tumor_mask = (cam_resized > 0.1)  # opcional si tienes segmentación
+    tumor_mask = (cam_resized > 0.1)
 
     intersection = np.logical_and(cam_mask, tumor_mask).sum()
     union = np.logical_or(cam_mask, tumor_mask).sum()
     iou = float(intersection / union) if union > 0 else 0.0
-
     max_index = np.unravel_index(np.argmax(cam_resized), cam_resized.shape)
+
     stats = {
         "gradcam_max_location": tuple(int(x) for x in max_index),
         "gradcam_iou_estimate": iou
