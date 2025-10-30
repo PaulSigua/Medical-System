@@ -1,6 +1,11 @@
 <div align="center">
 
-# 🧠 Medical System (Cranius AI) - AI-Assisted Segmentation and Diagnosis Platform
+# 🧠 Medical System (Cranius AI)  
+### AI-Assisted Segmentation and Diagnosis Platform
+
+</div>
+
+---
 
 ## 📌 Description
 
@@ -10,13 +15,13 @@ This system allows doctors and healthcare professionals to upload medical images
 
 ## ⚙️ Technologies Used
 
-- **Backend**: FastAPI + SQLAlchemy + PostgreSQL
-- **Frontend**: Angular + TailwindCSS
-- **Deep Learning**: nnU-Net (v1), PyTorch
-- **Visualization**: Plotly, Matplotlib
-- **Image Storage**: NIfTI (.nii.gz)
-- **Reports**: Embedded HTML + `pdfkit` + `wkhtmltopdf`
-- **Additional scraping (optional)**: Selenium, BeautifulSoup
+- **Backend**: FastAPI + SQLAlchemy + PostgreSQL  
+- **Frontend**: Angular + TailwindCSS  
+- **Deep Learning**: nnU-Net (v1), PyTorch  
+- **Visualization**: Plotly, Matplotlib  
+- **Image Storage**: NIfTI (.nii.gz)  
+- **Reports**: Embedded HTML + `pdfkit` + `wkhtmltopdf`  
+- **Additional scraping (optional)**: Selenium, BeautifulSoup  
 
 ---
 
