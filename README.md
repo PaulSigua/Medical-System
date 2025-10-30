@@ -2,8 +2,6 @@
 
 # 🧠 Medical System (Cranius AI) - AI-Assisted Segmentation and Diagnosis Platform
 
-Prediction, segmentation, and explainability system for brain cancer diagnosis, developed as part of the graduation project at the **Universidad Politécnica Salesiana of Ecuador**.
-
 ## 📌 Description
 
 This system allows doctors and healthcare professionals to upload medical images (T1, T1c, T2, and FLAIR modalities), perform automatic segmentations with artificial intelligence models (such as `nnU-Net`), visualize comparisons with manual segmentations, generate visual explanations (Grad-CAM), and produce clinical reports in PDF format.
@@ -113,9 +111,7 @@ The system allows authenticated user roles (doctor) for full access to patient m
 
 ## 👨‍⚕️ Authors
 
-**Paúl Sigua, Jeison Pañora, and David Alvarado**, students of the Computer Science Engineering program  
-Universidad Politécnica Salesiana – Ecuador  
-Thesis supervised by: Ing. Remigio Hurtado, PhD
+**Paúl Sigua, Jeison Pañora, and David Alvarado**
 
 ---
 
