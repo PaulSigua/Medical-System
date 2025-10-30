@@ -22,27 +22,26 @@ This system allows doctors and healthcare professionals to upload medical images
 
 ## 📂 Project Structure
 
-```bash
+```text
 Medical-System/
 ├── backend/
-│ ├── main.py
-│ ├── routers/
-│ ├── services/
-│ ├── models/
-│ ├── utils/
-│ └── static/
+│   ├── main.py
+│   ├── routers/
+│   ├── services/
+│   ├── models/
+│   ├── utils/
+│   └── static/
 ├── frontend/
-│ └── src/
-│ └── app/
-│ ├── components/
-│ ├── pages/
-│ └── services/
+│   └── src/
+│       └── app/
+│           ├── components/
+│           ├── pages/
+│           └── services/
 ├── nnUNet_raw/
 ├── nnUNet_results/
 ├── scripts/
 ├── requirements.txt
 └── README.md
-```
 
 ---
 
