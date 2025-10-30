@@ -1,15 +1,5 @@
 <div align="center">
 
-![UPS Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png/640px-Logo_Universidad_Polit%C3%A9cnica_Salesiana_del_Ecuador.png)
-
-## Universidad Politécnica Salesiana  
-## Computer Science Career
----
-### **System for Supporting Brain Cancer Diagnosis**  
-</div>
-
----
-
 # 🧠 Medical System (Cranius AI) - AI-Assisted Segmentation and Diagnosis Platform
 
 Prediction, segmentation, and explainability system for brain cancer diagnosis, developed as part of the graduation project at the **Universidad Politécnica Salesiana of Ecuador**.
