@@ -24,24 +24,24 @@ This system allows doctors and healthcare professionals to upload medical images
 
 ```bash
 Medical-System/
-  ├── backend/
-  │   ├── main.py
-  │   ├── routers/
-  │   ├── services/
-  │   ├── models/
-  │   ├── utils/
-  │   └── static/
-  ├── frontend/
-  │   └── src/
-  │       └── app/
-  │           ├── components/
-  │           ├── pages/
-  │           └── services/
-  ├── nnUNet_raw/
-  ├── nnUNet_results/
-  ├── scripts/
-  ├── requirements.txt
-  └── README.md
+├── backend/
+│ ├── main.py
+│ ├── routers/
+│ ├── services/
+│ ├── models/
+│ ├── utils/
+│ └── static/
+├── frontend/
+│ └── src/
+│ └── app/
+│ ├── components/
+│ ├── pages/
+│ └── services/
+├── nnUNet_raw/
+├── nnUNet_results/
+├── scripts/
+├── requirements.txt
+└── README.md
 ```
 
 ---
